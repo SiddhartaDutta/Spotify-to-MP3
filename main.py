@@ -29,7 +29,19 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
 
 ### Soundcloud Setup
 
-print(spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql'))
+#print(spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql'))
+
+tempAMLength = 0
+currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '0CdFo515yc2vcintnGYG3b')
+
+if(tempAMLength != currentSpotifyLength):
+        difference = currentSpotifyLength - tempAMLength
+        print(difference)
+
+        ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '0CdFo515yc2vcintnGYG3b')
+
+        for id in ids:
+                print(id)
 
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
         #2T1a2GrAKZaAeBGw2WnBql     <- 78 song uzi playlist
