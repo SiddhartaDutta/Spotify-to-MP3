@@ -15,10 +15,6 @@ load_dotenv()
 
 ### Spotify Setup
 
-# auth_manager = SpotifyClientCredentials(client_id=os.environ.get("CLIENTID"), client_secret=os.environ.get("CLIENTSECRET"))
-# sp = spotipy.Spotify(auth_manager=auth_manager, scope='playlist-read-private')
-
-
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTID"),
                                                client_secret=os.environ.get("CLIENTSECRET"),
                                                redirect_uri="http://localhost:1234/",
@@ -31,17 +27,18 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
 
 #print(spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql'))
 
-tempAMLength = 0
-currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '0CdFo515yc2vcintnGYG3b')
+tempAMLength = 70
+currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
 
 if(tempAMLength != currentSpotifyLength):
         difference = currentSpotifyLength - tempAMLength
         print(difference)
 
-        ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '0CdFo515yc2vcintnGYG3b')
+        ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
 
         for id in ids:
-                print(id)
+                track = spotifyScripts.get_track_info(sp, id)
+                print(track['name']+ ' - ' + track['artists'][0]['name'])
 
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
         #2T1a2GrAKZaAeBGw2WnBql     <- 78 song uzi playlist

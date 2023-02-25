@@ -1,13 +1,10 @@
 import spotipy
-# taylor_uri = 'spotify:artist:06HL4z0CvFAxyc27GXpf02'
-# results = sp.artist_albums(taylor_uri, album_type='album')
-
-# results1 = sp.current_user_playlists(limit=50)
-
-# for i, item in enumerate(results1['items']):
-#     print("%d %s" % (i, item['name']))
 
 def get_playlist_ids(self, username, playlist_id):
+    """
+    Returns object of ids for a given playlist.
+    """
+
     r = self.user_playlist_tracks(username,playlist_id)
     t = r['items']
     ids = []
@@ -38,3 +35,11 @@ def get_playlist_length(self, playlistId):
 
     #     if offset == response['total']:
     #         offset = -1
+
+def get_track_info(self, songID):
+    """
+    Returns track info for a given track ID.
+    """
+
+    urn = 'spotify:track:' + songID
+    return self.track(urn)
