@@ -36,8 +36,10 @@ if(tempAMLength != currentSpotifyLength):
 
         ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
 
-        for id in ids:
-                track = spotifyScripts.get_track_info(sp, id)
+        for index in range(tempAMLength, currentSpotifyLength):
+        #for id in ids:
+                trackID = ids[index]
+                track = spotifyScripts.get_track_info(sp, trackID)
                 print(track['name']+ ' - ' + track['artists'][0]['name'])
 
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
