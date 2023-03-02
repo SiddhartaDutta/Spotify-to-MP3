@@ -43,3 +43,5 @@ def get_track_info(self, songID):
 
     urn = 'spotify:track:' + songID
     return self.track(urn)
+
+# new method for outputting new track names with artists (from end of main.py)
