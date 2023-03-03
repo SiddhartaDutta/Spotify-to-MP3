@@ -16,6 +16,23 @@ def update_dir():
 
     #os.mkdir(newPath)
 
+def create_album_dir():
+
+    musicDir = os.getcwd()
+    musicDir = os.path.join(musicDir, "Music")
+
+    try:
+
+        os.chdir(musicDir)
+        print('inside')
+
+    except:
+        
+        os.mkdir(musicDir)
+        print("new directory created")
+
+    pass
+
 def get_dir_file_count(baseDir):
     """
     Returns file count for a given directory.
@@ -23,4 +40,5 @@ def get_dir_file_count(baseDir):
     
     pass
 
-update_dir()
+#update_dir()
+create_album_dir()
