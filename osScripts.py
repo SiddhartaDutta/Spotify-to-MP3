@@ -1,5 +1,6 @@
 import os
 import time
+import requests
 
 def update_dir():
     """
@@ -16,7 +17,10 @@ def update_dir():
 
     #os.mkdir(newPath)
 
-def create_album_dir():
+def create_album_dir(newAlbums=list):
+    """
+    Creates directories for albums passed in.
+    """
 
     musicDir = os.getcwd()
     musicDir = os.path.join(musicDir, "Music")
@@ -26,19 +30,48 @@ def create_album_dir():
         os.chdir(musicDir)
         print('inside')
 
-    except:
+        # If 'Music' directory doesn't exist, create 'Music' directory.
+        except:
+            
+            os.mkdir(musicDir)
+
+        finally:
+
+            # If album doesn't exist, create album directory.
+            try:
+
+                os.chdir(musicDir)
+                newAlbumDir = os.path.join(musicDir, album)
+                os.mkdir(newAlbumDir)
+
+            # If album already exists, ___.
+            except:
+                
+                pass
+            
+    # Create text file containing time-stamped update
+    preformattedTime = time.localtime()
+    formattedTime = time.strftime("%m-%d-%Y %H:%M:%S", preformattedTime)
+    
+    with open('New Songs (' + formattedTime + ')', 'a') as playlist:
         
-        os.mkdir(musicDir)
-        print("new directory created")
+        pass
 
-    pass
 
-def get_dir_file_count(baseDir):
+    updateFile = open('New Songs (' + formattedTime + ')', 'w')
+
+
+def get_dir_file_count(baseDir=str):
     """
     Returns file count for a given directory.
     """
     
     pass
 
-#update_dir()
-create_album_dir()
+def download_img(albumName=str, url=str):
+    """
+    Downloads the image from the provided url with the name of 'albumName'.jpg
+    """
+    response = requests.get(url)
+    with open('%s.jpg' % albumName, 'wb') as imgFile:
+        imgFile.write(response.content)

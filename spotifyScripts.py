@@ -1,5 +1,13 @@
 import spotipy
 
+def get_track_info(self, songID):
+    """
+    Returns track info for a given track ID.
+    """
+
+    urn = 'spotify:track:' + songID
+    return self.track(urn)
+
 def get_playlist_ids(self, username, playlist_id):
     """
     Returns object of ids for a given playlist.
@@ -13,6 +21,27 @@ def get_playlist_ids(self, username, playlist_id):
         t.extend(r['items'])
     for s in t: ids.append(s["track"]["id"])
     return ids
+
+def get_albums_from_ids(self, amLength, spotifyLength, idList):
+    """
+
+    """
+
+    # Array to hold album names
+    albumNames = []
+
+    # Iterate through idList (list of music ids)
+    for index in range(amLength, spotifyLength):
+        trackID = idList[index]
+        track = get_track_info(self, trackID)
+
+        # Only add if doesn't already exist in list
+        try:
+            albumNames.index(track['album']['name'])
+        except:
+            albumNames.append(track['album']['name'])
+
+    return albumNames
 
 def get_playlist_length(self, playlistId):
     """

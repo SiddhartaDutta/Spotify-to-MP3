@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import requests
 
 # Downlo
 import yt_dlp
@@ -10,6 +11,7 @@ import json
 import webbrowser
 
 import spotifyScripts
+import osScripts
 
 load_dotenv()
 
@@ -35,12 +37,18 @@ if(tempAMLength != currentSpotifyLength):
         print(difference)
 
         ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
+        
+        # image extraction test code
+        pprint(spotifyScripts.get_album_cover_url(sp, ids[0]))
+        osScripts.download_img('Eternal Atake', spotifyScripts.get_album_cover_url(sp, ids[0]))
 
-        for index in range(tempAMLength, currentSpotifyLength):
-        #for id in ids:
-                trackID = ids[index]
-                track = spotifyScripts.get_track_info(sp, trackID)
-                print(track['name']+ ' - ' + track['artists'][0]['name'])
+        # album name extraction test code
+        albums = spotifyScripts.get_albums_from_ids(sp, tempAMLength, currentSpotifyLength, ids)
+        pprint(albums)
+
+        # album directory creation test code
+        #osScripts.create_album_dir(albums)
+        
 
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
         #2T1a2GrAKZaAeBGw2WnBql     <- 78 song uzi playlist
