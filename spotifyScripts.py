@@ -36,12 +36,9 @@ def get_playlist_length(self, playlistId):
     #     if offset == response['total']:
     #         offset = -1
 
-def get_track_info(self, songID):
-    """
-    Returns track info for a given track ID.
-    """
+def get_album_cover_url(self, songID):
+    return get_track_info(self, songID)['album']['images'][0]['url']
 
-    urn = 'spotify:track:' + songID
-    return self.track(urn)
+
 
 # new method for outputting new track names with artists (from end of main.py)
