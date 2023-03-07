@@ -2,13 +2,15 @@ from dotenv import load_dotenv
 import os
 import requests
 
-# Downlo
+# Downloaded
 import yt_dlp
 import spotipy
 from spotipy import SpotifyOAuth
 #from spotipy.oauth2 import SpotifyClientCredentials
 import json
 import webbrowser
+
+from pprint import pprint
 
 import spotifyScripts
 import osScripts
@@ -27,14 +29,11 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
 
 ### Soundcloud Setup
 
-#print(spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql'))
-
 tempAMLength = 70
 currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
 
 if(tempAMLength != currentSpotifyLength):
-        difference = currentSpotifyLength - tempAMLength
-        print(difference)
+        print(currentSpotifyLength - tempAMLength)
 
         ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
         
@@ -48,10 +47,6 @@ if(tempAMLength != currentSpotifyLength):
 
         # album directory creation test code
         #osScripts.create_album_dir(albums)
-
-        # album download test code
-        
-        
         
 
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist

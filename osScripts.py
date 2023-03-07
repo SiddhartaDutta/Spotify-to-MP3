@@ -25,10 +25,12 @@ def create_album_dir(newAlbums=list):
     musicDir = os.getcwd()
     musicDir = os.path.join(musicDir, "Music")
 
-    try:
+    for album in newAlbums:
 
-        os.chdir(musicDir)
-        print('inside')
+        # If 'Music' directory exists, change directory into 'Music directory.
+        try:
+
+            os.chdir(musicDir)
 
         # If 'Music' directory doesn't exist, create 'Music' directory.
         except:
