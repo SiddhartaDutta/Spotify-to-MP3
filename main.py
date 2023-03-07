@@ -48,6 +48,10 @@ if(tempAMLength != currentSpotifyLength):
 
         # album directory creation test code
         #osScripts.create_album_dir(albums)
+
+        # album download test code
+        
+        
         
 
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
