@@ -1,6 +1,8 @@
 import os
 import time
 import requests
+import spotifyScripts
+from yt_dlp import YoutubeDL
 
 def update_dir():
     """
@@ -77,3 +79,30 @@ def download_img(albumName=str, url=str):
     response = requests.get(url)
     with open('%s.jpg' % albumName, 'wb') as imgFile:
         imgFile.write(response.content)
+
+ydl_opts = {
+    'format': 'bestaudio/best',
+    'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192'
+    }],
+    'postprocessor_args': [
+            '-ar', '16000'
+    ],
+    'prefer_ffmpeg': True,
+    'keepvideo': False
+}
+
+def download_songs_by_spotify_id(self, IDs=[]):
+    """
+    Downloads all songs by their Spotify ID.
+    """
+
+    for ID in IDs:
+        track = spotifyScripts.get_track_info(self, ID)
+        searchString = track['name'] + ' Official Audio'
+
+        with YoutubeDL(ydl_opts) as ydl:
+            videoURL = str(ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url'])
+            ydl.download(videoURL)

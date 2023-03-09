@@ -49,40 +49,40 @@ if(tempAMLength != currentSpotifyLength):
         # album directory creation test code
         #osScripts.create_album_dir(albums)
 
-        # print songs
+        # song download test code
 
-        ydl_opts = {
-                'format': 'bestaudio/best',
-                'postprocessors': [{
-                        'key': 'FFmpegExtractAudio',
-                        'preferredcodec': 'mp3',
-                        'preferredquality': '192'
-                }],
-                'postprocessor_args': [
-                        '-ar', '16000'
-                ],
-                'prefer_ffmpeg': True,
-                'keepvideo': False
-        }
+        # ydl_opts = {
+        #         'format': 'bestaudio/best',
+        #         'postprocessors': [{
+        #                 'key': 'FFmpegExtractAudio',
+        #                 'preferredcodec': 'mp3',
+        #                 'preferredquality': '192'
+        #         }],
+        #         'postprocessor_args': [
+        #                 '-ar', '16000'
+        #         ],
+        #         'prefer_ffmpeg': True,
+        #         'keepvideo': False
+        # }
 
-        for id in ids:
-                track = spotifyScripts.get_track_info(sp, id)
-                pprint(track['name'] + ' Official Audio')
-                searchString = track['name'] + ' Official Audio'
+        # for id in ids:
+        #         track = spotifyScripts.get_track_info(sp, id)
+        #         pprint(track['name'] + ' Official Audio')
+        #         searchString = track['name'] + ' Official Audio'
 
-                with YoutubeDL(ydl_opts) as ydl:
-                        video = str(ydl.extract_info(f"ytsearch:{searchString}", download= False)['entries'][0]['webpage_url'])
-                        pprint(video)
+        #         with YoutubeDL(ydl_opts) as ydl:
+        #                 video = str(ydl.extract_info(f"ytsearch:{searchString}", download= False)['entries'][0]['webpage_url'])
+        #                 pprint(video)
 
-                        ydl.download([video])
+        #                 ydl.download([video])
 
-                        break
+        #                 break
 
         # with YoutubeDL(ydl_opts) as ydl:
         #         ydl.download(['http://www.youtube.com/watch?v=BaW_jenozKc'])
 
-
-        # song download test code
+        osScripts.download_songs_by_spotify_id(sp, ids[tempAMLength:currentSpotifyLength])
+        #pprint(ids)
         
         
 
