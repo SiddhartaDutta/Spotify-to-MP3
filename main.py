@@ -10,8 +10,13 @@ from spotipy import SpotifyOAuth
 #from spotipy.oauth2 import SpotifyClientCredentials
 import json
 import webbrowser
+import glob
 
 from pprint import pprint
+from mutagen.mp3 import MP3
+from mutagen.id3 import ID3
+from mutagen.easyid3 import EasyID3  
+import mutagen.id3 
 
 import spotifyScripts
 import osScripts
@@ -30,7 +35,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
 
 ### Soundcloud Setup
 
-tempAMLength = 70
+tempAMLength = 79
 currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
 
 if(tempAMLength != currentSpotifyLength):
@@ -81,10 +86,41 @@ if(tempAMLength != currentSpotifyLength):
         # with YoutubeDL(ydl_opts) as ydl:
         #         ydl.download(['http://www.youtube.com/watch?v=BaW_jenozKc'])
 
-        osScripts.download_songs_by_spotify_id(sp, ids[tempAMLength:currentSpotifyLength])
+        #osScripts.download_songs_by_spotify_id(sp, ids[tempAMLength:currentSpotifyLength])
         #pprint(ids)
-        
-        
 
+        # ***** metadata test code *****
+        # audio = MP3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
+        # audio.pprint()
+        
+        audiop2 = ID3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
+        audiop2.pprint()
+
+        mp3Files = glob.glob("*.mp3")
+        
+        for path in mp3Files:
+                print(path)
+        
+        # get position in album
+        track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
+        pprint(track)
+        pprint(str(track['track_number']) + '/' + str(track['album']['total_tracks']))
+
+        mp3File = MP3(mp3Files[0], ID3=EasyID3)
+        print(mp3File)
+
+        # identify and create string of album artists
+        albumArtists = ''
+        numArtistsInAlbum = len(track['album']['artists'])
+        for i in range(numArtistsInAlbum):
+                if i:
+                        albumArtists += ', '
+                
+                albumArtists += track['album']['artists'][i]['name']
+
+        # set album artists tag
+        mp3File['albumartist'] = albumArtists
+
+        print(mp3File)
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
         #2T1a2GrAKZaAeBGw2WnBql     <- 78 song uzi playlist

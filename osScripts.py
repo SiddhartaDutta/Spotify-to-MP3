@@ -1,5 +1,7 @@
 import os
 import time
+import json
+import pprint
 import requests
 import spotifyScripts
 from yt_dlp import YoutubeDL
@@ -101,8 +103,11 @@ def download_songs_by_spotify_id(self, IDs=[]):
 
     for ID in IDs:
         track = spotifyScripts.get_track_info(self, ID)
-        searchString = track['name'] + ' Official Audio'
+        searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
+        track
 
         with YoutubeDL(ydl_opts) as ydl:
-            videoURL = str(ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url'])
+            videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']
+
+            #pprint(json.dumps(ydl.sanitize_info(ydl.extract_info(f'ytsearch:{searchString}', download=False))))
             ydl.download(videoURL)
