@@ -35,20 +35,21 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
 
 ### Soundcloud Setup
 
-tempAMLength = 79
-currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
+#tempAMLength = 76
 
-if(tempAMLength != currentSpotifyLength):
+#currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
+
+#if(tempAMLength != currentSpotifyLength):
         #print(currentSpotifyLength - tempAMLength)
 
-        ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
+        # ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
         
-        # ***** image extraction test code *****
-        #pprint(spotifyScripts.get_album_cover_url(sp, ids[0]))
-        osScripts.download_img('Eternal Atake', spotifyScripts.get_album_cover_url(sp, ids[0]))
+        # # ***** image extraction test code *****
+        # #pprint(spotifyScripts.get_album_cover_url(sp, ids[0]))
+        # osScripts.download_img('Eternal Atake', spotifyScripts.get_album_cover_url(sp, ids[0]))
 
-        # ***** album name extraction test code *****
-        albums = spotifyScripts.get_albums_from_ids(sp, tempAMLength, currentSpotifyLength, ids)
+        # # ***** album name extraction test code *****
+        # albums = spotifyScripts.get_albums_from_ids(sp, tempAMLength, currentSpotifyLength, ids)
         #pprint(albums)
 
         # ***** album directory creation test code *****
@@ -89,42 +90,42 @@ if(tempAMLength != currentSpotifyLength):
         #osScripts.download_songs_by_spotify_id(sp, ids[tempAMLength:currentSpotifyLength])
         #pprint(ids)
 
-        # ***** metadata test code *****
-        audio = MP3('Travis Scott - BACC.mp3')
-        #print(audio)
-        print(audio.pprint())
+        # # ***** metadata test code *****
+        # audio = MP3('Travis Scott - BACC.mp3')
+        # #print(audio)
+        # print(audio.pprint())
         
-        audiop2 = ID3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
-        audiop2.pprint()
+        # audiop2 = ID3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
+        # audiop2.pprint()
 
-        mp3Files = glob.glob("*.mp3")
+        # mp3Files = glob.glob("*.mp3")
         
-        for path in mp3Files:
-                print(path)
+        # for path in mp3Files:
+        #         print(path)
         
-        # get position in album
-        track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
-        #pprint(track)
-        pprint(str(track['track_number']) + '/' + str(track['album']['total_tracks']))
+        # # get position in album
+        # track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
+        # #pprint(track)
+        # pprint(str(track['track_number']) + '/' + str(track['album']['total_tracks']))
 
-        mp3File = MP3(mp3Files[0], ID3=ID3)
-        #print(mp3File)
+        # mp3File = MP3(mp3Files[0], ID3=ID3)
+        # #print(mp3File)
 
-        try:
-                mp3File.add_tags()
-        except error:
-                pass
+        # try:
+        #         mp3File.add_tags()
+        # except error:
+        #         pass
 
-        mp3File.tags.add(APIC(mime='image/jpeg', type=3,desc=u'Cover',data=open('Eternal Atake.jpg', 'rb').read()))
-        mp3File.save()
-        mp3F = MP3(mp3Files[0], ID3=EasyID3)
-        print(mp3F)
+        # mp3File.tags.add(APIC(mime='image/jpeg', type=3,desc=u'Cover',data=open('Eternal Atake.jpg', 'rb').read()))
+        # mp3File.save()
+        # mp3F = MP3(mp3Files[0], ID3=EasyID3)
+        # print(mp3F)
 
-        audio2 = MP3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
-        print(audio2.pprint())
+        # audio2 = MP3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
+        # print(audio2.pprint())
 
-        mp3File2 = MP3(mp3Files[1], ID3=EasyID3)
-        print(mp3File2)
+        # mp3File2 = MP3(mp3Files[1], ID3=EasyID3)
+        # print(mp3File2)
 
         # # identify and create string of album artists
         # albumArtists = ''
@@ -139,5 +140,33 @@ if(tempAMLength != currentSpotifyLength):
         # mp3File['albumartist'] = albumArtists
 
         # print(mp3File)
+
+        # ***** FINAL SCRIPT SETUP *****
+# Get Apple Music playlist lengths & Spotify playlist IDs
+AMPlaylistLengths = [0, 76]
+playlistIDs = json.loads(os.environ['PLAYLISTS'])
+
+# Iterate through each Spotify playlist and compare length to Apple Music lengths
+for n in range(len(playlistIDs)):
+
+        currentSpotifyLength = spotifyScripts.get_playlist_length(sp, playlistIDs[n])
+
+        if(currentSpotifyLength != AMPlaylistLengths[n]):
+
+                # Get song IDs for non-equal Spotify playlist
+                songIDs = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), playlistIDs[n])
+
+                # Get albums of missing songs
+                newAlbums = spotifyScripts.get_albums_from_ids(sp, AMPlaylistLengths[n], currentSpotifyLength, songIDs)
+                pprint(newAlbums)
+
+                # Make directories
+                osScripts.create_album_dirs(newAlbums)
+
+                # Download songs
+
+                # Download images
+
+                pass
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
         #2T1a2GrAKZaAeBGw2WnBql     <- 78 song uzi playlist

@@ -25,10 +25,12 @@ def update_dir():
 
     #os.mkdir(newPath)
 
-def create_album_dir(newAlbums=list):
+def create_album_dirs(newAlbums=list):
     """
     Creates directories for albums passed in.
     """
+
+    currDir = os.getcwd()
 
     musicDir = os.getcwd()
     musicDir = os.path.join(musicDir, "Music")
@@ -69,6 +71,9 @@ def create_album_dir(newAlbums=list):
 
 
     updateFile = open('New Songs (' + formattedTime + ')', 'w')
+
+    # Change back to original directory
+    os.chdir(currDir)
 
 
 def get_dir_file_count(baseDir=str):
