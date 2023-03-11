@@ -14,7 +14,7 @@ import glob
 
 from pprint import pprint
 from mutagen.mp3 import MP3
-from mutagen.id3 import ID3
+from mutagen.id3 import ID3, APIC, error
 from mutagen.easyid3 import EasyID3  
 import mutagen.id3 
 
@@ -43,18 +43,18 @@ if(tempAMLength != currentSpotifyLength):
 
         ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
         
-        # image extraction test code
+        # ***** image extraction test code *****
         #pprint(spotifyScripts.get_album_cover_url(sp, ids[0]))
         osScripts.download_img('Eternal Atake', spotifyScripts.get_album_cover_url(sp, ids[0]))
 
-        # album name extraction test code
+        # ***** album name extraction test code *****
         albums = spotifyScripts.get_albums_from_ids(sp, tempAMLength, currentSpotifyLength, ids)
         #pprint(albums)
 
-        # album directory creation test code
+        # ***** album directory creation test code *****
         #osScripts.create_album_dir(albums)
 
-        # song download test code
+        # ***** song download test code *****
 
         # ydl_opts = {
         #         'format': 'bestaudio/best',
@@ -90,8 +90,9 @@ if(tempAMLength != currentSpotifyLength):
         #pprint(ids)
 
         # ***** metadata test code *****
-        # audio = MP3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
-        # audio.pprint()
+        audio = MP3('Travis Scott - BACC.mp3')
+        #print(audio)
+        print(audio.pprint())
         
         audiop2 = ID3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
         audiop2.pprint()
@@ -103,24 +104,40 @@ if(tempAMLength != currentSpotifyLength):
         
         # get position in album
         track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
-        pprint(track)
+        #pprint(track)
         pprint(str(track['track_number']) + '/' + str(track['album']['total_tracks']))
 
-        mp3File = MP3(mp3Files[0], ID3=EasyID3)
-        print(mp3File)
+        mp3File = MP3(mp3Files[0], ID3=ID3)
+        #print(mp3File)
 
-        # identify and create string of album artists
-        albumArtists = ''
-        numArtistsInAlbum = len(track['album']['artists'])
-        for i in range(numArtistsInAlbum):
-                if i:
-                        albumArtists += ', '
+        try:
+                mp3File.add_tags()
+        except error:
+                pass
+
+        mp3File.tags.add(APIC(mime='image/jpeg', type=3,desc=u'Cover',data=open('Eternal Atake.jpg', 'rb').read()))
+        mp3File.save()
+        mp3F = MP3(mp3Files[0], ID3=EasyID3)
+        print(mp3F)
+
+        audio2 = MP3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
+        print(audio2.pprint())
+
+        mp3File2 = MP3(mp3Files[1], ID3=EasyID3)
+        print(mp3File2)
+
+        # # identify and create string of album artists
+        # albumArtists = ''
+        # numArtistsInAlbum = len(track['album']['artists'])
+        # for i in range(numArtistsInAlbum):
+        #         if i:
+        #                 albumArtists += ', '
                 
-                albumArtists += track['album']['artists'][i]['name']
+        #         albumArtists += track['album']['artists'][i]['name']
 
-        # set album artists tag
-        mp3File['albumartist'] = albumArtists
+        # # set album artists tag
+        # mp3File['albumartist'] = albumArtists
 
-        print(mp3File)
+        # print(mp3File)
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
         #2T1a2GrAKZaAeBGw2WnBql     <- 78 song uzi playlist

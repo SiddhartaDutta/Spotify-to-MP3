@@ -67,9 +67,9 @@ def get_playlist_length(self, playlistId):
 
 def get_album_cover_url(self, songID=str):
     """
-    Returns 640x640 album cover image url.
+    Returns 300x300 album cover image url.
     """
-    return get_track_info(self, songID)['album']['images'][0]['url']
+    return get_track_info(self, songID)['album']['images'][1]['url']
 
 def download_album(self):
     pass

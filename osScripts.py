@@ -111,3 +111,6 @@ def download_songs_by_spotify_id(self, IDs=[]):
 
             #pprint(json.dumps(ydl.sanitize_info(ydl.extract_info(f'ytsearch:{searchString}', download=False))))
             ydl.download(videoURL)
+
+def edit_id3_tags():
+    pass
