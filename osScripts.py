@@ -1,10 +1,14 @@
 import os
-import time
+import glob
 import json
+import time
 import pprint
 import requests
 import spotifyScripts
 from yt_dlp import YoutubeDL
+from mutagen.mp3 import MP3
+from mutagen.easyid3 import EasyID3  
+from mutagen.id3 import ID3, APIC, error
 
 def update_dir():
     """
@@ -112,5 +116,26 @@ def download_songs_by_spotify_id(self, IDs=[]):
             #pprint(json.dumps(ydl.sanitize_info(ydl.extract_info(f'ytsearch:{searchString}', download=False))))
             ydl.download(videoURL)
 
-def edit_id3_tags():
-    pass
+def add_img_to_id3_for_album(directory=str):
+    """
+    Edits all ID3 tags for songs in a directory.
+    """
+
+    # Get path of all .mp3 files and .jpg album cover file
+    mp3Files = glob.glob('*.mp3')
+    albumCoverPath = glob.glob('.jpg')[0]
+
+    for song in mp3Files:
+
+        tempFile = MP3(song, ID3=ID3)
+
+        # Add tags in-case there are none
+        try:
+            tempFile.add_tags()
+        except error:
+            pass
+
+        # Add image to ID3 and save
+        tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
+        tempFile.save()
+
