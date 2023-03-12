@@ -56,9 +56,8 @@ def create_album_dirs(playlistName=str, newAlbums=list):
                 newAlbumDir = os.path.join(musicDir, album)
                 os.mkdir(newAlbumDir)
 
-            # If album already exists, ___.
+            # If album already exists, skip.
             except:
-                
                 pass
             
     # Create text file containing time-stamped update
@@ -74,7 +73,6 @@ def create_album_dirs(playlistName=str, newAlbums=list):
 
     # Change back to original directory
     os.chdir(currDir)
-
 
 def get_dir_file_count(baseDir=str):
     """
@@ -111,13 +109,15 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
     """
 
     for index in range(amLength, spotifyLength):
+
+        # Create string to search for song with
         track = spotifyScripts.get_track_info(self, IDs[index])
         searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
 
         # Extract ID3 data
         albumName = str(track['album']['name'])
         releaseDate = '2014'
-        genre = 'Hip-hop'
+        genre = 'Hip-Hop/Rap'
         title = str(track['name'])
         tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
         
@@ -139,12 +139,12 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
 
             songArtist += track['artists'][index]['name']
 
-        #pprint(track)
-
+        # Download song and edit ID3 tags
         with YoutubeDL(ydl_opts) as ydl:
+
+            # Get URL for song
             videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']
     
-            #pprint(json.dumps(ydl.sanitize_info(ydl.extract_info(f'ytsearch:{searchString}', download=False))))
             # Change directory to add song to correct album folder
             currDir = os.getcwd()
             musicDir = os.getcwd()
@@ -154,11 +154,9 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
             # Download song
             ydl.download(videoURL)
 
-            # Rename
+            # Rename last downloaded file
             listOfFiles = glob.glob("*.mp3")
             latestFile = max(listOfFiles, key=os.path.getctime)
-            print(latestFile)
-            print(musicDir)
             os.rename(latestFile, title + '.mp3')
 
             # Adjust path to newest song
@@ -167,6 +165,7 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
             # Change ID3 tags
             add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
 
+            # Reset directory
             os.chdir(currDir)
 
 def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber):
@@ -191,8 +190,6 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
 
     tempFile.save()
 
-    print(tempFile.pprint())
-
 def add_img_to_id3_for_album(directory=str):
     """
     Edits all ID3 tags for songs in a directory.
@@ -215,4 +212,3 @@ def add_img_to_id3_for_album(directory=str):
         # Add image to ID3 and save
         tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
         tempFile.save()
-

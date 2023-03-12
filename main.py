@@ -142,31 +142,35 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
         # print(mp3File)
 
         # ***** FINAL SCRIPT SETUP *****
-# Get Apple Music playlist lengths & Spotify playlist IDs
-AMPlaylistLengths = [0, 76]
+# Get Spotify playlist IDs & Apple Music playlist lengths
 playlistIDs = json.loads(os.environ['PLAYLISTS'])
+AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
 
 # Iterate through each Spotify playlist and compare length to Apple Music lengths
-for n in range(len(playlistIDs)):
+for playlist in range(len(playlistIDs)):
 
-        currentSpotifyLength = spotifyScripts.get_playlist_length(sp, playlistIDs[n])
+        currentSpotifyLength = spotifyScripts.get_playlist_length(sp, playlistIDs[playlist])
 
-        if(currentSpotifyLength != AMPlaylistLengths[n]):
+        if(currentSpotifyLength != AMPlaylistLengths[playlist]):
 
                 # Get song IDs for non-equal Spotify playlist
-                songIDs = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), playlistIDs[n])
+                songIDs = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), playlistIDs[playlist])
 
                 # Get albums of missing songs
-                newAlbums = spotifyScripts.get_albums_from_ids(sp, AMPlaylistLengths[n], currentSpotifyLength, songIDs)
+                newAlbums = spotifyScripts.get_albums_from_ids(sp, int(AMPlaylistLengths[playlist]), currentSpotifyLength, songIDs)
                 pprint(newAlbums)
 
                 # Make directories
-                osScripts.create_album_dirs((sp.playlist(playlistIDs[n]))['name'], newAlbums)
+                osScripts.create_album_dirs((sp.playlist(playlistIDs[playlist]))['name'], newAlbums)
 
                 # Download songs
-                osScripts.download_songs_by_spotify_id(sp, songIDs, AMPlaylistLengths[n], currentSpotifyLength)
+                osScripts.download_songs_by_spotify_id(sp, songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
 
                 # Download images
+
+                # Update Apple Music playlist lengths automatically
+                AMPlaylistLengths[playlist] = currentSpotifyLength
+                os.environ['AMPLAYLISTLENGTHS'] = str(AMPlaylistLengths)
 
                 pass
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist
