@@ -35,14 +35,14 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
 
 ### Soundcloud Setup
 
-#tempAMLength = 76
+# tempAMLength = 76
 
-#currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
+# currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
 
-#if(tempAMLength != currentSpotifyLength):
-        #print(currentSpotifyLength - tempAMLength)
+# #if(tempAMLength != currentSpotifyLength):
+#         #print(currentSpotifyLength - tempAMLength)
 
-        # ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
+# ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
         
         # # ***** image extraction test code *****
         # #pprint(spotifyScripts.get_album_cover_url(sp, ids[0]))
@@ -91,9 +91,9 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
         #pprint(ids)
 
         # # ***** metadata test code *****
-        # audio = MP3('Travis Scott - BACC.mp3')
-        # #print(audio)
-        # print(audio.pprint())
+# audio = MP3('Travis Scott - BACC.mp3', ID3=EasyID3)
+# #print(audio)
+# print(audio.pprint())
         
         # audiop2 = ID3('Lil Uzi Vert - Venetia [Official Audio] [hihYATpt9oo].mp3')
         # audiop2.pprint()
@@ -104,8 +104,8 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
         #         print(path)
         
         # # get position in album
-        # track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
-        # #pprint(track)
+# track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
+# pprint(track)
         # pprint(str(track['track_number']) + '/' + str(track['album']['total_tracks']))
 
         # mp3File = MP3(mp3Files[0], ID3=ID3)
@@ -161,9 +161,10 @@ for n in range(len(playlistIDs)):
                 pprint(newAlbums)
 
                 # Make directories
-                osScripts.create_album_dirs(newAlbums)
+                osScripts.create_album_dirs((sp.playlist(playlistIDs[n]))['name'], newAlbums)
 
                 # Download songs
+                osScripts.download_songs_by_spotify_id(sp, songIDs, AMPlaylistLengths[n], currentSpotifyLength)
 
                 # Download images
 
