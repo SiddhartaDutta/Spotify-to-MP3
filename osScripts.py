@@ -121,15 +121,23 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
         title = str(track['name'])
         tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
         
+            # Extract all album artists
         albumArtist = ''
-        for artist in track['album']['artists']:
-            if artist != track['album']['artists'][0]:
+        numArtistsOnAlbum = len(track['album']['artists'])
+        for index in range(numArtistsOnAlbum):
+            if index:
                 albumArtist += ', '
         
-            albumArtist += str(artist)
+            albumArtist += track['album']['artists'][index]['name']
 
-        songArtist = 'test'
+            # Extract all song artists
+        songArtist = ''
+        numArtistsOnSong = len(track['artists'])
+        for index in range(numArtistsOnSong):
+            if index:
+                songArtist += ', '
 
+            songArtist += track['artists'][index]['name']
 
         #pprint(track)
 
@@ -153,11 +161,11 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
             print(musicDir)
             os.rename(latestFile, title + '.mp3')
 
-            # Get new song path
-            PATH = musicDir
+            # Adjust path to newest song
+            musicDir = os.path.join(musicDir, title + '.mp3')
 
             # Change ID3 tags
-            #add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
+            add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
 
             os.chdir(currDir)
 
@@ -182,8 +190,8 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
     tempFile['tracknumber'] = tracknumber
 
     tempFile.save()
+
     print(tempFile.pprint())
-    pass
 
 def add_img_to_id3_for_album(directory=str):
     """
