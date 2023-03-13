@@ -1,8 +1,6 @@
 import os
 import glob
-import json
 import time
-import pprint
 import requests
 import spotifyScripts
 from yt_dlp import YoutubeDL
@@ -35,6 +33,9 @@ def create_album_dirs(playlistName=str, newAlbums=list):
     musicDir = os.getcwd()
     musicDir = os.path.join(musicDir, "Music")
 
+    # Based on if there are new albums to be processed (new albums implies new songs)
+    newSongs = False
+
     for album in newAlbums:
 
         # If 'Music' directory exists, change directory into 'Music directory.
@@ -56,20 +57,16 @@ def create_album_dirs(playlistName=str, newAlbums=list):
                 newAlbumDir = os.path.join(musicDir, album)
                 os.mkdir(newAlbumDir)
 
-            # Once file exists, download album cover.
+                newSongs = True
+
+            # Even if album directory exists, set newSong flag to True
             except:
-                pass
+                newSongs = True
             
-    # Create text file containing time-stamped update
-    preformattedTime = time.localtime()
-    formattedTime = time.strftime("%m-%d-%Y %H:%M:%S", preformattedTime)
-    
-    with open(playlistName + ' (' + formattedTime + ')', 'a') as playlist:
-        
-        pass
-
-
-    #updateFile = open('New Songs (' + formattedTime + ')', 'w')
+    # Create text file if new songs exist, reset newSong flag
+    if newSongs:
+        with open('Playlist Update: ' + playlistName, 'a') as playlist:
+            newSongs = False
 
     # Change back to original directory
     os.chdir(currDir)
@@ -103,7 +100,7 @@ ydl_opts = {
     'keepvideo': False
 }
 
-def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
+def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, spotifyLength=int):
     """
     Downloads all songs by their Spotify ID.
     """
@@ -164,6 +161,13 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
 
             # Change ID3 tags
             add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
+
+            # Update "update" file
+            os.chdir('../')
+            with open('Playlist Update: ' + playlistName, 'a') as playlist:
+                print('[UPDATING PLAYLIST LIST]\n')
+                playlist.write('*\t' + 'ALBUM: ' + albumName)
+                playlist.write('\n \t' + 'TITLE: ' + title + '\n\n')
 
             # Reset directory
             os.chdir(currDir)
