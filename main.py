@@ -15,7 +15,7 @@ load_dotenv()
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTID"),
                                                client_secret=os.environ.get("CLIENTSECRET"),
                                                redirect_uri="http://localhost:1234/",
-                                               scope="user-library-read"))### Apple Music Setup### Soundcloud Setup
+                                               scope="user-library-read"))
 
 # tempAMLength = 76
 # currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
@@ -66,4 +66,3 @@ for playlist in range(len(playlistIDs)):
 
         else:
                 print("[NO UPDATE AVAILABLE] PLAYLIST: %-*s CURRENT LENGTH: %s" % (25, str((sp.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
-                
