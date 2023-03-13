@@ -1,3 +1,4 @@
+import dotenv
 from dotenv import load_dotenv
 import os
 import requests
@@ -35,14 +36,14 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
 
 ### Soundcloud Setup
 
-# tempAMLength = 76
+tempAMLength = 76
 
 # currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
 
 # #if(tempAMLength != currentSpotifyLength):
 #         #print(currentSpotifyLength - tempAMLength)
 
-# ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
+ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
         
         # # ***** image extraction test code *****
         # #pprint(spotifyScripts.get_album_cover_url(sp, ids[0]))
@@ -104,8 +105,8 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
         #         print(path)
         
         # # get position in album
-# track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
-# pprint(track)
+track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
+pprint(track)
         # pprint(str(track['track_number']) + '/' + str(track['album']['total_tracks']))
 
         # mp3File = MP3(mp3Files[0], ID3=ID3)
@@ -158,6 +159,7 @@ for playlist in range(len(playlistIDs)):
 
                 # Get albums of missing songs
                 newAlbums = spotifyScripts.get_albums_from_ids(sp, int(AMPlaylistLengths[playlist]), currentSpotifyLength, songIDs)
+                #newAlbumImgURLs = spotifyScripts.get_album_cover_url(sp, ids[0])
                 pprint(newAlbums)
 
                 # Make directories
@@ -170,7 +172,16 @@ for playlist in range(len(playlistIDs)):
 
                 # Update Apple Music playlist lengths automatically
                 AMPlaylistLengths[playlist] = currentSpotifyLength
-                os.environ['AMPLAYLISTLENGTHS'] = str(AMPlaylistLengths)
+                        # Convert list to strings
+                newStr = '['
+                for entry in range(len(AMPlaylistLengths)):
+                        tempStr = str(AMPlaylistLengths[entry])
+                        tempStr = '"' + tempStr + '",'
+                        newStr += tempStr
+                        print(tempStr)
+                newStr = newStr[:len(newStr)-1] + ']'
+                os.environ['AMPLAYLISTLENGTHS'] = str(newStr)
+                dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['AMPLAYLISTLENGTHS'])
 
                 pass
         #0CdFo515yc2vcintnGYG3b     <- single uzi playlist

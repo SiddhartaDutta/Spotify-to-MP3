@@ -56,7 +56,7 @@ def create_album_dirs(playlistName=str, newAlbums=list):
                 newAlbumDir = os.path.join(musicDir, album)
                 os.mkdir(newAlbumDir)
 
-            # If album already exists, skip.
+            # Once file exists, download album cover.
             except:
                 pass
             
@@ -116,7 +116,7 @@ def download_songs_by_spotify_id(self, IDs=[], amLength=int, spotifyLength=int):
 
         # Extract ID3 data
         albumName = str(track['album']['name'])
-        releaseDate = '2014'
+        releaseDate = str(track['album']['release_date'])
         genre = 'Hip-Hop/Rap'
         title = str(track['name'])
         tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
@@ -189,6 +189,8 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
     tempFile['tracknumber'] = tracknumber
 
     tempFile.save()
+
+    print('\n[NEW FILE]\n' + tempFile.pprint() + '\n')
 
 def add_img_to_id3_for_album(directory=str):
     """
