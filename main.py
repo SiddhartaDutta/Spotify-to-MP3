@@ -17,11 +17,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
                                                redirect_uri="http://localhost:1234/",
                                                scope="user-library-read"))
 
-# tempAMLength = 76
-# currentSpotifyLength = spotifyScripts.get_playlist_length(sp, '2T1a2GrAKZaAeBGw2WnBql')
-# ids = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), '2T1a2GrAKZaAeBGw2WnBql')
-# track = spotifyScripts.get_track_info(sp, ids[tempAMLength-2])
-# pprint(track)
+
 
 # *****         MAIN SCRIPT         *****
 
@@ -37,22 +33,31 @@ for playlist in range(len(playlistIDs)):
         if(currentSpotifyLength != int(AMPlaylistLengths[playlist])):
 
                 # Get song IDs for non-equal Spotify playlist
+                print('[CACHING SONG IDS]\n')
                 songIDs = spotifyScripts.get_playlist_ids(sp, os.environ.get("USERNAME"), playlistIDs[playlist])
 
                 # Get albums of missing songs
+                print('[CACHING ALBUM NAMES OF MISSING SONGS]\n')
                 newAlbums = spotifyScripts.get_albums_from_ids(sp, int(AMPlaylistLengths[playlist]), currentSpotifyLength, songIDs)
-                #newAlbumImgURLs = spotifyScripts.get_album_cover_url(sp, ids[0])
-                #pprint(newAlbums)
 
                 # Make directories
+                print('[CREATING ALBUM DIRECTORIES]\n')
                 osScripts.create_album_dirs((sp.playlist(playlistIDs[playlist]))['name'], newAlbums)
 
                 # Download songs & images
+                print('[DOWNLOADING SONGS AND ALBUM COVERS]\n')
                 osScripts.download_songs_by_spotify_id(sp, (sp.playlist(playlistIDs[playlist]))['name'], songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
 
                 # Move images
+                print('[MOVING .JPG FILES]\n')
+                osScripts.move_images_to_album_dirs()
+
+                # Update all image tags
+                print('[UPDATING ID3 IMAGE TAGS]\n')
+                osScripts.update_img_tags()
 
                 # Update Apple Music playlist lengths automatically
+                print('[UPDATING ENVIRONMENT VARIABLES]\n')
                 AMPlaylistLengths[playlist] = currentSpotifyLength
                         # Convert list to strings
                 newStr = '['
@@ -64,5 +69,6 @@ for playlist in range(len(playlistIDs)):
                 os.environ['AMPLAYLISTLENGTHS'] = str(newStr)
                 dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['AMPLAYLISTLENGTHS'])
 
+                print('[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((sp.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
         else:
-                print("[NO UPDATE AVAILABLE] PLAYLIST: %-*s CURRENT LENGTH: %s" % (25, str((sp.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
+                print("[NO UPDATE AVAILABLE] %-*s PLAYLIST: %-*s CURRENT LENGTH: %s\n" % (4, '', 25, str((sp.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))

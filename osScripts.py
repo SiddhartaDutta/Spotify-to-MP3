@@ -1,6 +1,7 @@
 import os
 import glob
 import time
+import shutil
 import requests
 import spotifyScripts
 from yt_dlp import YoutubeDL
@@ -192,9 +193,21 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             download_img(albumName, spotifyScripts.get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
+    """
+    Move images from base directory into album directories.
+    """
+
+    basePath = os.path.join(os.getcwd(), "Music/")
     imagePaths = glob.glob('*.jpg')
-    
-    pass
+
+    for image in imagePaths:
+
+        # Extract album name from image and create target path
+        tempStr = image[:(len(image)-4)]
+        tempTargetPath = os.path.join(basePath, tempStr, image)
+
+        # Move images from main directory into album directories
+        shutil.move(image, tempTargetPath)   
 
 def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber):
     """
@@ -220,14 +233,17 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
 
     print('\n[NEW FILE]\n' + tempFile.pprint() + '\n')
 
-def add_img_to_id3_for_album(directory=str):
+def add_img_to_id3_for_album(targetDirectory=str):
     """
     Edits all ID3 tags for songs in a directory.
     """
 
+    currDir = os.getcwd()
+    os.chdir(targetDirectory)
+
     # Get path of all .mp3 files and .jpg album cover file
     mp3Files = glob.glob('*.mp3')
-    albumCoverPath = glob.glob('.jpg')[0]
+    albumCoverPath = glob.glob('*.jpg')[0]
 
     for song in mp3Files:
 
@@ -242,3 +258,24 @@ def add_img_to_id3_for_album(directory=str):
         # Add image to ID3 and save
         tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
         tempFile.save()
+
+    os.chdir(currDir)
+
+def update_img_tags():
+    """
+    Steps through directories applying saved image to ID3 album cover tag.
+    """
+
+    currDir = os.getcwd()
+
+    # Switch into Music directory
+    os.chdir(os.path.join(os.getcwd(), 'Music'))
+
+    # Cache subdirectories
+    dirPaths = glob.glob(f'{os.getcwd()}/*/')
+
+    # Update
+    for directory in dirPaths:
+        add_img_to_id3_for_album(directory)
+
+    os.chdir(currDir)
