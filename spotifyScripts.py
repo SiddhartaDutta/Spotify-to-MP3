@@ -24,7 +24,7 @@ def get_playlist_ids(self, username, playlist_id):
 
 def get_albums_from_ids(self, amLength, spotifyLength, idList):
     """
-
+    Returns list of albums for given song IDs without repetition.
     """
 
     # Array to hold album names

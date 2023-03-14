@@ -62,6 +62,11 @@ def create_album_dirs(playlistName=str, newAlbums=list):
             # Even if album directory exists, set newSong flag to True
             except:
                 newSongs = True
+
+            # Once in directory, download image if image does not exist
+            finally:
+
+                pass
             
     # Create text file if new songs exist, reset newSong flag
     if newSongs:
@@ -82,9 +87,21 @@ def download_img(albumName=str, url=str):
     """
     Downloads the image from the provided url with the name of 'albumName'.jpg
     """
-    response = requests.get(url)
-    with open('%s.jpg' % albumName, 'wb') as imgFile:
-        imgFile.write(response.content)
+
+    jpgList = glob.glob('*.jpg')
+    imageExists = False
+
+    # Check if image exists
+    for image in jpgList:
+        if image == (albumName + '.jpg'):
+            imageExists = True
+
+    # If image doesn't exist, download image
+    if not imageExists:
+        response = requests.get(url)
+        with open('%s.jpg' % albumName, 'wb') as imgFile:
+            imgFile.write(response.content)
+
 
 ydl_opts = {
     'format': 'bestaudio/best',
@@ -106,7 +123,6 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
     """
 
     for index in range(amLength, spotifyLength):
-
         # Create string to search for song with
         track = spotifyScripts.get_track_info(self, IDs[index])
         searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
@@ -121,20 +137,20 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             # Extract all album artists
         albumArtist = ''
         numArtistsOnAlbum = len(track['album']['artists'])
-        for index in range(numArtistsOnAlbum):
-            if index:
+        for n in range(numArtistsOnAlbum):
+            if n:
                 albumArtist += ', '
         
-            albumArtist += track['album']['artists'][index]['name']
+            albumArtist += track['album']['artists'][n]['name']
 
             # Extract all song artists
         songArtist = ''
         numArtistsOnSong = len(track['artists'])
-        for index in range(numArtistsOnSong):
-            if index:
+        for n in range(numArtistsOnSong):
+            if n:
                 songArtist += ', '
 
-            songArtist += track['artists'][index]['name']
+            songArtist += track['artists'][n]['name']
 
         # Download song and edit ID3 tags
         with YoutubeDL(ydl_opts) as ydl:
@@ -171,6 +187,14 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
 
             # Reset directory
             os.chdir(currDir)
+
+            # Download album cover
+            download_img(albumName, spotifyScripts.get_album_cover_url(self, IDs[index]))
+
+def move_images_to_album_dirs():
+    imagePaths = glob.glob('*.jpg')
+    
+    pass
 
 def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber):
     """

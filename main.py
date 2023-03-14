@@ -47,10 +47,10 @@ for playlist in range(len(playlistIDs)):
                 # Make directories
                 osScripts.create_album_dirs((sp.playlist(playlistIDs[playlist]))['name'], newAlbums)
 
-                # Download songs
+                # Download songs & images
                 osScripts.download_songs_by_spotify_id(sp, (sp.playlist(playlistIDs[playlist]))['name'], songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
 
-                # Download images
+                # Move images
 
                 # Update Apple Music playlist lengths automatically
                 AMPlaylistLengths[playlist] = currentSpotifyLength
