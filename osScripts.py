@@ -237,13 +237,14 @@ def add_img_to_id3_for_album(targetDirectory=str):
     """
     Edits all ID3 tags for songs in a directory.
     """
-
+    #print(targetDirectory)
     currDir = os.getcwd()
     os.chdir(targetDirectory)
 
     # Get path of all .mp3 files and .jpg album cover file
     mp3Files = glob.glob('*.mp3')
-    albumCoverPath = glob.glob('*.jpg')[0]
+    albumCoverPath = ''.join(glob.glob('*.jpg'))
+    print(albumCoverPath)
 
     for song in mp3Files:
 
@@ -256,8 +257,11 @@ def add_img_to_id3_for_album(targetDirectory=str):
             pass
 
         # Add image to ID3 and save
-        tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
-        tempFile.save()
+        #print(albumCoverPath)
+        if not albumCoverPath == '':
+            #print(albumCoverPath)
+            tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
+            tempFile.save()
 
     os.chdir(currDir)
 
