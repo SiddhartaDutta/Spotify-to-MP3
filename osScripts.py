@@ -111,9 +111,9 @@ ydl_opts = {
             'preferredcodec': 'mp3',
             'preferredquality': '192'
     }],
-    'postprocessor_args': [
-            '-ar', '16000'
-    ],
+    # 'postprocessor_args': [
+    #         '-ar', '16000'
+    # ],
     'prefer_ffmpeg': True,
     'keepvideo': False
 }
