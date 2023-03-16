@@ -275,6 +275,11 @@ def add_img_to_id3_for_album(targetDirectory=str):
         else:
             print('[ERROR: .JPG NOT FOUND] ALBUM: ' + targetDirectory)
 
+    # Delete image file
+    try:
+        os.remove(albumCoverPath)
+    except:
+        pass
     os.chdir(currDir)
 
 def update_img_tags():
