@@ -165,8 +165,18 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             musicDir = os.path.join(musicDir, "Music/" + str(track['album']['name']))
             os.chdir(musicDir)
 
-            # Download song
-            ydl.download(videoURL)
+            successfulDownload = False
+            while not successfulDownload:
+                try:
+                    # Download song
+                    ydl.download(videoURL)
+
+                    successfulDownload = True
+                except:
+                    print('[TIMEOUT ERROR] WAITING...')
+                    time.sleep(3)
+                    print('[RETRYING...]\n')
+
 
             # Rename last downloaded file
             listOfFiles = glob.glob("*.mp3")
@@ -262,6 +272,8 @@ def add_img_to_id3_for_album(targetDirectory=str):
             #print(albumCoverPath)
             tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
             tempFile.save()
+        else:
+            print('[ERROR: .JPG NOT FOUND] ALBUM: ' + targetDirectory)
 
     os.chdir(currDir)
 
