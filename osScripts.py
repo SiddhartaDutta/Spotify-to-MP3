@@ -39,6 +39,8 @@ def create_album_dirs(playlistName=str, newAlbums=list):
 
     for album in newAlbums:
 
+        album = remove_slashes(album)
+
         # If 'Music' directory exists, change directory into 'Music directory.
         try:
 
@@ -162,7 +164,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             # Change directory to add song to correct album folder
             currDir = os.getcwd()
             musicDir = os.getcwd()
-            musicDir = os.path.join(musicDir, "Music/" + str(track['album']['name']))
+            musicDir = os.path.join(musicDir, "Music/" + remove_slashes(str(track['album']['name'])))
             os.chdir(musicDir)
 
             successfulDownload = False
@@ -200,7 +202,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             os.chdir(currDir)
 
             # Download album cover
-            download_img(albumName, spotifyScripts.get_album_cover_url(self, IDs[index]))
+            download_img(remove_slashes(albumName), spotifyScripts.get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
     """
@@ -300,3 +302,9 @@ def update_img_tags():
         add_img_to_id3_for_album(directory)
 
     os.chdir(currDir)
+
+def remove_slashes(string=str):
+    """
+    Replaces all slashes in a string.
+    """
+    return string.replace('/', ' ')
