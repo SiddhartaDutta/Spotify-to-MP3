@@ -247,7 +247,7 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
 
 def add_img_to_id3_for_album(targetDirectory=str):
     """
-    Edits all ID3 tags for songs in a directory.
+    Edits image ID3 tag for songs in a directory.
     """
     #print(targetDirectory)
     currDir = os.getcwd()
@@ -308,3 +308,11 @@ def remove_slashes(string=str):
     Replaces all slashes in a string.
     """
     return string.replace('/', ' ')
+
+def modify_slashes(string=str):
+    """
+    """
+    return string.replace('/', "[$KEY$]")
+
+# create key to replace for slashes - replace in song name before creating file and etc.
+# or- figure out how to replace name during download itself- like how u can thru terminal
