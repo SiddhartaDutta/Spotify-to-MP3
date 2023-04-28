@@ -117,7 +117,8 @@ ydl_opts = {
     #         '-ar', '16000'
     # ],
     'prefer_ffmpeg': True,
-    'keepvideo': False
+    'keepvideo': False,
+    'outtmpl': 'NEW_MP3_FILE'
 }
 
 def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, spotifyLength=int):
@@ -134,7 +135,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
         albumName = str(track['album']['name'])
         releaseDate = str(track['album']['release_date'])
         genre = 'Hip-Hop/Rap'
-        title = str(track['name'])
+        title = remove_slashes(str(track['name']))
         tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
         
             # Extract all album artists
@@ -181,9 +182,15 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
 
 
             # Rename last downloaded file
-            listOfFiles = glob.glob("*.mp3")
-            latestFile = max(listOfFiles, key=os.path.getctime)
-            os.rename(latestFile, title + '.mp3')
+            # listOfFiles = glob.glob("*.mp3")
+            # latestFile = max(listOfFiles, key=os.path.getctime)
+            # print(latestFile)
+            #try:
+            os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
+            # except:
+            #     print('\n[RENAME ERROR] RETRYING...\n')
+            #     os.rename('NEW_MP3_FILE.mp3', remove_slashes(title) + '.mp3')
+
 
             # Adjust path to newest song
             musicDir = os.path.join(musicDir, title + '.mp3')
@@ -231,6 +238,7 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
     try:
         tempFile.add_tags()
     except error:
+        print('[ERROR] Tags could not be added.\n')
         pass
 
     tempFile['album'] = albumName
@@ -256,7 +264,6 @@ def add_img_to_id3_for_album(targetDirectory=str):
     # Get path of all .mp3 files and .jpg album cover file
     mp3Files = glob.glob('*.mp3')
     albumCoverPath = ''.join(glob.glob('*.jpg'))
-    print(albumCoverPath)
 
     for song in mp3Files:
 
@@ -307,7 +314,7 @@ def remove_slashes(string=str):
     """
     Replaces all slashes in a string.
     """
-    return string.replace('/', ' ')
+    return string.replace('/', '[ADD SLASH HERE]')
 
 def modify_slashes(string=str):
     """
