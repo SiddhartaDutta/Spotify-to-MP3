@@ -1,4 +1,4 @@
-import spotipy
+import time
 
 def get_track_info(self, songID):
     """
@@ -69,7 +69,16 @@ def get_album_cover_url(self, songID=str):
     """
     Returns 300x300 album cover image url.
     """
-    return get_track_info(self, songID)['album']['images'][1]['url']
+
+    successfulDownload = False
+    while not successfulDownload:
+        try:
+            return get_track_info(self, songID)['album']['images'][1]['url']
+            successfulDownload = True
+        except:
+            print('[TIMEOUT ERROR] WAITING...')
+            time.sleep(3)
+            print('[RETRYING...]\n')
 
 def download_album(self):
     pass
