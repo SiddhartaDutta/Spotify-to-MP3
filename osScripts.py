@@ -39,8 +39,6 @@ def create_album_dirs(playlistName=str, newAlbums=list):
 
     for album in newAlbums:
 
-        album = remove_slashes(album)
-
         # If 'Music' directory exists, change directory into 'Music directory.
         try:
 
@@ -113,12 +111,11 @@ ydl_opts = {
             'preferredcodec': 'mp3',
             'preferredquality': '192'
     }],
-    # 'postprocessor_args': [
-    #         '-ar', '16000'
-    # ],
+    'postprocessor_args': [
+            '-ar', '16000'
+    ],
     'prefer_ffmpeg': True,
-    'keepvideo': False,
-    'outtmpl': 'NEW_MP3_FILE'
+    'keepvideo': False
 }
 
 def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, spotifyLength=int):
@@ -135,7 +132,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
         albumName = str(track['album']['name'])
         releaseDate = str(track['album']['release_date'])
         genre = 'Hip-Hop/Rap'
-        title = remove_slashes(str(track['name']))
+        title = str(track['name'])
         tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
         
             # Extract all album artists
@@ -165,32 +162,16 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             # Change directory to add song to correct album folder
             currDir = os.getcwd()
             musicDir = os.getcwd()
-            musicDir = os.path.join(musicDir, "Music/" + remove_slashes(str(track['album']['name'])))
+            musicDir = os.path.join(musicDir, "Music/" + str(track['album']['name']))
             os.chdir(musicDir)
 
-            successfulDownload = False
-            while not successfulDownload:
-                try:
-                    # Download song
-                    ydl.download(videoURL)
-
-                    successfulDownload = True
-                except:
-                    print('[TIMEOUT ERROR] WAITING...')
-                    time.sleep(3)
-                    print('[RETRYING...]\n')
-
+            # Download song
+            ydl.download(videoURL)
 
             # Rename last downloaded file
-            # listOfFiles = glob.glob("*.mp3")
-            # latestFile = max(listOfFiles, key=os.path.getctime)
-            # print(latestFile)
-            #try:
-            os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
-            # except:
-            #     print('\n[RENAME ERROR] RETRYING...\n')
-            #     os.rename('NEW_MP3_FILE.mp3', remove_slashes(title) + '.mp3')
-
+            listOfFiles = glob.glob("*.mp3")
+            latestFile = max(listOfFiles, key=os.path.getctime)
+            os.rename(latestFile, title + '.mp3')
 
             # Adjust path to newest song
             musicDir = os.path.join(musicDir, title + '.mp3')
@@ -209,7 +190,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             os.chdir(currDir)
 
             # Download album cover
-            download_img(remove_slashes(albumName), spotifyScripts.get_album_cover_url(self, IDs[index]))
+            download_img(albumName, spotifyScripts.get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
     """
@@ -238,7 +219,6 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
     try:
         tempFile.add_tags()
     except error:
-        print('[ERROR] Tags could not be added.\n')
         pass
 
     tempFile['album'] = albumName
@@ -255,15 +235,15 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
 
 def add_img_to_id3_for_album(targetDirectory=str):
     """
-    Edits image ID3 tag for songs in a directory.
+    Edits all ID3 tags for songs in a directory.
     """
-    #print(targetDirectory)
+
     currDir = os.getcwd()
     os.chdir(targetDirectory)
 
     # Get path of all .mp3 files and .jpg album cover file
     mp3Files = glob.glob('*.mp3')
-    albumCoverPath = ''.join(glob.glob('*.jpg'))
+    albumCoverPath = glob.glob('*.jpg')[0]
 
     for song in mp3Files:
 
@@ -276,19 +256,9 @@ def add_img_to_id3_for_album(targetDirectory=str):
             pass
 
         # Add image to ID3 and save
-        #print(albumCoverPath)
-        if not albumCoverPath == '':
-            #print(albumCoverPath)
-            tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
-            tempFile.save()
-        else:
-            print('[ERROR: .JPG NOT FOUND] ALBUM: ' + targetDirectory)
+        tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
+        tempFile.save()
 
-    # Delete image file
-    try:
-        os.remove(albumCoverPath)
-    except:
-        pass
     os.chdir(currDir)
 
 def update_img_tags():
@@ -309,17 +279,3 @@ def update_img_tags():
         add_img_to_id3_for_album(directory)
 
     os.chdir(currDir)
-
-def remove_slashes(string=str):
-    """
-    Replaces all slashes in a string.
-    """
-    return string.replace('/', '[ADD SLASH HERE]')
-
-def modify_slashes(string=str):
-    """
-    """
-    return string.replace('/', "[$KEY$]")
-
-# create key to replace for slashes - replace in song name before creating file and etc.
-# or- figure out how to replace name during download itself- like how u can thru terminal
