@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import dotenv
 from dotenv import load_dotenv
 
@@ -8,6 +9,8 @@ from spotipy import SpotifyOAuth
 
 import spotifyScripts
 import osScripts
+
+startTime = time.time()
 
 load_dotenv()
 
@@ -72,3 +75,5 @@ for playlist in range(len(playlistIDs)):
                 print('[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((sp.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
         else:
                 print("[NO UPDATE AVAILABLE] %-*s PLAYLIST: %-*s CURRENT LENGTH: %s\n" % (4, '', 25, str((sp.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
+
+print('Total Runtime: ' + str(time.time() - startTime))
