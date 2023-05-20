@@ -2,6 +2,7 @@
 
 ## Disclaimer
 
+This project is designed to be both a learning tool and for experimental purposes only. <u>**The author takes no responsibility for damage or misfunction of any kind caused by the software in this repository.**</u> Please use both caution and common sense when using this project.
 
 ## Description
 
@@ -34,29 +35,36 @@ sudo docker rmi $(docker images | grep 'spotify-to-mp3-setup')
 ## Cloning the Project
 To clone this project, you will need the following:
 ### Language
-* [Python3](https://www.python.org/downloads/)
+* [Python3](https://www.python.org/downloads/) 
+
+Please follow the linked instructions should you not already have Python (this program utilizes Python 3.10.11)
 ### Modules
 #### Modules to be Installed:
 * [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
 * [spotipy](https://github.com/spotipy-dev/spotipy)
 
-#### Pre-Installed Modules (May need to install some):
+* [dotenv]()
+
+* [requests]()
+
+Running the following command in your virtual environment (or where ever you wish to have the modules) should download all required and non-standard modules:
+```.sh
+pip3 install yt_dlp spotipy python-requests python-dotenv
+```
+
+#### Pre-Installed Modules (Installation should be unneeded):
 * os
 
 * glob
+
+* json
 
 * time
 
 * shutil
 
-* requests
-
 * mutagen
-
-* json
-
-* dotenv
 
 ## Usage
 
