@@ -25,7 +25,10 @@ sudo docker run -it spotify-to-mp3-setup
 ```
 This will automatically setup the required environment file and both build and run a new Docker image called ***spotify-to-mp3***.
 
-After having run the initial setup image, you can just run ***spotify-to-mp3*** for any subsequent use of the program.
+After having run the initial setup image, you can just run ***spotify-to-mp3*** for any subsequent use of the program:
+```.sh
+sudo docker run -it spotify-to-mp3
+```
 
 ***spotify-to-mp3-setup*** may be deleted with the following command:
 ```.sh
