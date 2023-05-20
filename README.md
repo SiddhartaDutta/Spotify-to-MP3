@@ -11,7 +11,27 @@
 
 ## Visuals
 
-## Installation
+## Installation (Running a Docker Image)
+
+Please get the Docker image by running the following command in your terminal:
+```.sh
+sudo docker pull ...
+```
+
+After pulling, please run the following command in your terminal:
+```.sh
+sudo docker run -it spotify-to-mp3-setup
+```
+This will automatically setup the required environment file and both build and run a new Docker image called ***spotify-to-mp3***.
+
+After having run the initial setup image, you can just run ***spotify-to-mp3*** for any subsequent use of the program.
+
+***spotify-to-mp3-setup*** may be deleted with the following command:
+```.sh
+sudo docker rmi $(docker images | grep 'spotify-to-mp3-setup')
+```
+
+## Cloning the Project
 To clone this project, you will need the following:
 ### Language
 * [Python3](https://www.python.org/downloads/)
