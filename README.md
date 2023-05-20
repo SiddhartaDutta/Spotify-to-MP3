@@ -12,7 +12,7 @@ This project is designed to be both a learning tool and for experimental purpose
 
 ## Visuals
 
-## Installation (Running a Docker Image)
+## Usage (Running a Docker Image)
 
 Please get the Docker image by running the following command in your terminal:
 ```.sh
@@ -66,13 +66,13 @@ pip3 install yt_dlp spotipy python-requests python-dotenv
 
 * mutagen
 
-## Usage
-
 ## Support
 
 ## Roadmap
 
 ## Contributing
+
+I am not currently looking for any collaborators.
 
 ## Authors and Acknowledgment
 
