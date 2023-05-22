@@ -9,6 +9,7 @@ This project is designed to be both a learning tool and for experimental purpose
 **Spotify to MP3** is a collection of scripts written and organized to help the user download their playlists in a relatively quick and organized manner. The MP3 files contain metadata in the ID3 format so that the MP3 files may be exported to a MP3 manager, such as Spotify or iTunes (although only iTunes will allow "premium" features for owned MP3 files, not Spotify) without the user having to edit metadata (files will organize themselves based on their metadata).
 
 ## Badges
+![LICENSE](https://img.shields.io/github/license/SiddhartaDutta/spotify-to-mp3)
 
 ## Visuals
 
@@ -18,6 +19,7 @@ Please download the correct *.zip* file from the repository. After unzipping, pl
 
 NOTE: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
 
+***
 Bash:
 ```
 sudo script.sh
@@ -26,7 +28,7 @@ sudo script.sh
 Powershell:
 
 There is currently no Powershell support. If you have WSL on Windows, you can follow the same step as if you had Bash (above).
-
+*** 
 <details><summary>What does the script do?</summary>
 When you run the script, it first asks you for some required information so that the program can access your Spotify data and know where to save downloaded MP3 files. Afterwards, it creates a *.env* file to store this data (this data can later be edited through the main menu in the program). It then creates a Docker image with the required files and deletes all the downloaded files (you can also delete the *.zip* you downloaded earlier if you have not already, it is not needed after unzipping). You are now left with none of the files related to the program except for the generated Docker image. Running the Docker image with the instructions below will always run the program.
 
