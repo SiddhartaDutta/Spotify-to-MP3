@@ -14,25 +14,28 @@ This project is designed to be both a learning tool and for experimental purpose
 
 ## Usage (Running a Docker Image)
 
-Please get the Docker image by running the following command in your terminal:
-```.sh
-sudo docker pull ...
+Please download the correct *.zip* file from the repository. After unzipping, place the unzipped folder where you want the downloaded music to be stored. Music is downloaded, placed in a single all-containing folder, and this folder is then placed in the same location the script was ran in. It is recommended to create a folder in your *Music* folder and place the unzipped folder in there. Run *script.sh* according to your command shell.
+
+NOTE: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
+
+Bash:
+```
+sudo script.sh
 ```
 
-After pulling, please run the following command in your terminal:
-```.sh
-sudo docker run -it spotify-to-mp3-setup
-```
-This will automatically setup the required environment file and both build and run a new Docker image called ***spotify-to-mp3***.
+Powershell:
+
+There is currently no Powershell support. If you have WSL on Windows, you can follow the same step as if you had Bash (above).
+
+<details><summary>What does the script do?</summary>
+When you run the script, it first asks you for some required information so that the program can access your Spotify data and know where to save downloaded MP3 files. Afterwards, it creates a *.env* file to store this data (this data can later be edited through the main menu in the program). It then creates a Docker image with the required files and deletes all the downloaded files (you can also delete the *.zip* you downloaded earlier if you have not already, it is not needed after unzipping). You are now left with none of the files related to the program except for the generated Docker image. Running the Docker image with the instructions below will always run the program.
+
+NOTE: The setup script will not delete a single *.env* file which will be placed where the *.zip* is placed. DO NOT DELETE THIS. Deleting may prevent the Docker image from working. 
+</details>
 
 After having run the initial setup image, you can just run ***spotify-to-mp3*** for any subsequent use of the program:
 ```.sh
 sudo docker run -it spotify-to-mp3
-```
-
-***spotify-to-mp3-setup*** may be deleted with the following command:
-```.sh
-sudo docker rmi $(docker images | grep 'spotify-to-mp3-setup')
 ```
 
 ## Cloning the Project
