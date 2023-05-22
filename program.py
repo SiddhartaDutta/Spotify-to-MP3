@@ -6,17 +6,30 @@ import osScripts
 import spotifyScripts
 
 def run(self):
-    printMenu()
 
-    userInput = inputVerification()
+    run = True
 
-    match userInput:
-        case 1:
-            autoUpdate(self)
-        case 2:
-            sourceAndSpotify(self)
-        case _:
-            print('here')
+    while run:
+        printMenu()
+
+        userInput = inputVerification()
+
+        match userInput:
+            case 1:
+                autoUpdate(self)
+            case 2:
+                sourceAndSpotify(self)
+            case 3:
+                createSong()
+            case 4:
+                editEnvVars()
+            case 5:
+                print('Quitting...')
+                run = False
+            case _:
+                print('[ERROR] Unexpected verified input. Please publish an issue on GitHub. The program will quit now.')
+                print('Quitting...')
+                run = False
 
 def inputVerification():
     userIn = None
@@ -24,21 +37,27 @@ def inputVerification():
     while userIn is None:
         try:
             userIn = int(input('Please Input Selection: '))
-            if userIn > 2:
+            if userIn > 5:
                 userIn = None
                 raise ValueError()
         except ValueError:
              print('Invalid Input.')
 
-    return userIn
-    
+    return userIn  
 
 def printMenu():
-    print('To automatically run checks on provided Spotify playlist IDs %-*s' % (10, 'Type 1'))
-    #print('To assign single source to single existing song %-*s' % (20, 'Type 2'))
 
+    # Main menu operations
+    print('To automatically run checks on provided Spotify playlist IDs %-*s' % (10, 'Type 1'))
+    print('To assign single source to Spotify song %-*s' % (20, 'Type 2'))
+    print('To create a fully custom song %-*s' % (20, 'Type 3'))
+
+    # Utility
+    print('To edit environment variables %-*s' % (20, 'Type 4'))
+    print('To exit the program %-*s' % (20, 'Type 5'))
+
+    # Ensure newline
     print()
-    
 
 def autoUpdate(self):
     # *****         MAIN SCRIPT         *****
@@ -96,4 +115,10 @@ def autoUpdate(self):
             print("[NO UPDATE AVAILABLE] %-*s PLAYLIST: %-*s CURRENT LENGTH: %s\n" % (4, '', 25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
 
 def sourceAndSpotify(self):
+    pass
+
+def createSong():
+    pass
+
+def editEnvVars():
     pass
