@@ -7,4 +7,4 @@ python3 ./setup.py
 docker build -f Dockerfile -t spotify-to-mp3 .
 
 # Run program image
-docker run -it spotify-to-mp3
+docker run --name spotify_to_mp3 -it spotify-to-mp3

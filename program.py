@@ -24,7 +24,7 @@ def run(self):
             case 4:
                 editEnvVars()
             case 5:
-                print('Quitting...')
+                print('Updating...')
                 run = False
             case _:
                 print('[ERROR] Unexpected verified input. Please publish an issue on GitHub. The program will quit now.')
@@ -121,4 +121,12 @@ def createSong():
     pass
 
 def editEnvVars():
+    run = True
+
+    while run:
+        print("Please enter the number of the variable you wish to edit:")
+        print("1. Spotify Username")
+        print("2. Spotify Client ID")
+        print("3. Spotify Client Secret")
+        print("")
     pass
