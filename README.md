@@ -28,16 +28,14 @@ sudo script.sh
 Powershell:
 
 There is currently no Powershell support. If you have WSL on Windows, you can follow the same step as if you had Bash (above).
-*** 
+
 <details><summary>What does the script do?</summary>
 When you run the script, it first asks you for some required information so that the program can access your Spotify data and know where to save downloaded MP3 files. Afterwards, it creates a *.env* file to store this data (this data can later be edited through the main menu in the program). It then creates a Docker image with the required files and deletes all the downloaded files (you can also delete the *.zip* you downloaded earlier if you have not already, it is not needed after unzipping). You are now left with none of the files related to the program except for the generated Docker image. Running the Docker image with the instructions below will always run the program.
-
-NOTE: The setup script will not delete a single *.env* file which will be placed where the *.zip* is placed. DO NOT DELETE THIS. Deleting may prevent the Docker image from working. 
 </details>
 
-After having run the initial setup image, you can just run ***spotify-to-mp3*** for any subsequent use of the program:
+After having run the initial setup image, you can just run the ***spotify_to_mp3*** container for any subsequent use of the program:
 ```.sh
-sudo docker run -it spotify-to-mp3
+sudo docker start -ai spotify_to_mp3
 ```
 
 ## Cloning the Project
