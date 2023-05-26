@@ -15,5 +15,4 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTI
                                                scope="user-library-read"))
 
 # RUN PROGRAM
-os.chdir('/src')
 program.run(sp)

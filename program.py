@@ -12,7 +12,7 @@ def run(self):
     while run:
         printMenu()
 
-        userInput = inputVerification()
+        userInput = inputVerification(5)
 
         match userInput:
             case 1:
@@ -31,13 +31,13 @@ def run(self):
                 print('Quitting...')
                 run = False
 
-def inputVerification():
+def inputVerification(maxCount):
     userIn = None
      
     while userIn is None:
         try:
             userIn = int(input('Please Input Selection: '))
-            if userIn > 5:
+            if userIn > maxCount:
                 userIn = None
                 raise ValueError()
         except ValueError:
@@ -128,5 +128,11 @@ def editEnvVars():
         print("1. Spotify Username")
         print("2. Spotify Client ID")
         print("3. Spotify Client Secret")
-        print("")
+        print("4. Playlist Currently Downloaded Counts")
+        print("5. Spotify Playlist IDs")
+        print("6. Back to Main Menu")
+
+        userInput = inputVerification(6)
+
+        
     pass
