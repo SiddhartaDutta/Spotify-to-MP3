@@ -13,7 +13,17 @@ This project is designed to be both a learning tool and for experimental purpose
 
 ## Visuals
 
+Coming soon.
+
 ## Usage (Running a Docker Image)
+
+Prerequisite: Docker
+
+<details><summary>Installing Docker</summary>
+
+Detailed instructions will come in the future. Please follow the instructions here instead: https://docs.docker.com/get-docker/
+
+</details>
 
 Please download the correct *.zip* file from the repository. After unzipping, place the unzipped folder where you want the downloaded music to be stored. Music is downloaded, placed in a single all-containing folder, and this folder is then placed in the same location the script was ran in. It is recommended to create a folder in your *Music* folder and place the unzipped folder in there. Run *script.sh* according to your command shell.
 
@@ -72,9 +82,10 @@ pip3 install yt_dlp spotipy python-requests python-dotenv
 
 * mutagen
 
-## Support
-
-## Roadmap
+You can then clone the repository with the following command:
+```.sh
+git clone https://github.com/SiddhartaDutta/Spotify-to-MP3.git
+```
 
 ## Contributing
 
