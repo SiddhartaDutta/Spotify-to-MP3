@@ -10,6 +10,12 @@ def run(self):
     run = True
 
     while run:
+
+        # Print .env (for testing)
+        # print("------------------------------------------------")
+        # with open(".env", "r") as file:
+        #     print(file.read())
+
         printMenu()
 
         userInput = inputVerification(5)

@@ -50,6 +50,7 @@ def create_album_dirs(playlistName=str, newAlbums=list):
         except:
             
             os.mkdir(musicDir)
+            os.chmod(musicDir, 0o777)
 
         finally:
 
@@ -59,6 +60,7 @@ def create_album_dirs(playlistName=str, newAlbums=list):
                 os.chdir(musicDir)
                 newAlbumDir = os.path.join(musicDir, album)
                 os.mkdir(newAlbumDir)
+                os.chmod(newAlbumDir, 0o777)
 
                 newSongs = True
 
