@@ -94,7 +94,7 @@ def initialSetup():
         spotifyScripts.get_track_info(sp, '4cOdK2wGLETKBW3PvgPWqT')
 
     else:
-        print('[Update] Setup cancelled. Please follow the setup steps if you wish to install Spotify Downloader in the future.')
+        print('[Update] Setup cancelled. Please follow the setup steps if you wish to install Spotify to MP3 in the future.')
         exit()
 
     print('[Update] Setup complete. Starting program...')
