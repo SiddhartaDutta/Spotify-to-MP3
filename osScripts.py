@@ -188,6 +188,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             # latestFile = max(listOfFiles, key=os.path.getctime)
             # print(latestFile)
             #try:
+            os.chmod('NEW_MP3_FILE.mp3', 0o777)
             os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
             # except:
             #     print('\n[RENAME ERROR] RETRYING...\n')

@@ -8,6 +8,7 @@ ADD osScripts.py .
 ADD spotifyScripts.py .
 
 ADD .env .
+ADD .cache .
 
 #COPY requirements.txt requirements.txt
 RUN pip3 install yt_dlp spotipy python-requests python-dotenv
