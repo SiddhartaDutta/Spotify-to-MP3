@@ -5,7 +5,6 @@ CURRENTPATH=$(pwd)
 
 # Get user who ran script
 CURRENTUSER=${SUDO_USER}
-#echo $CURRENTUSER
 
 # Setup .env file
 python3 ./setup.py
