@@ -2,8 +2,6 @@ import os
 from dotenv import load_dotenv
 
 import spotipy
-from spotipy import SpotifyOAuth
-
 import program
 
 load_dotenv()

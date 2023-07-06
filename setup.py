@@ -62,11 +62,7 @@ def initialSetup():
 
         print('[Update] Creating cache. This process may take several minutes...')
 
-        token = util.prompt_for_user_token(username=username,
-                                           scope="user-library-read",
-                                           client_id=clientID,
-                                           client_secret=clientSecret,
-                                           redirect_uri="http://localhost:1234/")
+        token = util.prompt_for_user_token(username=username,scope="user-library-read",client_id=clientID,client_secret=clientSecret,redirect_uri="http://localhost:1234/")
 
     else:
         print('[Update] Setup cancelled. Please follow the setup steps if you wish to install Spotify to MP3 in the future.')
