@@ -7,9 +7,10 @@ CURRENTPATH=$(pwd)
 CURRENTUSER=${SUDO_USER}
 
 # Setup .env file
-echo "here"
-pip install spotipy python-dotenv
-echo "here2"
+echo "[UPDATE] Installing spotipy (installation will be removed in future update)"
+pip3 install spotipy
+echo "[UPDATE] spotipy installation complete."
+echo "[UPDATE] Initiating setup..."
 python3 ./setup.py
 
 # Build program image

@@ -9,10 +9,7 @@ import program
 load_dotenv()
 
 ### Spotify Setup
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("CLIENTID"),
-                                               client_secret=os.environ.get("CLIENTSECRET"),
-                                               redirect_uri="http://localhost:1234/",
-                                               scope="user-library-read"))
+sp = spotipy.Spotify(auth=os.environ.get("TOKEN"))
 
 # RUN PROGRAM
 program.run(sp)

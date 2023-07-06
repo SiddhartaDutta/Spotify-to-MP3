@@ -29,6 +29,15 @@ Please download the *.zip* file from the repository. After unzipping, place the 
 
 NOTE: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
 
+Prerequisite: pip3
+
+<details><summary>Installing pip3</summary>
+Please enter the following command into your terminal (if you are not sure if you have pip3, it is safe to run this command still):
+```
+sudo apt install python3-pip
+```
+</details>
+
 ***
 Bash:
 ```
