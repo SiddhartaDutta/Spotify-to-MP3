@@ -25,10 +25,6 @@ Detailed instructions will come in the future. Please follow the instructions he
 
 </details>
 
-Please download the *.zip* file from the repository. After unzipping, place the unzipped folder where you want the downloaded music to be stored. Music is downloaded, placed in a single all-containing folder, and this folder is then placed in the same location the script was ran in. It is recommended to create a folder in your *Music* folder and place the unzipped folder in there. Run *script.sh* according to your command shell. Follow all instructions when prompted.
-
-NOTE: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
-
 **Prerequisite: pip3**
 
 <details><summary>Installing pip3</summary>
@@ -38,6 +34,10 @@ Please enter the following command into your terminal (if you are not sure if yo
 sudo apt install python3-pip
 ```
 </details>
+
+Please download the *.zip* file from the repository. After unzipping, place the unzipped folder where you want the downloaded music to be stored. Music is downloaded, placed in a single all-containing folder, and this folder is then placed in the same location the script was ran in. It is recommended to create a folder in your *Music* folder and place the unzipped folder in there. Run *script.sh* according to your command shell. Follow all instructions when prompted.
+
+NOTE: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
 
 ***
 Bash:

@@ -29,7 +29,7 @@ rm Dockerfile
 
 # Delete created files
 rm .env
-rm .cache
+rm .cache*
 
 rm -rf .__pycache__/
 
