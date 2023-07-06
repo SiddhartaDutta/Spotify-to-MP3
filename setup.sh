@@ -7,8 +7,8 @@ CURRENTPATH=$(pwd)
 CURRENTUSER=${SUDO_USER}
 
 # Setup .env file
-echo "[UPDATE] Installing spotipy (installation will be removed in future update)"
-pip3 install spotipy
+echo "[UPDATE] Installing spotipy (installation will be removed in future update). This process may take several minutes..."
+yes | pip3 install spotipy
 echo "[UPDATE] spotipy installation complete."
 echo "[UPDATE] Initiating setup..."
 python3 ./setup.py
