@@ -44,9 +44,12 @@ def inputVerification(maxCount):
         except ValueError:
              print('Invalid Input.')
 
+    print()
     return userIn  
 
 def printMenu():
+
+    print('-----***----- SPOTIFY TO MP3 -----***------\n')
 
     # Main menu operations
     print('To automatically run checks on provided Spotify playlist IDs %-*s' % (10, 'Type 1'))
@@ -57,6 +60,7 @@ def printMenu():
     print('To edit environment variables %-*s' % (20, 'Type 4'))
     print('To exit the program %-*s' % (20, 'Type 5'))
 
+    print('\n-----***----- - - * ** * - - -----***------')
     # Ensure newline
     print()
 
@@ -125,6 +129,8 @@ def editEnvVars():
     run = True
 
     while run:
+        print('-----***--***--- SETTINGS ---***--***------\n')
+
         print("Please enter the number of the variable you wish to edit:")
         print("1. Spotify Username")
         print("2. Spotify Client ID")
@@ -133,7 +139,39 @@ def editEnvVars():
         print("5. Spotify Playlist IDs")
         print("6. Back to Main Menu")
 
+        print('\n-----***----- - - * ** * - - -----***------\n')
+
         userInput = inputVerification(6)
+
+        match userInput:
+            case 1:     # Change Spotify username
+                print('Current Spotify username: ' + str(os.environ.get('USERNAME')))
+                inputStr = input('Please enter a new Spotify username to use (leave blank to cancel): ')
+
+                if len(inputStr):
+                    os.environ['USERNAME'] = inputStr
+                    dotenv.set_key(dotenv.find_dotenv(), "USERNAME", os.environ['USERNAME'])
+            case 2:     # Change Client ID
+                print('Current Spotify Client ID: ' + str(os.environ.get('CLIENTID')))
+                inputStr = input('Please input a new Spotify Client ID to use (leave blank to cancel): ')
+
+                if len(inputStr):
+                    os.environ['CLIENTID'] = inputStr
+                    dotenv.set_key(dotenv.find_dotenv(), "CLIENTID", os.environ['CLIENTID'])
+            case 3:     # Change Client Secret
+                os.environ['CLIENTSECRET'] = str(input('Please enter a new Spotify Client Secret to use: '))
+                dotenv.set_key(dotenv.find_dotenv(), "CLIENTSECRET", os.environ['CLIENTSECRET'])
+            case 4:     # 
+                os.environ['USERNAME'] = str(input('Please enter a new Spotify username to use: '))
+                dotenv.set_key(dotenv.find_dotenv(), "USERNAME", os.environ['USERNAME'])
+            case 5:
+                break
+            case 6:
+                run = False
+            case _:
+                print('Error')
+                run = False
+                break
 
         
     pass
