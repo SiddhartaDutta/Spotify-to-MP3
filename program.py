@@ -52,13 +52,13 @@ def printMenu():
     print('-----***----- SPOTIFY TO MP3 -----***------\n')
 
     # Main menu operations
-    print('To automatically run checks on provided Spotify playlist IDs %-*s' % (10, 'Type 1'))
-    print('To assign single source to Spotify song %-*s' % (20, 'Type 2'))
-    print('To create a fully custom song %-*s' % (20, 'Type 3'))
+    print('1. Automatically Run Checks on Provided Spotify Playlist IDs')
+    print('2. Assign a Source to Spotify Song')
+    print('3. Create a Fully Custom Song')
 
     # Utility
-    print('To edit environment variables %-*s' % (20, 'Type 4'))
-    print('To exit the program %-*s' % (20, 'Type 5'))
+    print('4. Edit Environment Variables')
+    print('5. Exit the Program')
 
     print('\n-----***----- - - * ** * - - -----***------')
     # Ensure newline
@@ -159,10 +159,26 @@ def editEnvVars():
                     os.environ['CLIENTID'] = inputStr
                     dotenv.set_key(dotenv.find_dotenv(), "CLIENTID", os.environ['CLIENTID'])
             case 3:     # Change Client Secret
-                os.environ['CLIENTSECRET'] = str(input('Please enter a new Spotify Client Secret to use: '))
-                dotenv.set_key(dotenv.find_dotenv(), "CLIENTSECRET", os.environ['CLIENTSECRET'])
-            case 4:     # 
-                os.environ['USERNAME'] = str(input('Please enter a new Spotify username to use: '))
+                print('Current Spotify Client Secret: ' + str(os.environ.get('CLIENTSECRET')))
+                inputStr = input('Please enter a new Spotify Client Secret to use: ')
+
+                if len(inputStr):
+                    os.environ['CLIENTSECRET'] = inputStr
+                    dotenv.set_key(dotenv.find_dotenv(), "CLIENTSECRET", os.environ['CLIENTSECRET'])
+            case 4:     # Change Download Counts
+                print('Current Playlist ID and Download Count: ')
+                playlistIDs = json.loads(os.environ['PLAYLISTS'])
+                AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+
+                # Print all playlists and counts
+                for playlist in range(len(playlistIDs)):
+                    print('\t' + str(playlist + 1) + '. ' + str(playlistIDs[playlist]) + ': ' + str(AMPlaylistLengths[playlist]))
+
+                # Get playlist to change
+                os.environ['USERNAME'] = str(input('Please enter a playlist to change download count (enter the listed number): '))
+                userSelect = inputVerification(len(playlistIDs))
+
+
                 dotenv.set_key(dotenv.find_dotenv(), "USERNAME", os.environ['USERNAME'])
             case 5:
                 break
