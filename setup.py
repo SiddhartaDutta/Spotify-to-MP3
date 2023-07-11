@@ -56,7 +56,7 @@ def initialSetup():
     token = None
     print('[Update] Setting up Spotify Cache...')
     
-    promptAns = str(input('[Warning] The following process will open tab in your web browser and request authorization to setup a cache.\n Type \'Y\' to proceed or \'N\' to cancel: '))
+    promptAns = str(input('[Warning] The following process will open tab in your web browser and request authorization to setup a cache.\nType \'Y\' to proceed or \'N\' to cancel: '))
 
     if(promptAns.lower() == 'y' or promptAns.lower() == 'yes'):
 

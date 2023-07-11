@@ -9,6 +9,8 @@ import program
 
 load_dotenv()
 
+print('[UPDATE] Starting Spotify to MP3...')
+
 # Token validity check
 try:
     ### Spotify Setup
@@ -17,8 +19,10 @@ try:
     testURN = 'spotify:artist:0gxyHStUsqpMadRV0Di1Qt'
     artist = sp.artist(testURN)
 
+    print('[UPDATE] Token verified. Launching...\n')
+
 except:
-    promptAns = str(input('[ERROR] Token has expired. The following process will open tab in your web browser and request authorization to create a new token.\n Type \'Y\' to proceed or \'N\' to cancel: '))
+    promptAns = str(input('[ERROR] Token has expired. The following process will open tab in your web browser and request authorization to create a new token.\nType \'Y\' to proceed or \'N\' to cancel: '))
     if(promptAns.lower() == 'y' or promptAns.lower() == 'yes'):
 
         print('[UPDATE] Re-generating token. This process may take several minutes...')
@@ -32,7 +36,6 @@ except:
     else:
         print('[Update] Update cancelled. To use Spotify to MP3 in the future, please update.')
         exit()
-    
 
     ### Spotify Setup
     sp = spotipy.Spotify(auth=os.environ.get("TOKEN"))

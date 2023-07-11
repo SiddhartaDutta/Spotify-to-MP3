@@ -166,7 +166,7 @@ def editEnvVars():
                     os.environ['CLIENTSECRET'] = inputStr
                     dotenv.set_key(dotenv.find_dotenv(), "CLIENTSECRET", os.environ['CLIENTSECRET'])
             case 4:     # Change Download Counts
-                print('Current Playlist ID and Download Count: ')
+                print('Current Playlist IDs and Download Count: ')
                 playlistIDs = json.loads(os.environ['PLAYLISTS'])
                 AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
 
@@ -175,11 +175,28 @@ def editEnvVars():
                     print('\t' + str(playlist + 1) + '. ' + str(playlistIDs[playlist]) + ': ' + str(AMPlaylistLengths[playlist]))
 
                 # Get playlist to change
-                os.environ['USERNAME'] = str(input('Please enter a playlist to change download count (enter the listed number): '))
+                #userSelect = input('\nPlease enter a playlist to change download count (enter the listed number): ')
+                print()
                 userSelect = inputVerification(len(playlistIDs))
+                newLength = str(input('Please enter new playlist length: '))
+                print()
 
+                AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+                
+                AMPlaylistLengths[userSelect - 1] = newLength
+                
+                # Convert list to strings
+                newStr = '['
+                for entry in range(len(AMPlaylistLengths)):
+                        tempStr = str(AMPlaylistLengths[entry])
+                        tempStr = '"' + tempStr + '",'
+                        newStr += tempStr
+                newStr = newStr[:len(newStr)-1] + ']'
+                os.environ['AMPLAYLISTLENGTHS'] = str(newStr)
+                dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['AMPLAYLISTLENGTHS'])
 
-                dotenv.set_key(dotenv.find_dotenv(), "USERNAME", os.environ['USERNAME'])
+                print('Playlist download count updated.\n')
+
             case 5:
                 break
             case 6:
