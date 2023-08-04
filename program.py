@@ -126,9 +126,8 @@ def createSong():
     pass
 
 def editEnvVars():
-    run = True
 
-    while run:
+    while True:
         print('-----***--***--- SETTINGS ---***--***------\n')
 
         print("Please enter the number of the variable you wish to edit:")
@@ -181,29 +180,67 @@ def editEnvVars():
                 newLength = str(input('Please enter new playlist length: '))
                 print()
 
+                if not newLength and newLength != 0:
+
+                    print('Playlist download count NOT updated.\n')
+
+                else:
+                    
+                    AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+                    
+                    AMPlaylistLengths[userSelect - 1] = newLength
+                    
+                    # Convert list to strings
+                    newStr = '['
+                    for entry in range(len(AMPlaylistLengths)):
+                            tempStr = str(AMPlaylistLengths[entry])
+                            tempStr = '"' + tempStr + '",'
+                            newStr += tempStr
+                    newStr = newStr[:len(newStr)-1] + ']'
+                    os.environ['AMPLAYLISTLENGTHS'] = str(newStr)
+                    dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['AMPLAYLISTLENGTHS'])
+
+                    print('Playlist download count updated.\n')
+
+            case 5:     # Edit Spotify playlist IDs
+                print('Current Playlist IDs and Download Count: ')
+                playlistIDs = json.loads(os.environ['PLAYLISTS'])
                 AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
-                
-                AMPlaylistLengths[userSelect - 1] = newLength
-                
-                # Convert list to strings
-                newStr = '['
-                for entry in range(len(AMPlaylistLengths)):
-                        tempStr = str(AMPlaylistLengths[entry])
-                        tempStr = '"' + tempStr + '",'
-                        newStr += tempStr
-                newStr = newStr[:len(newStr)-1] + ']'
-                os.environ['AMPLAYLISTLENGTHS'] = str(newStr)
-                dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['AMPLAYLISTLENGTHS'])
 
-                print('Playlist download count updated.\n')
+                # Print all playlists and counts
+                for playlist in range(len(playlistIDs)):
+                    print('\t' + str(playlist + 1) + '. ' + str(playlistIDs[playlist]) + ': ' + str(AMPlaylistLengths[playlist]))
 
-            case 5:
-                break
+                # Print 2 additional options
+                print('\t' + str(len(playlistIDs) + 1) + '. Add playlist')
+                print('\t' + str(len(playlistIDs) + 2) + '. Remove playlist')   
+
+                print()
+                userSelect = inputVerification(len(playlistIDs) + 2)
+                print()
+
+                if not userSelect and userSelect != 0:
+
+                    print('Playlist ID NOT updated.\n')
+
+                else:
+
+                    if len(playlistIDs) + 1:        # Add Playlist
+                        newID = str(input('Please enter new playlist ID: '))
+                        newCount = str(input('Please enter new playlist length: '))
+
+                    elif len(playlistIDs) + 2:      # Remove playlist
+                        pass
+
+                    else:                           # Update playlist ID
+                        pass
+
+
             case 6:
-                run = False
+                break
             case _:
-                print('Error')
-                run = False
+                print('[ERROR] Unexpected verified input. Please publish an issue on GitHub. The program will quit now.')
+                print('Quitting...')
                 break
 
         

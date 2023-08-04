@@ -21,11 +21,11 @@ try:
 
     print('[UPDATE] Token verified. Launching...\n')
 
-except:
+except Exception:
     promptAns = str(input('[ERROR] Token has expired. The following process will open tab in your web browser and request authorization to create a new token.\nType \'Y\' to proceed or \'N\' to cancel: '))
     if(promptAns.lower() == 'y' or promptAns.lower() == 'yes'):
 
-        print('[UPDATE] Re-generating token. This process may take several minutes...')
+        print('[UPDATE] Re-generating token. This process may take several minutes...\n')
         os.environ['TOKEN'] = util.prompt_for_user_token(username= os.environ.get("USERNAME"),
                                                         scope= "user-library-read",
                                                         client_id= os.environ.get("CLIENTID"),
