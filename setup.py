@@ -72,16 +72,16 @@ def initialSetup():
     with open(".env", "w") as envFile:
 
         # Update username
-        envFile.write("USERNAME=" + username + '\n')
+        envFile.write("USERNAME=\'" + username + '\'\n')
 
         # Update clientid
-        envFile.write("CLIENTID=" + clientID + '\n')
+        envFile.write("CLIENTID=\'" + clientID + '\'\n')
 
         # Update clientsecret
-        envFile.write("CLIENTSECRET=" + clientSecret + '\n')
+        envFile.write("CLIENTSECRET=\'" + clientSecret + '\'\n')
 
         # Update token
-        envFile.write("TOKEN=" + token + '\n')
+        envFile.write("TOKEN=\'" + token + '\'\n')
 
         # Update amplaylistlengths
         envFile.write("AMPLAYLISTLENGTHS=" + playlistLengthStr + '\n')
