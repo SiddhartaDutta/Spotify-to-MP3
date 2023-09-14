@@ -1,5 +1,4 @@
 from time import sleep
-import spotipy.util as util
 
 def initialSetup():
 
@@ -52,22 +51,6 @@ def initialSetup():
         playlistLengthStr = '\'' + playlistLengthStr[:len(playlistLengthStr)-1] + ']\''
         playlistIDStr = '\'' + playlistIDStr[:len(playlistIDStr)-1] + ']\''
 
-    # Generate Token
-    token = None
-    print('[Update] Setting up Spotify Cache...')
-    
-    promptAns = str(input('[Warning] The following process will open tab in your web browser and request authorization to setup a cache.\nType \'Y\' to proceed or \'N\' to cancel: '))
-
-    if(promptAns.lower() == 'y' or promptAns.lower() == 'yes'):
-
-        print('[Update] Creating cache. This process may take several minutes...')
-
-        token = util.prompt_for_user_token(username=username,scope="user-library-read",client_id=clientID,client_secret=clientSecret,redirect_uri="http://localhost:1234/")
-
-    else:
-        print('[Update] Setup cancelled. Please follow the setup steps if you wish to install Spotify to MP3 in the future.')
-        exit()
-
     # Set .env file
     with open(".env", "w") as envFile:
 
@@ -79,9 +62,6 @@ def initialSetup():
 
         # Update clientsecret
         envFile.write("CLIENTSECRET=\'" + clientSecret + '\'\n')
-
-        # Update token
-        envFile.write("TOKEN=\'" + token + '\'\n')
 
         # Update amplaylistlengths
         envFile.write("AMPLAYLISTLENGTHS=" + playlistLengthStr + '\n')
