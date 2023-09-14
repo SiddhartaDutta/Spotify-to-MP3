@@ -2,12 +2,96 @@ import os
 import glob
 import time
 import shutil
+import dotenv
 import requests
-import spotifyScripts
 from yt_dlp import YoutubeDL
 from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3  
 from mutagen.id3 import ID3, APIC, error
+
+from op_scripts import gen
+
+def get_track_info(self, songID):
+    """
+    Returns track info for a given track ID.
+    """
+
+    urn = 'spotify:track:' + songID
+    return self.track(urn)
+
+def get_playlist_ids(self, username, playlist_id):
+    """
+    Returns object of ids for a given playlist.
+    """
+
+    r = self.user_playlist_tracks(username,playlist_id)
+    t = r['items']
+    ids = []
+    while r['next']:
+        r = self.next(r)
+        t.extend(r['items'])
+    for s in t: ids.append(s["track"]["id"])
+    return ids
+
+def get_albums_from_ids(self, amLength, spotifyLength, idList):
+    """
+    Returns list of albums for given song IDs without repetition.
+    """
+
+    # Array to hold album names
+    albumNames = []
+
+    # Iterate through idList (list of music ids)
+    for index in range(amLength, spotifyLength):
+        trackID = idList[index]
+        track = get_track_info(self, trackID)
+
+        # Only add if doesn't already exist in list
+        try:
+            albumNames.index(track['album']['name'])
+        except:
+            albumNames.append(track['album']['name'])
+
+    return albumNames
+
+def get_playlist_length(self, playlistId):
+    """
+    Takes a Spotify playlist ID and returns the playlist's length.
+    """
+
+    playlist = self.playlist_items(playlist_id=playlistId, offset=0, fields='items.track.id,total', additional_types=['track'])
+    return playlist['total']
+    
+    # offset = 0
+    # while offset != -1:
+    #     response = sp.playlist_items(playlist_id, offset=0, fields='items.track.id,total', additional_types=['track'])
+
+    #     if len(response['items']) == 0:
+    #         break
+
+    #     print(response['items'])
+    #     offset = offset + len(response['items'])
+    #     print(offset, "/", response['total'])
+
+    #     if offset == response['total']:
+    #         offset = -1
+
+def get_album_cover_url(self, songID=str):
+    """
+    Returns 300x300 album cover image url.
+    """
+
+    successfulDownload = False
+    while not successfulDownload:
+        try:
+            return get_track_info(self, songID)['album']['images'][1]['url']
+            successfulDownload = True
+        except:
+            print('[TIMEOUT ERROR] WAITING...')
+            time.sleep(3)
+            print('[RETRYING...]\n')
+
+# new method for outputting new track names with artists (from end of main.py)
 
 def update_dir():
     """
@@ -39,7 +123,7 @@ def create_album_dirs(playlistName=str, newAlbums=list):
 
     for album in newAlbums:
 
-        album = remove_slashes(album)
+        album = gen.remove_slashes(album)
 
         # If 'Music' directory exists, change directory into 'Music directory.
         try:
@@ -81,13 +165,6 @@ def create_album_dirs(playlistName=str, newAlbums=list):
     # Change back to original directory
     os.chdir(currDir)
 
-def get_dir_file_count(baseDir=str):
-    """
-    Returns file count for a given directory.
-    """
-    
-    pass
-
 def download_img(albumName=str, url=str):
     """
     Downloads the image from the provided url with the name of 'albumName'.jpg
@@ -107,112 +184,6 @@ def download_img(albumName=str, url=str):
         with open('%s.jpg' % albumName, 'wb') as imgFile:
             imgFile.write(response.content)
 
-
-ydl_opts = {
-    'format': 'bestaudio/best',
-    'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192'
-    }],
-    # 'postprocessor_args': [
-    #         '-ar', '16000'
-    # ],
-    'prefer_ffmpeg': True,
-    'keepvideo': False,
-    'outtmpl': 'NEW_MP3_FILE'
-}
-
-def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, spotifyLength=int):
-    """
-    Downloads all songs by their Spotify ID.
-    """
-
-    for index in range(amLength, spotifyLength):
-        # Create string to search for song with
-        track = spotifyScripts.get_track_info(self, IDs[index])
-        searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
-
-        # Extract ID3 data
-        albumName = str(track['album']['name'])
-        releaseDate = str(track['album']['release_date'])
-        genre = 'Hip-Hop/Rap'
-        title = remove_slashes(str(track['name']))
-        tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
-        
-            # Extract all album artists
-        albumArtist = ''
-        numArtistsOnAlbum = len(track['album']['artists'])
-        for n in range(numArtistsOnAlbum):
-            if n:
-                albumArtist += ', '
-        
-            albumArtist += track['album']['artists'][n]['name']
-
-            # Extract all song artists
-        songArtist = ''
-        numArtistsOnSong = len(track['artists'])
-        for n in range(numArtistsOnSong):
-            if n:
-                songArtist += ', '
-
-            songArtist += track['artists'][n]['name']
-
-        # Download song and edit ID3 tags
-        with YoutubeDL(ydl_opts) as ydl:
-
-            # Get URL for song
-            videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']
-    
-            # Change directory to add song to correct album folder
-            currDir = os.getcwd()
-            musicDir = os.getcwd()
-            musicDir = os.path.join(musicDir, "Music/" + remove_slashes(str(track['album']['name'])))
-            os.chdir(musicDir)
-
-            successfulDownload = False
-            while not successfulDownload:
-                try:
-                    # Download song
-                    ydl.download(videoURL)
-
-                    successfulDownload = True
-                except:
-                    print('[TIMEOUT ERROR] WAITING...')
-                    time.sleep(3)
-                    print('[RETRYING...]\n')
-
-
-            # Rename last downloaded file
-            # listOfFiles = glob.glob("*.mp3")
-            # latestFile = max(listOfFiles, key=os.path.getctime)
-            # print(latestFile)
-            #try:
-            os.chmod('NEW_MP3_FILE.mp3', 0o777)
-            os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
-            # except:
-            #     print('\n[RENAME ERROR] RETRYING...\n')
-            #     os.rename('NEW_MP3_FILE.mp3', remove_slashes(title) + '.mp3')
-
-
-            # Adjust path to newest song
-            musicDir = os.path.join(musicDir, title + '.mp3')
-
-            # Change ID3 tags
-            add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
-
-            # Update "update" file
-            os.chdir('../')
-            with open('Playlist Update: ' + playlistName, 'a') as playlist:
-                print('[UPDATING PLAYLIST LIST]\n')
-                playlist.write('*\t' + 'ALBUM: ' + albumName)
-                playlist.write('\n \t' + 'TITLE: ' + title + '\n\n')
-
-            # Reset directory
-            os.chdir(currDir)
-
-            # Download album cover
-            download_img(remove_slashes(albumName), spotifyScripts.get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
     """
@@ -313,16 +284,29 @@ def update_img_tags():
 
     os.chdir(currDir)
 
-def remove_slashes(string=str):
-    """
-    Replaces all slashes in a string.
-    """
-    return string.replace('/', '[ADD SLASH HERE]')
+def write_playlist_data_to_env(playlistIDs, AMPlaylistLengths):
+    # Format playlist arrays for env file addition
+    playlistLengthStr = playlistIDStr = '['
+    for Length, ID in zip(AMPlaylistLengths, playlistIDs):
 
-def modify_slashes(string=str):
-    """
-    """
-    return string.replace('/', "[$KEY$]")
+        # Process length
+        tempStr = str(Length)
+        tempStr = '"' + tempStr + '",'
+        playlistLengthStr += tempStr
 
-# create key to replace for slashes - replace in song name before creating file and etc.
-# or- figure out how to replace name during download itself- like how u can thru terminal
+        # Process ID
+        tempStr = str(ID)
+        tempStr = '"' + tempStr + '",'
+        playlistIDStr += tempStr
+
+    # Remove extra comma
+    if len(playlistIDs) > 0:
+        playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
+        playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
+
+    # Write to env file
+    os.environ['PLAYLISTS'] = playlistIDStr
+    dotenv.set_key(dotenv.find_dotenv(), 'PLAYLISTS', os.environ['PLAYLISTS'])
+
+    os.environ['AMPLAYLISTLENGTHS'] = playlistLengthStr
+    dotenv.set_key(dotenv.find_dotenv(), 'AMPLAYLISTLENGTHS', os.environ['AMPLAYLISTLENGTHS'])

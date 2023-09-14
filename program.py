@@ -2,8 +2,8 @@ import os
 import json
 import dotenv
 
-import osScripts
-import spotifyScripts
+import op_scripts.gen as gen
+import op_scripts.spotify as spotify
 
 def run(self):
 
@@ -13,7 +13,7 @@ def run(self):
 
         printMenu()
 
-        userInput = inputVerification(5)
+        userInput = gen.input_verification(5)
 
         match userInput:
             case 1:
@@ -31,31 +31,6 @@ def run(self):
                 print('[ERROR] Unexpected verified input. Please publish an issue on GitHub. The program will quit now.')
                 print('Quitting...')
                 run = False
-
-def inputVerification(maxCount, ignoreMax = False, blankInput = False, prompt = 'Please input selection'):
-    userIn = None
-     
-    while userIn is None:
-        try:
-            if not blankInput:
-                userIn = int(input(prompt + ': '))
-            else:
-                userIn = int(input(prompt + ' (leave blank to cancel): '))
-
-            if userIn > maxCount and not ignoreMax:
-                #userIn = None
-                raise ValueError()
-            
-        except ValueError:
-            
-             if blankInput and not userIn and userIn != 0:
-                return userIn
-             
-             userIn = None
-             print('Invalid Input.')
-
-    print()
-    return userIn  
 
 def printMenu():
 
@@ -84,33 +59,33 @@ def autoUpdate(self):
     # Iterate through each Spotify playlist and compare length to Apple Music lengths
     for playlist in range(len(playlistIDs)):
 
-        currentSpotifyLength = spotifyScripts.get_playlist_length(self, playlistIDs[playlist])
+        currentSpotifyLength = spotify.get_playlist_length(self, playlistIDs[playlist])
 
         if(currentSpotifyLength != int(AMPlaylistLengths[playlist])):
 
             # Get song IDs for non-equal Spotify playlist
             print('[CACHING SONG IDS]\n')
-            songIDs = spotifyScripts.get_playlist_ids(self, os.environ.get("USERNAME"), playlistIDs[playlist])
+            songIDs = spotify.get_playlist_ids(self, os.environ.get("USERNAME"), playlistIDs[playlist])
 
             # Get albums of missing songs
             print('[CACHING ALBUM NAMES OF MISSING SONGS]\n')
-            newAlbums = spotifyScripts.get_albums_from_ids(self, int(AMPlaylistLengths[playlist]), currentSpotifyLength, songIDs)
+            newAlbums = spotify.get_albums_from_ids(self, int(AMPlaylistLengths[playlist]), currentSpotifyLength, songIDs)
 
             # Make directories
             print('[CREATING ALBUM DIRECTORIES]\n')
-            osScripts.create_album_dirs((self.playlist(playlistIDs[playlist]))['name'], newAlbums)
+            gen.create_album_dirs((self.playlist(playlistIDs[playlist]))['name'], newAlbums)
 
             # Download songs & images
             print('[DOWNLOADING SONGS AND ALBUM COVERS]\n')
-            osScripts.download_songs_by_spotify_id(self, (self.playlist(playlistIDs[playlist]))['name'], songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
+            gen.download_songs_by_spotify_id(self, (self.playlist(playlistIDs[playlist]))['name'], songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
 
             # Move images
             print('[MOVING .JPG FILES]\n')
-            osScripts.move_images_to_album_dirs()
+            gen.move_images_to_album_dirs()
 
             # Update all image tags
             print('[UPDATING ID3 IMAGE TAGS]\n')
-            osScripts.update_img_tags()
+            gen.update_img_tags()
 
             # Update Apple Music playlist lengths automatically
             print('[UPDATING ENVIRONMENT VARIABLES]\n')
@@ -150,7 +125,7 @@ def editEnvVars():
 
         print('\n-----***----- - - * ** * - - -----***------\n')
 
-        userInput = inputVerification(6)
+        userInput = gen.input_verification(6)
 
         match userInput:
             case 1:     # Change Spotify username
@@ -201,7 +176,7 @@ def editEnvVars():
 
                 # Get playlist to change
                 print()
-                userSelect = inputVerification(len(playlistIDs), blankInput= True, prompt= 'Please enter a playlist number')
+                userSelect = gen.input_verification(len(playlistIDs), blankInput= True, prompt= 'Please enter a playlist number')
 
                 if not userSelect and userSelect != 0:
 
@@ -247,7 +222,7 @@ def editEnvVars():
                 print('\t' + str(len(playlistIDs) + 2) + '. Remove playlist')   
 
                 print()
-                userSelect = inputVerification(len(playlistIDs) + 2, blankInput= True)
+                userSelect = gen.input_verification(len(playlistIDs) + 2, blankInput= True)
 
                 if not userSelect and userSelect != 0:
 
@@ -276,37 +251,21 @@ def editEnvVars():
                                     playlistIDs.append(newID)
                                     AMPlaylistLengths.append(newCount)
 
-                                    # Format playlist arrays for env file addition
-                                    playlistLengthStr = playlistIDStr = '['
-                                    for Length, ID in zip(AMPlaylistLengths, playlistIDs):
-
-                                        # Process length
-                                        tempStr = str(Length)
-                                        tempStr = '"' + tempStr + '",'
-                                        playlistLengthStr += tempStr
-
-                                        # Process ID
-                                        tempStr = str(ID)
-                                        tempStr = '"' + tempStr + '",'
-                                        playlistIDStr += tempStr
-
-                                    # Remove extra comma
-                                    if len(playlistIDs) > 0:
-                                        playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
-                                        playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
-
-                                    # Write to env file
-                                    os.environ['PLAYLISTS'] = playlistIDStr
-                                    dotenv.set_key(dotenv.find_dotenv(), 'PLAYLISTS', os.environ['PLAYLISTS'])
-
-                                    os.environ['AMPLAYLISTLENGTHS'] = playlistLengthStr
-                                    dotenv.set_key(dotenv.find_dotenv(), 'AMPLAYLISTLENGTHS', os.environ['AMPLAYLISTLENGTHS'])
-
+                                    spotify.write_playlist_data_to_env(playlistIDs, AMPlaylistLengths)
+                                    
                                     print('Saved.\n')
 
 
 
                     elif len(playlistIDs) + 2:      # Remove playlist
+                        removeNum = gen.input_verification(maxCount= len(playlistIDs), blankInput= True)
+
+                        if not removeNum and removeNum != 0:
+                            print('Operation Aborted.\n')
+                            break
+
+                        print('here')
+                        
                         pass
 
                     else:                           # Update playlist ID
