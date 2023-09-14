@@ -188,6 +188,111 @@ def download_img(albumName=str, url=str):
         with open('%s.jpg' % albumName, 'wb') as imgFile:
             imgFile.write(response.content)
 
+ydl_opts = {
+    'format': 'bestaudio/best',
+    'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192'
+    }],
+    # 'postprocessor_args': [
+    #         '-ar', '16000'
+    # ],
+    'prefer_ffmpeg': True,
+    'keepvideo': False,
+    'outtmpl': 'NEW_MP3_FILE'
+}
+
+def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, spotifyLength=int):
+    """
+    Downloads all songs by their Spotify ID.
+    """
+
+    for index in range(amLength, spotifyLength):
+        # Create string to search for song with
+        track = get_track_info(self, IDs[index])
+        searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
+
+        # Extract ID3 data
+        albumName = str(track['album']['name'])
+        releaseDate = str(track['album']['release_date'])
+        genre = 'Hip-Hop/Rap'
+        title = gen.remove_slashes(str(track['name']))
+        tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
+        
+            # Extract all album artists
+        albumArtist = ''
+        numArtistsOnAlbum = len(track['album']['artists'])
+        for n in range(numArtistsOnAlbum):
+            if n:
+                albumArtist += ', '
+        
+            albumArtist += track['album']['artists'][n]['name']
+
+            # Extract all song artists
+        songArtist = ''
+        numArtistsOnSong = len(track['artists'])
+        for n in range(numArtistsOnSong):
+            if n:
+                songArtist += ', '
+
+            songArtist += track['artists'][n]['name']
+
+        # Download song and edit ID3 tags
+        with YoutubeDL(ydl_opts) as ydl:
+
+            # Get URL for song
+            videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']
+    
+            # Change directory to add song to correct album folder
+            currDir = os.getcwd()
+            musicDir = os.getcwd()
+            musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(str(track['album']['name'])))
+            os.chdir(musicDir)
+
+            successfulDownload = False
+            while not successfulDownload:
+                try:
+                    # Download song
+                    ydl.download(videoURL)
+
+                    successfulDownload = True
+                except:
+                    print('[TIMEOUT ERROR] WAITING...')
+                    time.sleep(3)
+                    print('[RETRYING...]\n')
+
+
+            # Rename last downloaded file
+            # listOfFiles = glob.glob("*.mp3")
+            # latestFile = max(listOfFiles, key=os.path.getctime)
+            # print(latestFile)
+            #try:
+            os.chmod('NEW_MP3_FILE.mp3', 0o777)
+            os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
+            # except:
+            #     print('\n[RENAME ERROR] RETRYING...\n')
+            #     os.rename('NEW_MP3_FILE.mp3', remove_slashes(title) + '.mp3')
+
+
+            # Adjust path to newest song
+            musicDir = os.path.join(musicDir, title + '.mp3')
+
+            # Change ID3 tags
+            add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
+
+            # Update "update" file
+            os.chdir('../')
+            with open('Playlist Update: ' + playlistName, 'a') as playlist:
+                print('[UPDATING PLAYLIST LIST]\n')
+                playlist.write('*\t' + 'ALBUM: ' + albumName)
+                playlist.write('\n \t' + 'TITLE: ' + title + '\n\n')
+
+            # Reset directory
+            os.chdir(currDir)
+
+            # Download album cover
+            download_img(gen.remove_slashes(albumName), get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
     """
