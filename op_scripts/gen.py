@@ -1,3 +1,7 @@
+"""
+Module dedicated to general operation methods.
+"""
+
 def get_dir_file_count(baseDir=str):
     """
     Returns file count for a given directory.

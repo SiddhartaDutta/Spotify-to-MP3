@@ -1,3 +1,7 @@
+"""
+Module dedicated to Spotify/music specific methods.
+"""
+
 import os
 import glob
 import time
