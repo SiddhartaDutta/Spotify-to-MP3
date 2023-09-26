@@ -17,7 +17,7 @@ from op_scripts import gen
 
 def get_track_info(self, songID):
     """
-    Returns track info for a given track ID.
+    Returns track info for a given track's Spotify ID.
     """
 
     urn = 'spotify:track:' + songID
@@ -25,7 +25,7 @@ def get_track_info(self, songID):
 
 def get_playlist_ids(self, username, playlist_id):
     """
-    Returns object of ids for a given playlist.
+    Returns list of track Spotify IDs for a given playlist's Spotify ID.
     """
 
     r = self.user_playlist_tracks(username,playlist_id)
@@ -39,7 +39,7 @@ def get_playlist_ids(self, username, playlist_id):
 
 def get_albums_from_ids(self, amLength, spotifyLength, idList):
     """
-    Returns list of albums for given song IDs without repetition.
+    Returns list of album names for given Spotify track IDs without repetition.
     """
 
     # Array to hold album names
@@ -65,35 +65,22 @@ def get_playlist_length(self, playlistId):
 
     playlist = self.playlist_items(playlist_id=playlistId, offset=0, fields='items.track.id,total', additional_types=['track'])
     return playlist['total']
-    
-    # offset = 0
-    # while offset != -1:
-    #     response = sp.playlist_items(playlist_id, offset=0, fields='items.track.id,total', additional_types=['track'])
-
-    #     if len(response['items']) == 0:
-    #         break
-
-    #     print(response['items'])
-    #     offset = offset + len(response['items'])
-    #     print(offset, "/", response['total'])
-
-    #     if offset == response['total']:
-    #         offset = -1
 
 def get_album_cover_url(self, songID=str):
     """
     Returns 300x300 album cover image url.
     """
 
-    successfulDownload = False
-    while not successfulDownload:
+    attempts = 0
+    while attempts < 5:
         try:
             return get_track_info(self, songID)['album']['images'][1]['url']
-            successfulDownload = True
         except:
             print('[TIMEOUT ERROR] WAITING...')
             time.sleep(3)
             print('[RETRYING...]\n')
+
+    print('[]')
 
 # new method for outputting new track names with artists (from end of main.py)
 
