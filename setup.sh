@@ -18,21 +18,21 @@ docker run --name spotify_to_mp3 -it --mount type=bind,src=$CURRENTPATH,target=/
 
 echo "[UPDATE] Deleting unnecessary files..."
 
-# Delete downloaded files
-rm main.py
-rm osScripts.py
-rm program.py
-rm setup.py
-rm setup.sh
-rm spotifyScripts
+# # Delete downloaded files
+# rm main.py
+# rm osScripts.py
+# rm program.py
+# rm setup.py
+# rm setup.sh
+# rm spotifyScripts
 
-rm LICENSE
-rm Dockerfile
+# rm LICENSE
+# rm Dockerfile
 
-# Delete created files
-rm .env
-rm .cache*
+# # Delete created files
+# rm .env
+# rm .cache*
 
-rm -rf .__pycache__/
+# rm -rf .__pycache__/
 
 echo "[UPDATE] Complete."
