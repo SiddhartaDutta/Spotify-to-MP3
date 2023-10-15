@@ -70,6 +70,22 @@ After having run the initial setup image, you can just run the ***spotify_to_mp3
 sudo docker start -ai spotify_to_mp3
 ```
 
+## Frequently Asked Questions (For the Tool)
+**How do I get a Spotify playlist's ID?** 
+<details><summary>Answer</summary>
+
+Test instructions
+
+</details>
+
+**How do I get a Spotify song's ID?**
+
+<details><summary>Answer</summary>
+
+Test instructions
+
+</details>
+
 ## Cloning the Project
 To clone this project, you will need the following:
 ### Language
