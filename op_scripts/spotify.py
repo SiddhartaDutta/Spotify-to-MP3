@@ -182,15 +182,12 @@ ydl_opts = {
             'preferredcodec': 'mp3',
             'preferredquality': '192'
     }],
-    # 'postprocessor_args': [
-    #         '-ar', '16000'
-    # ],
     'prefer_ffmpeg': True,
     'keepvideo': False,
     'outtmpl': 'NEW_MP3_FILE'
 }
 
-def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, spotifyLength=int):
+def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL=''):
     """
     Downloads all songs by their Spotify ID.
     """
@@ -228,9 +225,6 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
         # Download song and edit ID3 tags
         with YoutubeDL(ydl_opts) as ydl:
 
-            # Get URL for song
-            videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']
-    
             # Change directory to add song to correct album folder
             currDir = os.getcwd()
             musicDir = os.getcwd()
@@ -240,8 +234,16 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             successfulDownload = False
             while not successfulDownload:
                 try:
+
                     # Download song
-                    ydl.download(videoURL)
+                    if sourceURL == '':
+
+                        # Get URL for song
+                        videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']                        
+                        ydl.download(videoURL)
+
+                    else:
+                        ydl.download(sourceURL)
 
                     successfulDownload = True
                 except:
@@ -249,31 +251,14 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
                     time.sleep(3)
                     print('[RETRYING...]\n')
 
-
-            # Rename last downloaded file
-            # listOfFiles = glob.glob("*.mp3")
-            # latestFile = max(listOfFiles, key=os.path.getctime)
-            # print(latestFile)
-            #try:
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
             os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
-            # except:
-            #     print('\n[RENAME ERROR] RETRYING...\n')
-            #     os.rename('NEW_MP3_FILE.mp3', remove_slashes(title) + '.mp3')
-
 
             # Adjust path to newest song
             musicDir = os.path.join(musicDir, title + '.mp3')
 
             # Change ID3 tags
             add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
-
-            # Update "update" file
-            os.chdir('../')
-            with open('Playlist Update: ' + playlistName, 'a') as playlist:
-                print('[UPDATING PLAYLIST LIST]\n')
-                playlist.write('*\t' + 'ALBUM: ' + albumName)
-                playlist.write('\n \t' + 'TITLE: ' + title + '\n\n')
 
             # Reset directory
             os.chdir(currDir)
