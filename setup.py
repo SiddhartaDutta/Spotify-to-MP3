@@ -7,7 +7,6 @@ def initialSetup():
     print("[INFO] Please enter the information as requested...")
     sleep(0.5)
 
-    username = str(input("[INPUT] Please enter your Spotify username: "))
     clientID = str(input("[INPUT] Please input your generated Client ID: "))
     clientSecret = str(input("[INPUT] Please input your generated Client Secret: "))
 
@@ -53,9 +52,6 @@ def initialSetup():
 
     # Set .env file
     with open(".env", "w") as envFile:
-
-        # Update username
-        envFile.write("USERNAME=\'" + username + '\'\n')
 
         # Update clientid
         envFile.write("CLIENTID=\'" + clientID + '\'\n')
