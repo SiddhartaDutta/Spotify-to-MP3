@@ -4,8 +4,7 @@ RUN apk add --no-cache ffmpeg
 
 ADD main.py .
 ADD program.py .
-ADD osScripts.py .
-ADD spotifyScripts.py .
+ADD op_scripts .
 
 ADD .env .
 ADD .cache* .

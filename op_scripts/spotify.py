@@ -1,13 +1,88 @@
+"""
+Module dedicated to Spotify/music specific methods.
+"""
+
 import os
 import glob
 import time
 import shutil
+import dotenv
 import requests
-import spotifyScripts
 from yt_dlp import YoutubeDL
 from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3  
 from mutagen.id3 import ID3, APIC, error
+
+from op_scripts import gen
+
+def get_track_info(self, songID):
+    """
+    Returns track info for a given track's Spotify ID.
+    """
+
+    urn = 'spotify:track:' + songID
+    return self.track(urn)
+
+def get_playlist_ids(self, username, playlist_id):
+    """
+    Returns list of track Spotify IDs for a given playlist's Spotify ID.
+    """
+
+    r = self.user_playlist_tracks(username,playlist_id)
+    t = r['items']
+    ids = []
+    while r['next']:
+        r = self.next(r)
+        t.extend(r['items'])
+    for s in t: ids.append(s["track"]["id"])
+    return ids
+
+def get_albums_from_ids(self, amLength, spotifyLength, idList):
+    """
+    Returns list of album names for given Spotify track IDs without repetition.
+    """
+
+    # Array to hold album names
+    albumNames = []
+
+    # Iterate through idList (list of music ids)
+    for index in range(amLength, spotifyLength):
+        trackID = idList[index]
+        track = get_track_info(self, trackID)
+
+        # Only add if doesn't already exist in list
+        try:
+            albumNames.index(track['album']['name'])
+        except:
+            albumNames.append(track['album']['name'])
+
+    return albumNames
+
+def get_playlist_length(self, playlistId):
+    """
+    Takes a Spotify playlist ID and returns the playlist's length.
+    """
+
+    playlist = self.playlist_items(playlist_id=playlistId, offset=0, fields='items.track.id,total', additional_types=['track'])
+    return playlist['total']
+
+def get_album_cover_url(self, songID=str):
+    """
+    Returns 300x300 album cover image url.
+    """
+
+    attempts = 0
+    while attempts < 5:
+        try:
+            return get_track_info(self, songID)['album']['images'][1]['url']
+        except:
+            print('[TIMEOUT ERROR] WAITING...')
+            time.sleep(3)
+            print('[RETRYING...]\n')
+
+    print('[]')
+
+# new method for outputting new track names with artists (from end of main.py)
 
 def update_dir():
     """
@@ -39,7 +114,7 @@ def create_album_dirs(playlistName=str, newAlbums=list):
 
     for album in newAlbums:
 
-        album = remove_slashes(album)
+        album = gen.remove_slashes(album)
 
         # If 'Music' directory exists, change directory into 'Music directory.
         try:
@@ -81,13 +156,6 @@ def create_album_dirs(playlistName=str, newAlbums=list):
     # Change back to original directory
     os.chdir(currDir)
 
-def get_dir_file_count(baseDir=str):
-    """
-    Returns file count for a given directory.
-    """
-    
-    pass
-
 def download_img(albumName=str, url=str):
     """
     Downloads the image from the provided url with the name of 'albumName'.jpg
@@ -106,7 +174,6 @@ def download_img(albumName=str, url=str):
         response = requests.get(url)
         with open('%s.jpg' % albumName, 'wb') as imgFile:
             imgFile.write(response.content)
-
 
 ydl_opts = {
     'format': 'bestaudio/best',
@@ -130,14 +197,14 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
 
     for index in range(amLength, spotifyLength):
         # Create string to search for song with
-        track = spotifyScripts.get_track_info(self, IDs[index])
+        track = get_track_info(self, IDs[index])
         searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
 
         # Extract ID3 data
         albumName = str(track['album']['name'])
         releaseDate = str(track['album']['release_date'])
         genre = 'Hip-Hop/Rap'
-        title = remove_slashes(str(track['name']))
+        title = gen.remove_slashes(str(track['name']))
         tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
         
             # Extract all album artists
@@ -167,7 +234,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             # Change directory to add song to correct album folder
             currDir = os.getcwd()
             musicDir = os.getcwd()
-            musicDir = os.path.join(musicDir, "Music/" + remove_slashes(str(track['album']['name'])))
+            musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(str(track['album']['name'])))
             os.chdir(musicDir)
 
             successfulDownload = False
@@ -212,7 +279,7 @@ def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, s
             os.chdir(currDir)
 
             # Download album cover
-            download_img(remove_slashes(albumName), spotifyScripts.get_album_cover_url(self, IDs[index]))
+            download_img(gen.remove_slashes(albumName), get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
     """
@@ -313,16 +380,29 @@ def update_img_tags():
 
     os.chdir(currDir)
 
-def remove_slashes(string=str):
-    """
-    Replaces all slashes in a string.
-    """
-    return string.replace('/', '[ADD SLASH HERE]')
+def write_playlist_data_to_env(playlistIDs, AMPlaylistLengths):
+    # Format playlist arrays for env file addition
+    playlistLengthStr = playlistIDStr = '['
+    for Length, ID in zip(AMPlaylistLengths, playlistIDs):
 
-def modify_slashes(string=str):
-    """
-    """
-    return string.replace('/', "[$KEY$]")
+        # Process length
+        tempStr = str(Length)
+        tempStr = '"' + tempStr + '",'
+        playlistLengthStr += tempStr
 
-# create key to replace for slashes - replace in song name before creating file and etc.
-# or- figure out how to replace name during download itself- like how u can thru terminal
+        # Process ID
+        tempStr = str(ID)
+        tempStr = '"' + tempStr + '",'
+        playlistIDStr += tempStr
+
+    # Remove extra comma
+    if len(playlistIDs) > 0:
+        playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
+        playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
+
+    # Write to env file
+    os.environ['PLAYLISTS'] = playlistIDStr
+    dotenv.set_key(dotenv.find_dotenv(), 'PLAYLISTS', os.environ['PLAYLISTS'])
+
+    os.environ['AMPLAYLISTLENGTHS'] = playlistLengthStr
+    dotenv.set_key(dotenv.find_dotenv(), 'AMPLAYLISTLENGTHS', os.environ['AMPLAYLISTLENGTHS'])

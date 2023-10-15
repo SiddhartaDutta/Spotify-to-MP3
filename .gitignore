@@ -1,6 +1,7 @@
 .env
 .cache
-/__pycache__
 *.jpg
 *.mp3
 /Music
+/__pycache__
+/op_scripts/__pycache__

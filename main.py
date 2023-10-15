@@ -1,13 +1,20 @@
 import os
+import dotenv
 from dotenv import load_dotenv
 
 import spotipy
+import spotipy.util as util
+
+from spotipy.oauth2 import SpotifyClientCredentials
+
 import program
 
 load_dotenv()
 
-### Spotify Setup
-sp = spotipy.Spotify(auth=os.environ.get("TOKEN"))
+print('[UPDATE] Starting Spotify to MP3...')
 
-# RUN PROGRAM
+auth_manager = SpotifyClientCredentials(client_id=os.environ.get("CLIENTID"), client_secret=os.environ.get("CLIENTSECRET"))
+sp = spotipy.Spotify(auth_manager=auth_manager)
+
+# Launch Program
 program.run(sp)
