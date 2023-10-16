@@ -24,7 +24,7 @@ def run(self):
             case 2:
                 spotify_base.spotifyBase(self)
             case 3:
-                createSong()
+                create_song.createSong()
             case 4:
                 settings.editEnvVars()
             case 5:

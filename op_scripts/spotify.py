@@ -21,7 +21,11 @@ def get_track_info(self, songID):
     """
 
     urn = 'spotify:track:' + songID
-    return self.track(urn)
+    try:
+        return self.track(urn)
+    except:
+        print('\n[ERROR] INVALID SONG ID')
+        pass
 
 def get_playlist_ids(self, username, playlist_id):
     """
@@ -78,7 +82,7 @@ def get_album_cover_url(self, songID=str):
         except:
             print('[TIMEOUT ERROR] WAITING...')
             time.sleep(3)
-            print('[RETRYING...]\n')
+            print('[RETRYING...]')
 
     print('[]')
 
@@ -232,7 +236,8 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             os.chdir(musicDir)
 
             successfulDownload = False
-            while not successfulDownload:
+            tries = 0
+            while not successfulDownload and tries < 3:
                 try:
 
                     # Download song
@@ -247,6 +252,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
                     successfulDownload = True
                 except:
+                    tries += 1
                     print('[TIMEOUT ERROR] WAITING...')
                     time.sleep(3)
                     print('[RETRYING...]\n')
