@@ -8,8 +8,9 @@ import time
 import shutil
 import dotenv
 import requests
-from yt_dlp import YoutubeDL
 from mutagen.mp3 import MP3
+from yt_dlp import YoutubeDL
+from pydub import AudioSegment
 from mutagen.easyid3 import EasyID3  
 from mutagen.id3 import ID3, APIC, error
 
@@ -192,6 +193,10 @@ ydl_opts = {
     'outtmpl': 'NEW_MP3_FILE'
 }
 
+def __match_target_amplitude(sound, target_dBFS):
+    change_in_dBFS = target_dBFS - sound.dBFS
+    return sound.apply_gain(change_in_dBFS)
+
 def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL='', metaData= metaDF.metaDataFrame(), imgDownloaded= False):
     """
     Downloads all songs by their Spotify ID.
@@ -262,6 +267,12 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                     print('[RETRYING...]\n')
 
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
+
+            print('[NORMALIZING AUDIO]\n')
+            sound = AudioSegment.from_file("NEW_MP3_FILE.mp3", "mp3")
+            normalized_sound = __match_target_amplitude(sound, -14.0)
+            normalized_sound.export("NEW_MP3_FILE.mp3", format= "mp3")
+
             os.rename('NEW_MP3_FILE.mp3', gen.remove_slashes(metaData.title) + '.mp3')
 
             # Adjust path to newest song

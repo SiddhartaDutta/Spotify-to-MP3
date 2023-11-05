@@ -10,7 +10,7 @@ ADD .env .
 ADD .cache* .
 
 #COPY requirements.txt requirements.txt
-RUN pip3 install yt_dlp spotipy python-requests python-dotenv
+RUN pip3 install yt_dlp spotipy python-requests python-dotenv pydub
 
 WORKDIR /src
 CMD ["python3", "./main.py"]
