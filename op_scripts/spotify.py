@@ -13,7 +13,8 @@ from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3  
 from mutagen.id3 import ID3, APIC, error
 
-from op_scripts import gen
+import op_scripts.gen as gen
+import op_scripts.meta_data_frame as metaDF
 
 def get_track_info(self, songID):
     """
@@ -191,9 +192,10 @@ ydl_opts = {
     'outtmpl': 'NEW_MP3_FILE'
 }
 
-def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL=''):
+def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL='', metaData= metaDF.metaDataFrame()):
     """
     Downloads all songs by their Spotify ID.
+    :param list metaData: test
     """
 
     for index in range(amLength, spotifyLength):
@@ -202,29 +204,29 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
         searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
 
         # Extract ID3 data
-        albumName = str(track['album']['name'])
-        releaseDate = str(track['album']['release_date'])
-        genre = 'Hip-Hop/Rap'
-        title = gen.remove_slashes(str(track['name']))
-        tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
-        
-            # Extract all album artists
-        albumArtist = ''
-        numArtistsOnAlbum = len(track['album']['artists'])
-        for n in range(numArtistsOnAlbum):
-            if n:
-                albumArtist += ', '
-        
-            albumArtist += track['album']['artists'][n]['name']
+        if metaData.albumName == '':
 
-            # Extract all song artists
-        songArtist = ''
-        numArtistsOnSong = len(track['artists'])
-        for n in range(numArtistsOnSong):
-            if n:
-                songArtist += ', '
+            metaData.albumName = str(track['album']['name'])
+            metaData.releaseDate = str(track['album']['release_date'])
+            metaData.genre = 'Hip-Hop/Rap'
+            metaData.title = gen.remove_slashes(str(track['name']))
+            metaData.tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
+            
+                # Extract all album artists
+            numArtistsOnAlbum = len(track['album']['artists'])
+            for n in range(numArtistsOnAlbum):
+                if n:
+                    metaData.albumArtist += ', '
+            
+                metaData.albumArtist += track['album']['artists'][n]['name']
 
-            songArtist += track['artists'][n]['name']
+                # Extract all song artists
+            numArtistsOnSong = len(track['artists'])
+            for n in range(numArtistsOnSong):
+                if n:
+                    metaData.songArtist += ', '
+
+                metaData.songArtist += track['artists'][n]['name']
 
         # Download song and edit ID3 tags
         with YoutubeDL(ydl_opts) as ydl:
@@ -258,19 +260,19 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                     print('[RETRYING...]\n')
 
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
-            os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
+            os.rename('NEW_MP3_FILE.mp3', metaData.title + '.mp3')
 
             # Adjust path to newest song
-            musicDir = os.path.join(musicDir, title + '.mp3')
+            musicDir = os.path.join(musicDir, metaData.title + '.mp3')
 
             # Change ID3 tags
-            add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
+            add_easyid3_tags(musicDir, metaData.albumName, metaData.albumArtist, metaData.songArtist, metaData.releaseDate, metaData.genre, metaData.title, metaData.tracknumber)
 
             # Reset directory
             os.chdir(currDir)
 
             # Download album cover
-            download_img(gen.remove_slashes(albumName), get_album_cover_url(self, IDs[index]))
+            download_img(gen.remove_slashes(metaData.albumName), get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
     """

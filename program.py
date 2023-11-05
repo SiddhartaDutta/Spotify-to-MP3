@@ -41,7 +41,7 @@ def printMenu():
 
     # Main menu operations
     print('1. Automatically Run Checks on Provided Spotify Playlist IDs')
-    print('2. Assign a Source to Spotify Song')
+    print('2. Assign a SoundCloud Source to Spotify Song')
     print('3. Create a Fully Custom Song')
 
     # Utility

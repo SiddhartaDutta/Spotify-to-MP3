@@ -34,7 +34,7 @@ def spotifyBase(self):
 
             # Download songs & images
             print('[DOWNLOADING SONG AND ALBUM COVER]\n')
-            spotify.download_songs_by_spotify_id(self,  songID, 0, 1, sourceURL)
+            spotify.download_songs_by_spotify_id(self, songID, 0, 1, sourceURL)
 
             # Move images
             print('[MOVING .JPG FILE]\n')
