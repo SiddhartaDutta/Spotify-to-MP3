@@ -192,16 +192,16 @@ ydl_opts = {
     'outtmpl': 'NEW_MP3_FILE'
 }
 
-def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL='', metaData= metaDF.metaDataFrame()):
+def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL='', metaData= metaDF.metaDataFrame(), imgDownloaded= False):
     """
     Downloads all songs by their Spotify ID.
     :param list metaData: test
     """
 
     for index in range(amLength, spotifyLength):
-        # Create string to search for song with
-        track = get_track_info(self, IDs[index])
-        searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
+
+        if sourceURL == '':
+            track = get_track_info(self, IDs[index])
 
         # Extract ID3 data
         if metaData.albumName == '':
@@ -234,7 +234,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             # Change directory to add song to correct album folder
             currDir = os.getcwd()
             musicDir = os.getcwd()
-            musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(str(track['album']['name'])))
+            musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(metaData.albumName))
             os.chdir(musicDir)
 
             successfulDownload = False
@@ -244,6 +244,8 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
                     # Download song
                     if sourceURL == '':
+
+                        searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
 
                         # Get URL for song
                         videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']                        
@@ -260,19 +262,20 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                     print('[RETRYING...]\n')
 
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
-            os.rename('NEW_MP3_FILE.mp3', metaData.title + '.mp3')
+            os.rename('NEW_MP3_FILE.mp3', gen.remove_slashes(metaData.title) + '.mp3')
 
             # Adjust path to newest song
-            musicDir = os.path.join(musicDir, metaData.title + '.mp3')
+            musicDir = os.path.join(musicDir, gen.remove_slashes(metaData.title) + '.mp3')
 
             # Change ID3 tags
-            add_easyid3_tags(musicDir, metaData.albumName, metaData.albumArtist, metaData.songArtist, metaData.releaseDate, metaData.genre, metaData.title, metaData.tracknumber)
+            add_easyid3_tags(musicDir, metaData.albumName, metaData.albumArtist, metaData.songArtist, metaData.releaseDate, metaData.genre, metaData.title, metaData.trackNumber)
 
             # Reset directory
             os.chdir(currDir)
 
             # Download album cover
-            download_img(gen.remove_slashes(metaData.albumName), get_album_cover_url(self, IDs[index]))
+            if not imgDownloaded:
+                download_img(gen.remove_slashes(metaData.albumName), get_album_cover_url(self, IDs[index]))
 
 def move_images_to_album_dirs():
     """
