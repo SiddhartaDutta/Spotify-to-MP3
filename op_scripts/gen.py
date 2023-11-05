@@ -23,7 +23,7 @@ def modify_slashes(string=str):
 # create key to replace for slashes - replace in song name before creating file and etc.
 # or- figure out how to replace name during download itself- like how u can thru terminal
 
-def input_verification(maxCount, ignoreMax = False, blankInput = False, prompt = 'Please input selection'):
+def input_verification(maxCount = 0, ignoreMax = False, blankInput = False, stringInput = False, prompt = 'Please input selection'):
     """
     Modular input collection method.
     :param int maxCount: 
@@ -34,14 +34,21 @@ def input_verification(maxCount, ignoreMax = False, blankInput = False, prompt =
      
     while userIn is None:
         try:
-            if not blankInput:
-                userIn = int(input(prompt + ': '))
-            else:
-                userIn = int(input(prompt + ' (leave blank to cancel): '))
+            if not stringInput:
+                if not blankInput:
+                    userIn = int(input(prompt + ': '))
+                else:
+                    userIn = int(input(prompt + ' (leave blank to cancel): '))
 
-            if userIn > maxCount and not ignoreMax:
-                #userIn = None
-                raise ValueError()
+                if userIn > maxCount and not ignoreMax:
+                    #userIn = None
+                    raise ValueError()
+            else:
+                if not blankInput:
+                    userIn = input(prompt + ': ')
+                else:
+                    userIn = input(prompt + ' (leave blank to cancel): ')
+
             
         except ValueError:
             
