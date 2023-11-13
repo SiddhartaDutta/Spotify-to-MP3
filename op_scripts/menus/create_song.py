@@ -41,6 +41,7 @@ def createSong():
                 break
 
             # Update album artists
+            metaData.albumArtist = ''
             numOfArtists = gen.input_verification(ignoreMax= True, blankInput= True, prompt= 'Please enter the number of artists for the album')
             for n in range(numOfArtists):
 
@@ -67,6 +68,7 @@ def createSong():
                 break
 
             # Update song artists
+            metaData.songArtist = ''
             numOfArtists = gen.input_verification(ignoreMax= True, blankInput= True, prompt= 'Please enter the number of artists for the song')
             for n in range(numOfArtists):
 
@@ -99,7 +101,7 @@ def createSong():
             print('[MOVING .JPG FILE]\n')
             spotify.move_images_to_album_dirs()
             
-            print('[CUSTOM MP3 FILE CREATED]\n')
+            print('\n[CUSTOM MP3 FILE CREATED]\n')
 
             # Request for another song
             promptAns = str(input('Would you like to add another song? Type \'Y\' for "Yes" or \'N\' to cancel: '))
