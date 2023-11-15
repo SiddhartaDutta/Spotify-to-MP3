@@ -5,8 +5,14 @@ Module dedicated to creating metadata and MP3 from user provided data.
 import op_scripts.gen as gen
 import op_scripts.spotify as spotify
 import op_scripts.meta_data_frame as metaDF
+import op_scripts.menus.create_album as create_album
 
 def createSong():
+
+    promptAns = str(input('Would you like to add a full custom album? Type \'Y\' for "Yes" or \'N\' to cancel: '))
+    if(promptAns.lower() == 'y' or promptAns.lower() == 'yes'):
+        create_album()
+        return
 
     metaData = metaDF.metaDataFrame()
 
