@@ -6,46 +6,46 @@ import op_scripts.gen as gen
 import op_scripts.menus.settings as settings
 import op_scripts.menus.auto_update as auto_update
 import op_scripts.menus.create_song as create_song
+import op_scripts.menus.create_album as create_album
 import op_scripts.menus.spotify_base as spotify_base
+
+
+
+operations = [(auto_update.autoUpdate, True, 'Automatically Run Checks on Provided Spotify Playlist IDs'),
+              (spotify_base.spotifyBase, True, 'Assign a SoundCloud Source to Spotify Song'),
+              (create_song.createSong, False, 'Create a Fully Custom Song'),
+              (create_album.createAlbum, False, 'Create a Fully Custom Album'),
+              (settings.editEnvVars, False, 'Edit Environment Variables'),
+              (None, False, 'Exit the Program')
+             ]
 
 def run(self):
 
     run = True
 
     while run:
-
+        
         printMenu()
 
-        userInput = gen.input_verification(5)
+        userInput = gen.input_verification(len(operations)) - 1
 
-        match userInput:
-            case 1:
-                auto_update.autoUpdate(self)
-            case 2:
-                spotify_base.spotifyBase(self)
-            case 3:
-                create_song.createSong()
-            case 4:
-                settings.editEnvVars()
-            case 5:
-                print('Quitting...\n')
-                run = False
-            case _:
-                print('[ERROR] Unexpected verified input. Please publish an issue on GitHub. The program will quit now.')
-                print('Quitting...')
-                run = False
+        if userInput == len(operations) - 1:
+            print('Quitting...\n')
+            run = False
+            break
+
+        choice = operations[userInput]
+
+        if choice[1]:
+            choice[0](self)
+        else:
+            choice[0]()
 
 def printMenu():
 
     print('-----***----- SPOTIFY TO MP3 -----***------\n')
 
-    # Main menu operations
-    print('1. Automatically Run Checks on Provided Spotify Playlist IDs')
-    print('2. Assign a SoundCloud Source to Spotify Song')
-    print('3. Create a Fully Custom Song')
-
-    # Utility
-    print('4. Edit Environment Variables')
-    print('5. Exit the Program')
+    for tupleIndex in range(len(operations)):
+        print(f'{tupleIndex + 1}. {operations[tupleIndex][2]}')
 
     print('\n-----***----- - - * ** * - - -----***------\n')
