@@ -98,31 +98,38 @@ sudo docker start -ai spotify_to_mp3
 **How is the tool designed to be used?** 
 <details><summary>Answer</summary>
 
+***
 For the least confusing operation, it is highly recommended that when creating playlists on Spotify, you create them grouped as albums; all songs belonging to an album should be grouped chronologically together. This style of listening involves fully listening to an album at once and adding desired songs then.
 
 However, if you do not wish to listen to music in an album fashion, you can still easily add albums to your MP3 manager. After downloading your music, you can sort the album folders by those edited most recent. This way, all albums will be listed that need to be transferred (is beneficial when there are a large amount of albums/singles).
+***
 
 </details>
 
 **How do I get a Spotify playlist's ID?** 
 <details><summary>Answer</summary>
 
+***
 First get the share link to a playlist. The playlist ID is after the '/playlist/' to the first question mark.
 
 Example: https://open.spotify.com/playlist/0CdFo515yc2vcintnGYG3b?si=e8f762d893c64743
 
 The ID is **0CdFo515yc2vcintnGYG3b**
+***
+
 </details>
 
 **How do I get a Spotify song's ID?**
 
 <details><summary>Answer</summary>
 
+***
 First get the share link to a song. The song ID is after the '/track/' to the first question mark.
 
 Example: https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=d6d587fe7439454f
 
 The ID is **4PTG3Z6ehGkBFwjybzWkR8**
+***
 
 </details>
 
