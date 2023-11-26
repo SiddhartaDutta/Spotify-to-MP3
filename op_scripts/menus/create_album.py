@@ -49,6 +49,12 @@ def createAlbum():
 
             for num in range(songCount):
 
+                # Get source URL
+                sourceURL = gen.input_verification(ignoreMax= True, blankInput= True, stringInput= True, prompt= 'Please enter a source URL (YouTube, SoundCloud)')
+                if not sourceURL and sourceURL != 0:
+                    print('Operation Aborted.\n')
+                    break
+
                 # Update song title
                 metaData.title = gen.input_verification(ignoreMax= True, blankInput= True, stringInput= True, prompt= 'Please enter the song\'s title')
                 if not metaData.title and metaData.title != 0:
