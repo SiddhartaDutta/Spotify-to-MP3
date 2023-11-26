@@ -21,28 +21,38 @@ Coming soon.
 
 <details><summary>Installing Docker</summary>
 
+***
 Detailed instructions will come in the future. Please follow the instructions here instead: https://docs.docker.com/get-docker/
+***
 
 </details>
 
 **Prerequisite: pip3**
 
 <details><summary>Installing pip3</summary>
+
+***
 Please enter the following command into your terminal (if you are not sure if you have pip3, it is safe to run this command still):
 
 ```
 sudo apt install python3-pip
 ```
+***
+
 </details>
 
 **Prerequisite: MP3 Manager of Your Choice**
 
 <details><summary>MP3 Managers</summary>
+
+***
 If you have an Apple device, it is highly recommended you use Apple Music as your MP3 manager. To do so, after downloading all of your music, you can upload full albums by navigating to <i>File > Add Folder to Library...</i> and then selecting all album folders in the file manager.
 
 If you have an Android device, it is highly recommended you use the native song manager (to be more in-depth in the future; I, @SiddhartaDutta, have an iPhone).
 
 Spotify is **not** recommended as even with your own MP3 files, Spotify still applies non-premium rules such as limited skips and ads.
+***
+
 </details>
 
 Please download the *.zip* file from the repository. After unzipping, place the unzipped folder where you want the downloaded music to be stored. Music is downloaded, placed in a single all-containing folder, and this folder is then placed in the same location the script was ran in. It is recommended to create a folder in your *Music* folder and place the unzipped folder in there. Run *script.sh* according to your command shell. Follow all instructions when prompted.
@@ -72,7 +82,11 @@ Powershell:
 There is currently no Powershell support. If you have WSL on Windows, you can follow the same step as if you had Bash (above).
 
 <details><summary>What does the script do?</summary>
+
+***
 When you run the script, it first asks you for some required information so that the program can access your Spotify data and know where to save downloaded MP3 files. Afterwards, it creates a *.env* file to store this data (this data can later be edited through the main menu in the program). It then creates a Docker image with the required files and deletes all the downloaded files (you can also delete the *.zip* you downloaded earlier if you have not already, it is not needed after unzipping). You are now left with none of the files related to the program except for the generated Docker image. Running the Docker image with the instructions below will always run the program.
+***
+
 </details>
 
 After having run the initial setup image, you can just run the ***spotify_to_mp3*** container for any subsequent use of the program:
@@ -93,15 +107,22 @@ However, if you do not wish to listen to music in an album fashion, you can stil
 **How do I get a Spotify playlist's ID?** 
 <details><summary>Answer</summary>
 
-Test instructions
+First get the share link to a playlist. The playlist ID is after the '/playlist/' to the first question mark.
 
+Example: https://open.spotify.com/playlist/0CdFo515yc2vcintnGYG3b?si=e8f762d893c64743
+
+The ID is **0CdFo515yc2vcintnGYG3b**
 </details>
 
 **How do I get a Spotify song's ID?**
 
 <details><summary>Answer</summary>
 
-Test instructions
+First get the share link to a song. The song ID is after the '/track/' to the first question mark.
+
+Example: https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=d6d587fe7439454f
+
+The ID is **4PTG3Z6ehGkBFwjybzWkR8**
 
 </details>
 
