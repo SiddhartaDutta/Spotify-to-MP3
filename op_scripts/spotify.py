@@ -284,6 +284,9 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             # Reset directory
             os.chdir(currDir)
 
+            # Remove meta data struct
+            del metaData
+
             # Download album cover
             if not imgDownloaded:
                 download_img(gen.remove_slashes(metaData.albumName), get_album_cover_url(self, IDs[index]))
@@ -315,7 +318,7 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
     try:
         tempFile.add_tags()
     except error:
-        print('[ERROR] Tags could not be added.\n')
+        print('[UPDATE] Tag base already exists.')
         pass
 
     tempFile['album'] = albumName
