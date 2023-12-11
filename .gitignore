@@ -2,9 +2,13 @@
 .cache
 *.jpg
 *.mp3
+
 /Music
+
+.vscode/
+
+testScript.py
+
 /__pycache__
 op_scripts/__pycache__
 op_scripts/menus/__pycache__
-.vccode/
-testScript.py

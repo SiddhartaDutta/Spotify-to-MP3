@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-import program
+import op_scripts.menus.program_op as program_op
+import op_scripts.menus.program.auto_update as auto_update
 
 load_dotenv()
 
@@ -14,4 +15,4 @@ auth_manager = SpotifyClientCredentials(client_id=os.environ.get("CLIENTID"), cl
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Launch Program
-program.run(sp)
+program_op.run(sp)
