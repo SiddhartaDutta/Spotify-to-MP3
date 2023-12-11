@@ -215,9 +215,10 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             metaData.releaseDate = str(track['album']['release_date'])
             metaData.genre = 'Hip-Hop/Rap'
             metaData.title = gen.remove_slashes(str(track['name']))
-            metaData.tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
-            
+            metaData.trackNumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
+
                 # Extract all album artists
+            metaData.albumArtist = ''
             numArtistsOnAlbum = len(track['album']['artists'])
             for n in range(numArtistsOnAlbum):
                 if n:
@@ -226,6 +227,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                 metaData.albumArtist += track['album']['artists'][n]['name']
 
                 # Extract all song artists
+            metaData.songArtist = ''
             numArtistsOnSong = len(track['artists'])
             for n in range(numArtistsOnSong):
                 if n:
@@ -268,7 +270,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
 
-            print('[NORMALIZING AUDIO]\n')
+            print('\n[NORMALIZING AUDIO]\n')
             sound = AudioSegment.from_file("NEW_MP3_FILE.mp3", "mp3")
             normalized_sound = __match_target_amplitude(sound, -14.0)
             normalized_sound.export("NEW_MP3_FILE.mp3", format= "mp3")
@@ -284,12 +286,12 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             # Reset directory
             os.chdir(currDir)
 
-            # Remove meta data struct
-            del metaData
-
             # Download album cover
             if not imgDownloaded:
                 download_img(gen.remove_slashes(metaData.albumName), get_album_cover_url(self, IDs[index]))
+
+            # Reset meta data struct
+            metaData.albumName = ''
 
 def move_images_to_album_dirs():
     """
