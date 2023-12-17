@@ -15,7 +15,7 @@ operations = [(auto_update.autoUpdate, True, 'Automatically Run Checks on Provid
               (spotify_base.spotifyBase, True, 'Assign a SoundCloud Source to Spotify Song'),
               (create_song.createSong, False, 'Create a Fully Custom Song'),
               (create_album.createAlbum, False, 'Create a Fully Custom Album'),
-              (settings_op.editEnvVars, False, 'Edit Environment Variables'),
+              (settings_op.run, False, 'Advanced Settings'),
               (None, False, 'Exit the Program')
              ]
 
@@ -43,9 +43,9 @@ def run(self):
 
 def printMenu():
 
-    print('-----***----- SPOTIFY TO MP3 -----***------\n')
+    print('------***----- SPOTIFY TO MP3 -----***------\n')
 
     for tupleIndex in range(len(operations)):
         print(f'{tupleIndex + 1}. {operations[tupleIndex][2]}')
 
-    print('\n-----***----- - - * ** * - - -----***------\n')
+    print('\n-----***----- - - * **** * - - -----***-----\n')
