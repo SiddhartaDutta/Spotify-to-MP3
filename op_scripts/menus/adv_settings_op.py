@@ -9,13 +9,55 @@ import dotenv
 import op_scripts.gen as gen
 import op_scripts.spotify as spotify
 
+from op_scripts.menus.adv_settings import edit_username
+from op_scripts.menus.adv_settings import edit_clientID
+from op_scripts.menus.adv_settings import edit_clientSecret
+from op_scripts.menus.adv_settings import edit_downloadCounts
+from op_scripts.menus.adv_settings import edit_spotifyPlaylistIDs
+
+
+operations = [(edit_username.edit_username, 'Edit Spotify Username'),
+              (edit_clientID.edit_clientID, 'Edit Spotify Client ID'),
+              (edit_clientSecret.edit_clientSecret, 'Edit Spotify Client Secret'),
+              (edit_downloadCounts.edit_downloadCounts, 'Edit Downloaded Song Counts'),
+              (edit_spotifyPlaylistIDs.edit_spotifyPlaylistIDs, 'Edit Spotify Playlist IDs'),
+              (None, 'Back to Main Menu')
+              ]
+
+def run():
+
+    run = True
+
+    while run:
+
+        printMenu()
+
+        userInput = gen.input_verification(len(operations)) - 1
+
+        if userInput == len(operations) - 1:
+            #print('Quitting...\n')
+            run = False
+            break
+
+        operations[userInput][0]()
+
+
+def printMenu():
+
+    print('---**--**--- ADVANCED SETTINGS ---**--**---\n')
+
+    for tupleIndex in range(len(operations)):
+        print(f'{tupleIndex + 1}. {operations[tupleIndex][1]}')
+
+    print('\n-----***----- - - * *** * - - -----***-----\n')
+
 def editEnvVars():
     """
     
     """
-
+#44
     while True:
-        print('-----***--***--- SETTINGS ---***--***------\n')
+        print('---**--**--- ADVANCED SETTINGS ---**--**---\n')
 
         print("Please enter the number of the variable you wish to edit:")
         print("1. Spotify Username")
@@ -25,35 +67,16 @@ def editEnvVars():
         print("5. Spotify Playlist IDs")
         print("6. Back to Main Menu")
 
-        print('\n-----***----- - - * ** * - - -----***------\n')
+        print('\n-----***----- - - * *** * - - -----***-----\n')
 
         userInput = gen.input_verification(6)
 
         match userInput:
             case 1:     # Change Spotify username
-                print('Current Spotify username: ' + str(os.environ.get('USERNAME')))
-                print(str(os.environ.get('USERNAME')))
-                inputStr = input('Please enter a new Spotify username to use (leave blank to cancel): ')
-
-                if len(inputStr):
-                    os.environ['USERNAME'] = inputStr
-                    dotenv.set_key(dotenv.find_dotenv(), "USERNAME", os.environ['USERNAME'])
-                    print('Saved.\n')
-
-                else:
-                    print('Operation Aborted.\n')
+                edit_username.editUsername()
             
             case 2:     # Change Client ID
-                print('Current Spotify Client ID: ' + str(os.environ.get('CLIENTID')))
-                inputStr = input('Please input a new Spotify Client ID to use (leave blank to cancel): ')
-
-                if len(inputStr):
-                    os.environ['CLIENTID'] = inputStr
-                    dotenv.set_key(dotenv.find_dotenv(), "CLIENTID", os.environ['CLIENTID'])
-                    print('Saved.\n')
-
-                else:
-                    print('Operation Aborted.\n')
+                pass
             
             case 3:     # Change Client Secret
                 print('Current Spotify Client Secret: ' + str(os.environ.get('CLIENTSECRET')))

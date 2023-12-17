@@ -3,7 +3,7 @@ Module dedicated to calling methods for menu operation.
 """
 
 import op_scripts.gen as gen
-import op_scripts.menus.settings_op as settings_op
+import op_scripts.menus.adv_settings_op as adv_settings_op
 import op_scripts.menus.program.auto_update as auto_update
 import op_scripts.menus.program.create_song as create_song
 import op_scripts.menus.program.create_album as create_album
@@ -15,7 +15,7 @@ operations = [(auto_update.autoUpdate, True, 'Automatically Run Checks on Provid
               (spotify_base.spotifyBase, True, 'Assign a SoundCloud Source to Spotify Song'),
               (create_song.createSong, False, 'Create a Fully Custom Song'),
               (create_album.createAlbum, False, 'Create a Fully Custom Album'),
-              (settings_op.run, False, 'Advanced Settings'),
+              (adv_settings_op.run, False, 'Advanced Settings'),
               (None, False, 'Exit the Program')
              ]
 
