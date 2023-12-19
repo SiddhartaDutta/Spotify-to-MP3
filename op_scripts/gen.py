@@ -2,6 +2,10 @@
 Module dedicated to general operation methods.
 """
 
+import sys
+import time
+import itertools
+
 def get_dir_file_count(baseDir=str):
     """
     Returns file count for a given directory.
@@ -60,3 +64,15 @@ def input_verification(maxCount = 0, ignoreMax = False, blankInput = False, stri
 
     print()
     return userIn
+
+def loading_screen(active):
+    for char in itertools.cycle(['', '.', '..', '...']):
+        if not active():
+            break
+        sys.stdout.write('\rCreating File(s) ' + char)
+        sys.stdout.flush()
+        time.sleep(0.25)
+    sys.stdout.write('\r\n')
+
+def prnt(active, string):
+    if active: print(string)

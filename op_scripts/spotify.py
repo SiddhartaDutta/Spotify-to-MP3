@@ -190,7 +190,8 @@ ydl_opts = {
     }],
     'prefer_ffmpeg': True,
     'keepvideo': False,
-    'outtmpl': 'NEW_MP3_FILE'
+    'outtmpl': 'NEW_MP3_FILE',
+    'quiet' : True
 }
 
 def __match_target_amplitude(sound, target_dBFS):
