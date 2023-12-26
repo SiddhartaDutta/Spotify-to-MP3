@@ -9,6 +9,4 @@
 
 testScript.py
 
-/__pycache__
-op_scripts/__pycache__
-op_scripts/menus/__pycache__
+**/__pycache__
