@@ -2,6 +2,7 @@
 Module dedicated to general operation methods.
 """
 
+import os
 import sys
 import time
 import itertools
@@ -74,5 +75,5 @@ def loading_screen(active):
         time.sleep(0.25)
     sys.stdout.write('\r\n')
 
-def prnt(active, string):
-    if active: print(string)
+def prnt(string):
+    if os.environ.get("DEBUGMODE"): print(string)

@@ -16,6 +16,10 @@ def autoUpdate(self):
     playlistIDs = json.loads(os.environ['PLAYLISTS'])
     AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
 
+    if len(playlistIDs) == 0:
+        print('[UPDATE] No playlists available. Please add playlists from the advanced menu.\n')
+        return
+
     # Iterate through each Spotify playlist and compare length to Apple Music lengths
     for playlist in range(len(playlistIDs)):
 
@@ -28,31 +32,31 @@ def autoUpdate(self):
             loadThread.start()
 
             # Get song IDs for non-equal Spotify playlist
-            prnt(False, '[CACHING SONG IDS]\n')
+            prnt('[CACHING SONG IDS]\n')
             songIDs = spotify.get_playlist_ids(self, os.environ.get("USERNAME"), playlistIDs[playlist])
 
             # Get albums of missing songs
-            prnt(False, '[CACHING ALBUM NAMES OF MISSING SONGS]\n')
+            prnt('[CACHING ALBUM NAMES OF MISSING SONGS]\n')
             newAlbums = spotify.get_albums_from_ids(self, int(AMPlaylistLengths[playlist]), currentSpotifyLength, songIDs)
 
             # Make directories
-            prnt(False, '[CREATING ALBUM DIRECTORIES]\n')
+            prnt('[CREATING ALBUM DIRECTORIES]\n')
             spotify.create_album_dirs((self.playlist(playlistIDs[playlist]))['name'], newAlbums)
 
             # Download songs & images
-            prnt(False, '[DOWNLOADING SONGS AND ALBUM COVERS]\n')
+            prnt('[DOWNLOADING SONGS AND ALBUM COVERS]\n')
             spotify.download_songs_by_spotify_id(self,  songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
 
             # Move images
-            prnt(False, '[MOVING .JPG FILES]\n')
+            prnt('[MOVING .JPG FILES]\n')
             spotify.move_images_to_album_dirs()
 
             # Update all image tags
-            prnt(False, '[UPDATING ID3 IMAGE TAGS]\n')
+            prnt('[UPDATING ID3 IMAGE TAGS]\n')
             spotify.update_img_tags()
 
             # Update Apple Music playlist lengths automatically
-            prnt(False, '[UPDATING ENVIRONMENT VARIABLES]\n')
+            prnt('[UPDATING ENVIRONMENT VARIABLES]\n')
             AMPlaylistLengths[playlist] = currentSpotifyLength
                     # Convert list to strings
             newStr = '['

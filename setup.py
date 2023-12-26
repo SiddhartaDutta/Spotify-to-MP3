@@ -53,6 +53,9 @@ def initialSetup():
     # Set .env file
     with open(".env", "w") as envFile:
 
+        # Debug Mode flag
+        envFile.write("DEBUGMODE=\'" + 'True' + '\'\n')
+
         # Update clientid
         envFile.write("CLIENTID=\'" + clientID + '\'\n')
 
