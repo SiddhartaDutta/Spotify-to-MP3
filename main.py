@@ -7,7 +7,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import op_scripts.menus.program_op as program_op
 import op_scripts.menus.program.auto_update as auto_update
 
-load_dotenv()
+load_dotenv(override= True)
 
 print('[UPDATE] Starting Spotify to MP3...\n')
 

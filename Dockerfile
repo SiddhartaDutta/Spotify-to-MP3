@@ -3,7 +3,6 @@ FROM python:3.10.11-alpine
 RUN apk add --no-cache ffmpeg
 
 ADD main.py .
-ADD program.py .
 ADD op_scripts .
 
 ADD .env .

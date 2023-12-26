@@ -394,6 +394,7 @@ def update_img_tags():
     os.chdir(currDir)
 
 def write_playlist_data_to_env(playlistIDs, AMPlaylistLengths):
+
     # Format playlist arrays for env file addition
     playlistLengthStr = playlistIDStr = '['
     for Length, ID in zip(AMPlaylistLengths, playlistIDs):
@@ -409,13 +410,17 @@ def write_playlist_data_to_env(playlistIDs, AMPlaylistLengths):
         playlistIDStr += tempStr
 
     # Remove extra comma
-    if len(playlistIDs) > 0:
+    #if len(playlistIDs) > 0:
+    if len(playlistIDs) == 0:
+        playlistLengthStr = playlistLengthStr + ']'
+        playlistIDStr = playlistIDStr + ']'
+    else:
         playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
         playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
 
     # Write to env file
-    os.environ['PLAYLISTS'] = playlistIDStr
-    dotenv.set_key(dotenv.find_dotenv(), 'PLAYLISTS', os.environ['PLAYLISTS'])
+    os.environ["PLAYLISTS"] = playlistIDStr
+    dotenv.set_key(dotenv.find_dotenv(), "PLAYLISTS", os.environ["PLAYLISTS"])
 
-    os.environ['AMPLAYLISTLENGTHS'] = playlistLengthStr
-    dotenv.set_key(dotenv.find_dotenv(), 'AMPLAYLISTLENGTHS', os.environ['AMPLAYLISTLENGTHS'])
+    os.environ["AMPLAYLISTLENGTHS"] = playlistLengthStr
+    dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ["AMPLAYLISTLENGTHS"])
