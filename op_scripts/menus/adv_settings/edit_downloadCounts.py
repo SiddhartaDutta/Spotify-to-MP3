@@ -11,8 +11,8 @@ import op_scripts.gen as gen
 def edit_downloadCounts():
 
     print('Current Playlist IDs and Download Count: ')
-    playlistIDs = json.loads(os.environ['PLAYLISTS'])
-    AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+    playlistIDs = json.loads(os.environ['SPOTIFYPLAYLISTS'])
+    AMPlaylistLengths = json.loads(os.environ['DOWNLOADCOUNTS'])
 
     # Print all playlists and counts
     for playlist in range(len(playlistIDs)):
@@ -36,7 +36,7 @@ def edit_downloadCounts():
 
         else:
             
-            AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+            AMPlaylistLengths = json.loads(os.environ['DOWNLOADCOUNTS'])
             
             AMPlaylistLengths[userSelect - 1] = newLength
             
@@ -47,7 +47,7 @@ def edit_downloadCounts():
                     tempStr = '"' + tempStr + '",'
                     newStr += tempStr
             newStr = newStr[:len(newStr)-1] + ']'
-            os.environ['AMPLAYLISTLENGTHS'] = str(newStr)
-            dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['AMPLAYLISTLENGTHS'])
+            os.environ['DOWNLOADCOUNTS'] = str(newStr)
+            dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['DOWNLOADCOUNTS'])
 
             print('Saved.\n')

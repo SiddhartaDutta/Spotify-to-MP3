@@ -11,8 +11,8 @@ import op_scripts.spotify as spotify
 def edit_spotifyPlaylistIDs():
 
     print('Current Playlist IDs and Download Count: ')
-    playlistIDs = json.loads(os.environ['PLAYLISTS'])
-    AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+    playlistIDs = json.loads(os.environ['SPOTIFYPLAYLISTS'])
+    AMPlaylistLengths = json.loads(os.environ['DOWNLOADCOUNTS'])
 
     # Print all playlists and counts
     for playlist in range(len(playlistIDs)):
@@ -46,8 +46,8 @@ def edit_spotifyPlaylistIDs():
                 
                 else:
                     if(len(newCount)):
-                        playlistIDs = json.loads(os.environ['PLAYLISTS'])
-                        AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+                        playlistIDs = json.loads(os.environ['SPOTIFYPLAYLISTS'])
+                        AMPlaylistLengths = json.loads(os.environ['DOWNLOADCOUNTS'])
 
                         playlistIDs.append(newID)
                         AMPlaylistLengths.append(newCount)
@@ -75,8 +75,8 @@ def edit_spotifyPlaylistIDs():
                 
                 else:
 
-                    playlistIDs = json.loads(os.environ['PLAYLISTS'])
-                    AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+                    playlistIDs = json.loads(os.environ['SPOTIFYPLAYLISTS'])
+                    AMPlaylistLengths = json.loads(os.environ['DOWNLOADCOUNTS'])
 
                     delID = playlistIDs.pop(numConfirm - 1)
                     delLength = AMPlaylistLengths.pop(numConfirm - 1)

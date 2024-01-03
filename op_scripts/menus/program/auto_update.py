@@ -13,8 +13,8 @@ import op_scripts.spotify as spotify
 def autoUpdate(self):
 
     # Get Spotify playlist IDs & Apple Music playlist lengths
-    playlistIDs = json.loads(os.environ['PLAYLISTS'])
-    AMPlaylistLengths = json.loads(os.environ['AMPLAYLISTLENGTHS'])
+    playlistIDs = json.loads(os.environ['SPOTIFYPLAYLISTS'])
+    AMPlaylistLengths = json.loads(os.environ['DOWNLOADCOUNTS'])
 
     if len(playlistIDs) == 0:
         print('[UPDATE] No playlists available. Please add playlists from the advanced menu.\n')
@@ -65,8 +65,8 @@ def autoUpdate(self):
                     tempStr = '"' + tempStr + '",'
                     newStr += tempStr
             newStr = newStr[:len(newStr)-1] + ']'
-            os.environ['AMPLAYLISTLENGTHS'] = str(newStr)
-            dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['AMPLAYLISTLENGTHS'])
+            os.environ['DOWNLOADCOUNTS'] = str(newStr)
+            dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['DOWNLOADCOUNTS'])
 
             active = False
             print('[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
