@@ -1,5 +1,5 @@
 """
-Module dedicated to Spotify/music specific methods.
+Module dedicated to Spotify specific methods.
 """
 
 import os

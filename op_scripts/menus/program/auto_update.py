@@ -27,9 +27,11 @@ def autoUpdate(self):
 
         if(currentSpotifyLength != int(AMPlaylistLengths[playlist])):
 
-            active = True
-            loadThread = threading.Thread(target= loading_screen, args= (lambda : active, ))
-            loadThread.start()
+            # Loading animation
+            if os.environ.get("DEBUGMODE") == 'False' : 
+                active = True
+                loadThread = threading.Thread(target= loading_screen, args= (lambda : active, ))
+                loadThread.start()
 
             # Get song IDs for non-equal Spotify playlist
             prnt('[CACHING SONG IDS]\n')
