@@ -11,7 +11,7 @@ load_dotenv(override= True)
 
 print('[UPDATE] Starting Spotify to MP3...\n')
 
-auth_manager = SpotifyClientCredentials(client_id=os.environ.get("CLIENTID"), client_secret=os.environ.get("CLIENTSECRET"))
+auth_manager = SpotifyClientCredentials(client_id=os.environ.get("SPOTIFYCLIENTID"), client_secret=os.environ.get("SPOTIFYCLIENTSECRET"))
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Launch Program
