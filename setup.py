@@ -46,10 +46,13 @@ def initialSetup():
         playlistIDStr += tempStr
 
     # Remove extra comma
-    if numOfPlaylists > 0:
-        playlistLengthStr = '\'' + playlistLengthStr[:len(playlistLengthStr)-1] + ']\''
-        playlistIDStr = '\'' + playlistIDStr[:len(playlistIDStr)-1] + ']\''
-
+    if len(playlistIDs) == 0:
+        playlistLengthStr = playlistLengthStr + ']'
+        playlistIDStr = playlistIDStr + ']'
+    else:
+        playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
+        playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
+        
     # Set .env file
     with open(".env", "w") as envFile:
 
