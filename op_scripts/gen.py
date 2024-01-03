@@ -67,7 +67,7 @@ def input_verification(maxCount = 0, ignoreMax = False, blankInput = False, stri
     return userIn
 
 def loading_screen(active):
-    for char in itertools.cycle(['', '.', '..', '...']):
+    for char in itertools.cycle(['|', '/', '-', '\\']):
         if not active():
             break
         sys.stdout.write('\rCreating File(s) ' + char)
@@ -76,4 +76,4 @@ def loading_screen(active):
     sys.stdout.write('\r\n')
 
 def prnt(string):
-    if os.environ.get("DEBUGMODE"): print(string)
+    if os.environ.get("DEBUGMODE") == 'True' : print(string)

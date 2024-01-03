@@ -1,7 +1,10 @@
 .env
+.data.json
+
 .cache
 *.jpg
 *.mp3
+
 
 /Music
 

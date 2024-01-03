@@ -181,19 +181,6 @@ def download_img(albumName=str, url=str):
         with open('%s.jpg' % albumName, 'wb') as imgFile:
             imgFile.write(response.content)
 
-ydl_opts = {
-    'format': 'bestaudio/best',
-    'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192'
-    }],
-    'prefer_ffmpeg': True,
-    'keepvideo': False,
-    'outtmpl': 'NEW_MP3_FILE',
-    'quiet' : True
-}
-
 def __match_target_amplitude(sound, target_dBFS):
     change_in_dBFS = target_dBFS - sound.dBFS
     return sound.apply_gain(change_in_dBFS)
@@ -235,6 +222,35 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                     metaData.songArtist += ', '
 
                 metaData.songArtist += track['artists'][n]['name']
+        
+        # Determine set of download options
+        if os.environ.get("DEBUGMODE") == 'True':
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': 'mp3',
+                        'preferredquality': '192'
+                }],
+                'prefer_ffmpeg': True,
+                'keepvideo': False,
+                'outtmpl': 'NEW_MP3_FILE',
+                'quiet' : True
+            }
+
+        else:
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': 'mp3',
+                        'preferredquality': '192'
+                }],
+                'prefer_ffmpeg': True,
+                'keepvideo': False,
+                'outtmpl': 'NEW_MP3_FILE',
+                'quiet' : False
+            }
 
         # Download song and edit ID3 tags
         with YoutubeDL(ydl_opts) as ydl:
@@ -271,7 +287,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
 
-            print('\n[NORMALIZING AUDIO]\n')
+            gen.prnt('\n[NORMALIZING AUDIO]\n')
             sound = AudioSegment.from_file("NEW_MP3_FILE.mp3", "mp3")
             normalized_sound = __match_target_amplitude(sound, -14.0)
             normalized_sound.export("NEW_MP3_FILE.mp3", format= "mp3")
@@ -334,7 +350,7 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
 
     tempFile.save()
 
-    print('\n[NEW FILE]\n' + tempFile.pprint() + '\n')
+    gen.prnt('\n[NEW FILE]\n' + tempFile.pprint() + '\n')
 
 def add_img_to_id3_for_album(targetDirectory=str):
     """
