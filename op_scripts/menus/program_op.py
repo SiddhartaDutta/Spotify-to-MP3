@@ -30,7 +30,7 @@ def run(self):
         userInput = gen.input_verification(len(operations)) - 1
 
         if userInput == len(operations) - 1:
-            print('Quitting...\n')
+            print('[UPDATE] Quitting...\n')
             run = False
             break
 

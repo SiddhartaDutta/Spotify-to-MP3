@@ -235,7 +235,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                 'prefer_ffmpeg': True,
                 'keepvideo': False,
                 'outtmpl': 'NEW_MP3_FILE',
-                'quiet' : True
+                'quiet' : False
             }
 
         else:
@@ -249,7 +249,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                 'prefer_ffmpeg': True,
                 'keepvideo': False,
                 'outtmpl': 'NEW_MP3_FILE',
-                'quiet' : False
+                'quiet' : True
             }
 
         # Download song and edit ID3 tags
@@ -337,7 +337,7 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
     try:
         tempFile.add_tags()
     except error:
-        print('[UPDATE] Tag base already exists.')
+        gen.prnt('[UPDATE] Tag base already exists.')
         pass
 
     tempFile['album'] = albumName
@@ -435,8 +435,8 @@ def write_playlist_data_to_env(playlistIDs, AMPlaylistLengths):
         playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
 
     # Write to env file
-    os.environ["PLAYLISTS"] = playlistIDStr
-    dotenv.set_key(dotenv.find_dotenv(), "PLAYLISTS", os.environ["PLAYLISTS"])
+    os.environ["SPOTIFYPLAYLISTS"] = playlistIDStr
+    dotenv.set_key(dotenv.find_dotenv(), "SPOTIFYPLAYLISTS", os.environ["SPOTIFYPLAYLISTS"])
 
-    os.environ["AMPLAYLISTLENGTHS"] = playlistLengthStr
-    dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ["AMPLAYLISTLENGTHS"])
+    os.environ["DOWNLOADCOUNTS"] = playlistLengthStr
+    dotenv.set_key(dotenv.find_dotenv(), "DOWNLOADCOUNTS", os.environ["DOWNLOADCOUNTS"])

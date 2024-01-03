@@ -48,6 +48,6 @@ def edit_downloadCounts():
                     newStr += tempStr
             newStr = newStr[:len(newStr)-1] + ']'
             os.environ['DOWNLOADCOUNTS'] = str(newStr)
-            dotenv.set_key(dotenv.find_dotenv(), "AMPLAYLISTLENGTHS", os.environ['DOWNLOADCOUNTS'])
+            dotenv.set_key(dotenv.find_dotenv(), "DOWNLOADCOUNTS", os.environ['DOWNLOADCOUNTS'])
 
             print('Saved.\n')
