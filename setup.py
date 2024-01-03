@@ -8,33 +8,23 @@ def initialSetup():
     print("[INFO] Please enter the information as requested. All mistakes can be fixed later in settings...")
     sleep(0.5)
 
-    data = {"DEBUGMODE":"False",
-            "UPDATEIBROADCAST":'',
-            "SPOTIFYCLIENTID":'',
-            "SPOTIFYCLIENTSECRET":'',
-            "IBROADCASTUSER":'',
-            "IBROADCASTPSWD":'',
-            "NATIVEPLAYLISTS":{},
-            "IBROADCASTPLAYLISTS":{}
-            }
-
-    data["SPOTIFYCLIENTID"] = str(input("[INPUT] Please input your generated Spotify Client ID: "))
-    data["SPOTIFYCLIENTSECRET"] = str(input("[INPUT] Please input your generated Spotify Client Secret: "))
+    clientID = str(input("[INPUT] Please input your generated Spotify Client ID: "))
+    clientSecret = str(input("[INPUT] Please input your generated Spotify Client Secret: "))
 
     # Get iBroadcast information
     run = True
     while run:
         promptAns = str(input('[INPUT] Would you like to connect to iBroadcast? Type \'Y\' for "Yes" or \'N\' for "No": '))
         if(promptAns.lower() == 'n' or promptAns.lower() == 'no'):
-            data["UPDATEIBROADCAST"] = 'False'
+            updateIBroad = 'False'
             run = False
         elif(promptAns.lower() == 'y' or promptAns.lower() == 'yes'):
-            data["UPDATEIBROADCAST"] = 'True'
+            updateIBroad = 'True'
             run = False
         else:
             print('[ERROR] Invalid Input.')
 
-    iBroadUpdate = data["UPDATEIBROADCAST"] == 'True'
+    updateIBroad = updateIBroad == 'True'
 
     # Get number of playlists to be added
     numOfPlaylists = None
@@ -44,38 +34,100 @@ def initialSetup():
         except:
             print("[ERROR] Invalid input. Please input a number.")
     
-    if iBroadUpdate:
-        data["IBROADCASTUSER"] = str(input("[INPUT] Please enter your iBroadcast username: "))
-        data["IBROADCASTPSWD"] = str(input("[INPUT] Please enter your iBroadcast password: "))
+    if updateIBroad == 'True':
+        iBroadUser = str(input("[INPUT] Please enter your iBroadcast username: "))
+        iBroadPswd = str(input("[INPUT] Please enter your iBroadcast password: "))
+    else:
+        iBroadUser = ''
+        iBroadPswd = ''
 
     # Get playlist IDs and download counts
-    while(len(data["NATIVEPLAYLISTS"])) < numOfPlaylists:
+    playlistIDs = []
+    playlistLengths = []
+    iBroadIDs = []
+    while(len(playlistIDs)) < numOfPlaylists:
 
         # Get Spotify playlist ID
-        spotifyID = str(input('[INPUT] Please input a playlist ID for playlist #' + str(len(data["NATIVEPLAYLISTS"]) + 1) + ': '))
+        playlistIDs.append(input('[INPUT] Please input a playlist ID for playlist #' + str(len(playlistIDs) + 1) + ': '))
         
         # Get download count
         run = True
         while run:
             try:
-                downloadCount = str(int(input('[INPUT] Please input the number of songs already downloaded for the above playlist: ')))
+                playlistLengths.append(str(int(input('[INPUT] Please input the number of songs already downloaded for the above playlist: '))))
                 run = False
             except:
                 print("[ERROR] Invalid input. Please input a number.")
 
-        # Update native
-        data["NATIVEPLAYLISTS"].update({spotifyID : downloadCount})
-
         # Update iBroadcast
-        if iBroadUpdate:
-            data["IBROADCASTPLAYLISTS"].update({spotifyID : str(input('[INPUT] Please enter the corresponding iBroadcast playlist ID for the above playlist: '))})
-        else:
-            data["IBROADCASTPLAYLISTS"].update({spotifyID : ''})
+        if updateIBroad:
+            iBroadIDs.append(input('[INPUT] Please input the corresponding iBroadcast playlist ID for the above playlist: '))
 
-    # Set .data.json file
-    with open(".data.json", "w") as datafile:
-        obj = json.dumps(data, indent= 4)
-        datafile.write(obj)
+    # Format playlist arrays for env file addition
+    playlistLengthStr = playlistIDStr = iBroadIDStr = '['
+    for Length, spID in zip(playlistLengths, playlistIDs):
+
+        # Process length
+        tempStr = str(Length)
+        tempStr = '"' + tempStr + '",'
+        playlistLengthStr += tempStr
+
+        # Process Spotify ID
+        tempStr = str(spID)
+        tempStr = '"' + tempStr + '",'
+        playlistIDStr += tempStr
+
+    if updateIBroad:
+        for ibID in iBroadIDs:
+            # Process iBroadcast ID
+            tempStr = str(ibID)
+            tempStr = '"' + tempStr + '",'
+            iBroadIDStr += tempStr
+
+    if numOfPlaylists == 0:
+        playlistLengthStr = playlistLengthStr + ']'
+        playlistIDStr = playlistIDStr + ']'
+    else:
+        playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
+        playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
+
+    if updateIBroad:
+        if numOfPlaylists == 0:
+            iBroadIDStr = iBroadIDStr + ']'
+        else:
+            iBroadIDStr = '\'' + iBroadIDStr[:len(iBroadIDStr)-1] + ']\''
+    else:
+        iBroadIDStr = iBroadIDStr + ']'
+
+    # Set .env file
+    with open(".env", "w") as envFile:
+
+        # Debug Mode flag
+        envFile.write("DEBUGMODE=\'" + 'False' + '\'\n')
+
+        # iBroadcast flag
+        envFile.write("UPDATEIBROADCAST=\'" + str(updateIBroad) + '\'\n')
+
+        # Update clientid
+        envFile.write("SPOTIFYCLIENTID=\'" + clientID + '\'\n')
+
+        # Update clientsecret
+        envFile.write("SPOTIFYCLIENTSECRET=\'" + clientSecret + '\'\n')
+
+        # Update ibroadcast username
+        envFile.write("IBROADCASTUSER=\'" + iBroadUser + '\'\n')
+
+        # Update ibroadcast password
+        envFile.write("IBROADCASTPSWD=\'" + iBroadPswd + '\'\n')
+
+        # Update spotify playlists
+        envFile.write("SPOTIFYPLAYLISTS=" + playlistIDStr + '\n')
+
+        # Update ibroadcast playlists
+        envFile.write("IBROADCASTPLAYLISTS=" + iBroadIDStr + '\n')
+
+        # Update download counts
+        envFile.write("DOWNLOADCOUNTS=" + playlistLengthStr + '\n')
         
     print('[Update] Finished setting up your data file.')
 
