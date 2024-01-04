@@ -129,9 +129,9 @@ def initialSetup():
         # Update download counts
         envFile.write("DOWNLOADCOUNTS=" + playlistLengthStr + '\n')
         
-    print('[Update] Finished setting up your data file.')
+    print('[UPDATE] Finished setting up your data file.')
 
-    print('[Update] Setup complete. Starting program...')  
+    print('[UPDATE] Data setup complete.')  
 
 # RUN SETUP
 initialSetup()

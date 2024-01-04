@@ -63,7 +63,7 @@ def autoUpdate(self):
             # Update iBroadcast if flagged
             if os.environ.get("UPDATEIBROADCAST") == 'True':
                 prnt('[UPDATING iBROADCAST')
-                ibroadcast.upload_to_ibroadcast(newFiles, iBroadcastIDs[playlist])
+                ibroadcast.upload_new(newFiles, iBroadcastIDs[playlist])
 
             # Update Apple Music playlist lengths automatically
             prnt('[UPDATING ENVIRONMENT VARIABLES]\n')

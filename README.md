@@ -46,20 +46,22 @@ sudo apt install python3-pip
 <details><summary>MP3 Managers</summary>
 
 ***
-If you have an Apple device, it is highly recommended you use Apple Music as your MP3 manager. To do so, after downloading all of your music, you can upload full albums by navigating to <i>File > Add Folder to Library...</i> and then selecting all album folders in the file manager.
+If you have an Apple device, it is highly recommended you use either iBroadcast or Apple Music as your MP3 manager.
 
-If you have an Android device, it is highly recommended you use the native song manager (to be more in-depth in the future; I, @SiddhartaDutta, have an iPhone).
+If you have an Android device, it is highly recommended you use iBroadcast.
 
 Spotify is **not** recommended as even with your own MP3 files, Spotify still applies non-premium rules such as limited skips and ads.
+
+Other managers may work, those previously mentioned have just been tested with this program.
 ***
 
 </details>
 
-Please download the *.zip* file from the repository. After unzipping, place the unzipped folder where you want the downloaded music to be stored. Music is downloaded, placed in a single all-containing folder, and this folder is then placed in the same location the script was ran in. It is recommended to create a folder in your *Music* folder and place the unzipped folder in there. Run *script.sh* according to your command shell. Follow all instructions when prompted.
-
-**NOTE**: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
+Please download the *.zip* file from the repository. After unzipping, place the unzipped folder where you want the downloaded music to be stored. Music is downloaded, placed in a single all-containing folder, and this folder is then placed in the same location the script was ran in. It is recommended to create a folder in your *Music* folder and place the unzipped folder in there. Run *setup.sh* according to your command shell. Follow all instructions when prompted.
 
 ***
+**NOTE**: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
+
 **NOTE**: If using WSL on Ubuntu 22.xx, make sure to run the following commands prior to running the script (adds missing yet required tools):
 ```
 sudo add-apt-repository ppa:wslutilities/wslu
@@ -67,27 +69,25 @@ sudo apt update
 sudo apt install wslu
 ```
 
+***
+
 Bash/WSL:
 ```
-sudo script.sh
+sudo ./setup.sh
 ```
 
-**NOTE**: If being told that script cannot run, run the follow command before trying again:
+If being told that script cannot run, run the follow command before trying again:
 ```
 sudo chmod +x setup.sh
 ```
+
+***
 
 Powershell:
 
 There is currently no Powershell support. If you have WSL on Windows, you can follow the same step as if you had Bash (above).
 
-<details><summary>What does the script do?</summary>
-
 ***
-When you run the script, it first asks you for some required information so that the program can access your Spotify data and know where to save downloaded MP3 files. Afterwards, it creates a *.env* file to store this data (this data can later be edited through the main menu in the program). It then creates a Docker image with the required files and deletes all the downloaded files (you can also delete the *.zip* you downloaded earlier if you have not already, it is not needed after unzipping). You are now left with none of the files related to the program except for the generated Docker image. Running the Docker image with the instructions below will always run the program.
-***
-
-</details>
 
 After having run the initial setup image, you can just run the ***spotify_to_mp3*** container for any subsequent use of the program:
 ```.sh
@@ -99,9 +99,11 @@ sudo docker start -ai spotify_to_mp3
 <details><summary>Answer</summary>
 
 ***
-For the least confusing operation, it is highly recommended that when creating playlists on Spotify, you create them grouped as albums; all songs belonging to an album should be grouped chronologically together. This style of listening involves fully listening to an album at once and adding desired songs then.
+When using iBroadcast for your music library, your songs will be added in the same order they appear when you decide to update your playlist. If you wish for iBroadcast to mirror Spotify (only when uploading initially), then you can use the tool regularly with no worry about song order specification.
 
-However, if you do not wish to listen to music in an album fashion, you can still easily add albums to your MP3 manager. After downloading your music, you can sort the album folders by those edited most recent. This way, all albums will be listed that need to be transferred (is beneficial when there are a large amount of albums/singles).
+When using Apple Music for your music library, it is highly recommended that when creating playlists on Spotify, you create them grouped as albums; all songs belonging to an album should be grouped chronologically together. This style of listening involves fully listening to an album at once and adding desired songs then.
+
+Note for Apple Music: However, if you do not wish to listen to music in an album fashion, you can still easily add albums to your MP3 manager. After downloading your music, you can sort the album folders by those edited most recent. This way, all albums will be listed that need to be transferred (is beneficial when there are a large amount of albums/singles).
 ***
 
 </details>
@@ -133,6 +135,19 @@ The ID is **4PTG3Z6ehGkBFwjybzWkR8**
 
 </details>
 
+**How do I get a iBroadcast playlist's ID?** 
+<details><summary>Answer</summary>
+
+***
+First locate the url when your playlist is open. The playlist ID follows the ID tag within the URL and prior to the apersand (&).
+
+Example: https://media.ibroadcast.com/?view=container&container_id=######&type=playlists
+
+The ID is **######**
+***
+
+</details>
+
 ## Cloning the Project
 To clone this project, you will need the following:
 ### Language
@@ -141,17 +156,21 @@ To clone this project, you will need the following:
 Please follow the linked instructions should you not already have Python (this program utilizes Python 3.10.11)
 ### Modules
 #### Modules to be Installed:
-* [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+* [yt-dlp](https://pypi.org/project/yt-dlp/)
 
-* [spotipy](https://github.com/spotipy-dev/spotipy)
+* [spotipy](https://pypi.org/project/spotipy/)
 
-* [dotenv]()
+* [dotenv](https://pypi.org/project/python-dotenv/)
 
-* [requests]()
+* [requests](https://pypi.org/project/requests/)
+
+* [pydub](https://pypi.org/project/pydub/)
+
+* [ibroadcast](https://pypi.org/project/ibroadcast/)
 
 Running the following command in your virtual environment (or where ever you wish to have the modules) should download all required and non-standard modules:
 ```.sh
-pip3 install yt_dlp spotipy python-requests python-dotenv
+pip3 install yt_dlp python-requests python-dotenv pydub ibroadcast && pip3 install spotipy --upgrade
 ```
 
 #### Pre-Installed Modules (Installation should be unneeded):
@@ -175,6 +194,4 @@ git clone https://github.com/SiddhartaDutta/Spotify-to-MP3.git
 ## Contributing
 
 I am not currently looking for any collaborators.
-
-## Authors and Acknowledgment
 
