@@ -6,7 +6,7 @@ This project is designed to be both a learning tool and for experimental purpose
 
 ## Description
 
-**Spotify to MP3** is a collection of scripts written and organized to help the user download their playlists in a relatively quick and organized manner. The MP3 files contain metadata in the ID3 format so that the MP3 files may be exported to a MP3 manager, such as Spotify or iTunes (although only iTunes will allow "premium" features for owned MP3 files, not Spotify) without the user having to edit metadata (files will organize themselves based on their metadata).
+**Spotify to MP3** is a collection of scripts written and organized to help the user download their playlists in a relatively quick and organized manner. The MP3 files contain metadata in the ID3 format so that the MP3 files may be exported to an MP3 manager, such as iBroadcast, iTunes or Spotify (although Spotify does not allow "premium" features for owned MP3 files), without the user having to edit metadata.
 
 ## Badges
 ![LICENSE](https://img.shields.io/github/license/SiddhartaDutta/spotify-to-mp3)
