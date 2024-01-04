@@ -20,7 +20,7 @@ def __return_iB_obj():
         print('[UPDATE] Aborting...')
         return None
 
-def upload_to_ibroadcast(newFilePaths : list, iBroadcastPlaylistID):
+def upload_new(newFilePaths : list, iBroadcastPlaylistID):
     """
     Uploads new tracks to iBroadcast
     """
@@ -49,3 +49,8 @@ def upload_to_ibroadcast(newFilePaths : list, iBroadcastPlaylistID):
     # Add tracks to playlist
     tempIBOBJ.addtracks(iBroadcastPlaylistID, iBroadcastTrackIDs)
     
+def upload_all():
+    """
+    Attempts to upload all files in 'Music' directory to iBroadcast
+    """
+    pass
