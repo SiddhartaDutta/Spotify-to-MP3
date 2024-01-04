@@ -24,7 +24,12 @@ def initialSetup():
         else:
             print('[ERROR] Invalid Input.')
 
-    updateIBroad = updateIBroad == 'True'
+    if updateIBroad == 'True':
+        iBroadUser = str(input("[INPUT] Please enter your iBroadcast username: "))
+        iBroadPswd = str(input("[INPUT] Please enter your iBroadcast password: "))
+    else:
+        iBroadUser = ''
+        iBroadPswd = ''
 
     # Get number of playlists to be added
     numOfPlaylists = None
@@ -33,13 +38,6 @@ def initialSetup():
             numOfPlaylists = int(input("[INPUT] Please input the number of Spotify playlists you wish to update: "))
         except:
             print("[ERROR] Invalid input. Please input a number.")
-    
-    if updateIBroad == 'True':
-        iBroadUser = str(input("[INPUT] Please enter your iBroadcast username: "))
-        iBroadPswd = str(input("[INPUT] Please enter your iBroadcast password: "))
-    else:
-        iBroadUser = ''
-        iBroadPswd = ''
 
     # Get playlist IDs and download counts
     playlistIDs = []
