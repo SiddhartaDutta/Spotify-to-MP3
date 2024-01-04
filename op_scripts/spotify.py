@@ -82,9 +82,9 @@ def get_album_cover_url(self, songID=str):
         try:
             return get_track_info(self, songID)['album']['images'][1]['url']
         except:
-            print('[TIMEOUT ERROR] WAITING...')
+            gen.prnt('[TIMEOUT ERROR] WAITING...')
             time.sleep(3)
-            print('[RETRYING...]')
+            gen.prnt('[RETRYING...]')
 
     print('[]')
 
@@ -283,9 +283,9 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                     successfulDownload = True
                 except:
                     tries += 1
-                    print('[TIMEOUT ERROR] WAITING...')
+                    gen.prnt('[TIMEOUT ERROR] WAITING...')
                     time.sleep(3)
-                    print('[RETRYING...]\n')
+                    gen.prnt('[RETRYING...]\n')
 
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
 

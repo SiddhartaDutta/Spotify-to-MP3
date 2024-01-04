@@ -20,22 +20,32 @@ def __return_iB_obj():
         print('[UPDATE] Aborting...')
         return None
 
-def upload_to_ibroadcast(newFilePaths):
+def upload_to_ibroadcast(newFilePaths : list, iBroadcastPlaylistID):
+    """
+    Uploads new tracks to iBroadcast
+    """
 
+    # Abort if no new files for playlist
     if newFilePaths == None:
         return
 
+    # Abort if user credentials are wrong
     tempIBOBJ = __return_iB_obj()
     if tempIBOBJ == None:
         return
     
-    print(list)
-    # isuploaded
-    # upload
-        # record returned ids
-    # addtracks
-    # notes:
-    # - will be added near line 70 auto_update.py
-    # - will probably need all track names prior to upload to know what to upload
-        # - make a list of paths with spotify track ids?
-    pass
+    # iBroadcast returned track ids for playlist assignment 
+    iBroadcastTrackIDs = []
+    
+    # For each new file, attempt to
+    for file in newFilePaths:
+        
+        # Upload if not uploaded
+        if not tempIBOBJ.isuploaded(file):
+
+            # Upload file
+            iBroadcastTrackIDs.append(tempIBOBJ.upload(file))
+
+    # Add tracks to playlist
+    tempIBOBJ.addtracks(iBroadcastPlaylistID, iBroadcastTrackIDs)
+    

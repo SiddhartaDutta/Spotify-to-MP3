@@ -16,12 +16,13 @@ def autoUpdate(self):
     # Get Spotify playlist IDs & Apple Music playlist lengths
     playlistIDs = json.loads(os.environ['SPOTIFYPLAYLISTS'])
     AMPlaylistLengths = json.loads(os.environ['DOWNLOADCOUNTS'])
+    iBroadcastIDs = json.loads(os.environ['IBROADCASTPLAYLISTS'])
 
     if len(playlistIDs) == 0:
         print('[UPDATE] No playlists available. Please add playlists from the advanced menu.\n')
         return
 
-    # Iterate through each Spotify playlist and compare length to Apple Music lengths
+    # Iterate through each Spotify playlist and compare length to downloaded counts
     for playlist in range(len(playlistIDs)):
 
         currentSpotifyLength = spotify.get_playlist_length(self, playlistIDs[playlist])
@@ -30,6 +31,7 @@ def autoUpdate(self):
 
             # Loading animation
             if os.environ.get("DEBUGMODE") == 'False' : 
+                print('[UPDATE] This process can take several minutes. Do *NOT* force quit the program!')
                 active = True
                 loadThread = threading.Thread(target= loading_screen, args= (lambda : active, ))
                 loadThread.start()
@@ -61,7 +63,7 @@ def autoUpdate(self):
             # Update iBroadcast if flagged
             if os.environ.get("UPDATEIBROADCAST") == 'True':
                 prnt('[UPDATING iBROADCAST')
-                ibroadcast.upload_to_ibroadcast(newFilePaths= newFiles)
+                ibroadcast.upload_to_ibroadcast(newFiles, iBroadcastIDs[playlist])
 
             # Update Apple Music playlist lengths automatically
             prnt('[UPDATING ENVIRONMENT VARIABLES]\n')
