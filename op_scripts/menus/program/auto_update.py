@@ -7,8 +7,9 @@ import json
 import dotenv
 import threading
 
-from op_scripts.gen import loading_screen, prnt
 import op_scripts.spotify as spotify
+import op_scripts.ibroadcast as ibroadcast
+from op_scripts.gen import loading_screen, prnt
 
 def autoUpdate(self):
 
@@ -45,9 +46,9 @@ def autoUpdate(self):
             prnt('[CREATING ALBUM DIRECTORIES]\n')
             spotify.create_album_dirs((self.playlist(playlistIDs[playlist]))['name'], newAlbums)
 
-            # Download songs & images
+            # Download songs & images AND record new file paths
             prnt('[DOWNLOADING SONGS AND ALBUM COVERS]\n')
-            spotify.download_songs_by_spotify_id(self,  songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
+            newFiles = spotify.download_songs_by_spotify_id(self,  songIDs, int(AMPlaylistLengths[playlist]), currentSpotifyLength)
 
             # Move images
             prnt('[MOVING .JPG FILES]\n')
@@ -56,6 +57,11 @@ def autoUpdate(self):
             # Update all image tags
             prnt('[UPDATING ID3 IMAGE TAGS]\n')
             spotify.update_img_tags()
+
+            # Update iBroadcast if flagged
+            if os.environ.get("UPDATEIBROADCAST") == 'True':
+                prnt('[UPDATING iBROADCAST')
+                ibroadcast.upload_to_ibroadcast(newFilePaths= newFiles)
 
             # Update Apple Music playlist lengths automatically
             prnt('[UPDATING ENVIRONMENT VARIABLES]\n')

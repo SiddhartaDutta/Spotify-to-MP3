@@ -191,6 +191,8 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
     :param list metaData: test
     """
 
+    newFiles = []
+
     for index in range(amLength, spotifyLength):
 
         if sourceURL == '':
@@ -297,6 +299,9 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             # Adjust path to newest song
             musicDir = os.path.join(musicDir, gen.remove_slashes(metaData.title) + '.mp3')
 
+            # Record new paths
+            newFiles.append(str(musicDir))
+
             # Change ID3 tags
             add_easyid3_tags(musicDir, metaData.albumName, metaData.albumArtist, metaData.songArtist, metaData.releaseDate, metaData.genre, metaData.title, metaData.trackNumber)
 
@@ -309,6 +314,9 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
             # Reset meta data struct
             metaData.albumName = ''
+
+    # Return new file paths
+    return newFiles
 
 def move_images_to_album_dirs():
     """

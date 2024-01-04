@@ -9,7 +9,7 @@ ADD .env .
 ADD .cache* .
 
 #COPY requirements.txt requirements.txt
-RUN pip3 install yt_dlp python-requests python-dotenv pydub && pip3 install spotipy --upgrade
+RUN pip3 install yt_dlp python-requests python-dotenv pydub ibroadcast && pip3 install spotipy --upgrade
 
 WORKDIR /src
 CMD ["python3", "./main.py"]

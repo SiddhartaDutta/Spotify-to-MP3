@@ -5,10 +5,11 @@ Module dedicated to iBroadcast specific methods.
 import os
 import ibroadcast
 
-def return_iB_obj():
+def __return_iB_obj():
     """
     Returns iBroadcast object if credentials are accurate
     """
+
     user = os.environ.get("IBROADCASTUSER")
     pswd = os.environ.get("IBROADCASTPSWD")
 
@@ -16,9 +17,19 @@ def return_iB_obj():
         return ibroadcast.iBroadcast(user, pswd)
     except:
         print('[ERROR] No/incorrect iBroadcast credentials. Please check your username and password in Advanced Settings.')
+        print('[UPDATE] Aborting...')
         return None
 
-def upload_ibroadcast():
+def upload_to_ibroadcast(newFilePaths):
+
+    if newFilePaths == None:
+        return
+
+    tempIBOBJ = __return_iB_obj()
+    if tempIBOBJ == None:
+        return
+    
+    print(list)
     # isuploaded
     # upload
         # record returned ids
