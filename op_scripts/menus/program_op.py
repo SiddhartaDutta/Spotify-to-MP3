@@ -8,13 +8,15 @@ import op_scripts.menus.program.auto_update as auto_update
 import op_scripts.menus.program.create_song as create_song
 import op_scripts.menus.program.create_album as create_album
 import op_scripts.menus.program.spotify_base as spotify_base
+import op_scripts.ibroadcast as ibroadcast
 
 
 
 operations = [(auto_update.autoUpdate, True, 'Automatically Run Checks on Provided Spotify Playlist IDs'),
-              (spotify_base.spotifyBase, True, 'Assign a SoundCloud Source to Spotify Song'),
+              (spotify_base.spotifyBase, True, 'Assign a SoundCloud or YouTube Source to Spotify Song'),
               (create_song.createSong, False, 'Create a Fully Custom Song'),
               (create_album.createAlbum, False, 'Create a Fully Custom Album'),
+              (ibroadcast.upload_all, False, 'Upload All Songs to iBroadcast'),
               (adv_settings_op.run, False, 'Advanced Settings'),
               (None, False, 'Exit the Program')
              ]

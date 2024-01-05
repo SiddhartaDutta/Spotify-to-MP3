@@ -107,15 +107,18 @@ def createSong():
             # Request for another song
             promptAns = str(input('Would you like to add another song? Type \'Y\' for "Yes" or \'N\' to cancel: '))
             if(promptAns.lower() == 'n' or promptAns.lower() == 'no'):
-                run = False
+                run = None
 
             print()
-
-            # Update all image tags
-            print('[UPDATING ID3 IMAGE TAGS]\n')
-            spotify.update_img_tags()
 
         except:
             print('[ERROR] OPERATION FAILED (Invalid Song ID and/or Invalid Source URL). The operation will be aborted.\n')
             print()
             run = False
+    
+    # Update all images if run was successful
+    if run == None:
+        # Update all image tags
+        print('[UPDATING ID3 IMAGE TAGS]\n')
+        spotify.update_img_tags()
+
