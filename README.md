@@ -13,9 +13,13 @@ This project is designed to be both a learning tool and for experimental purpose
 
 ## Visuals
 
-Coming soon.
+Coming soon...
 
-## Usage (Running a Docker Image)
+## Usage (Downloadable Image)
+
+Coming soon...
+
+## Usage (Creating a Docker Image)
 
 **Prerequisite: Docker**
 
@@ -61,6 +65,8 @@ Please download the *.zip* file from the repository. After unzipping, place the 
 
 ***
 **NOTE**: System administrator permissions are required due to Docker. The script and subsequently generated Docker image will not work without administrator permissions.
+
+**NOTE**: Ensure that any directory in the full path where you are installing the program does NOT contain spaces. Docker will not work with any spaces.
 
 **NOTE**: If using WSL on Ubuntu 22.xx, make sure to run the following commands prior to running the script (adds missing yet required tools):
 ```

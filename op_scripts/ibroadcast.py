@@ -64,7 +64,7 @@ def upload_all():
         return
     
     # Start loading animation
-    print('[UPDATE] This process can take several minutes. Do *NOT* force quit the program!\n')
+    print('[UPDATE] This process can take several minutes. Do *NOT* force quit the program!')
     active = True
     loadThread = threading.Thread(target= loading_screen, args= (lambda : active, ))
     loadThread.start()
