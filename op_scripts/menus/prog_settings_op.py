@@ -2,13 +2,7 @@
 Module dedicated to settings menu methods.
 """
 
-import os
-import json
-import dotenv
-
 import op_scripts.gen as gen
-import op_scripts.spotify as spotify
-
 from op_scripts.menus.prog_settings import edit_username
 from op_scripts.menus.prog_settings import edit_clientID
 from op_scripts.menus.prog_settings import edit_clientSecret

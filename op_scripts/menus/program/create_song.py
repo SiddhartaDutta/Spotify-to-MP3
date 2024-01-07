@@ -5,7 +5,6 @@ Module dedicated to creating metadata and MP3 from user provided data.
 import op_scripts.gen as gen
 import op_scripts.spotify as spotify
 import op_scripts.meta_data_frame as metaDF
-import op_scripts.menus.program.create_album as create_album
 
 def createSong():
 
