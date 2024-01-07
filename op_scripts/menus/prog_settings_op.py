@@ -8,13 +8,17 @@ from op_scripts.menus.prog_settings import edit_clientID
 from op_scripts.menus.prog_settings import edit_clientSecret
 from op_scripts.menus.prog_settings import edit_downloadCounts
 from op_scripts.menus.prog_settings import edit_spotifyPlaylistIDs
+from op_scripts.menus.prog_settings import toggle_debug
+from op_scripts.menus.prog_settings import toggle_ibroadcastUpdate
 
 
 operations = [(edit_username.edit_username, 'Edit Spotify Username'),
-              (edit_clientID.edit_clientID, 'Edit Spotify Client ID'),
-              (edit_clientSecret.edit_clientSecret, 'Edit Spotify Client Secret'),
+              (toggle_ibroadcastUpdate.toggle_ibroadcastUpdate, 'Toggle iBroadcast Connection'),
               (edit_downloadCounts.edit_downloadCounts, 'Edit Downloaded Song Counts'),
               (edit_spotifyPlaylistIDs.edit_spotifyPlaylistIDs, 'Edit Spotify Playlist IDs'),
+              (edit_clientID.edit_clientID, 'Edit Spotify Client ID'),
+              (edit_clientSecret.edit_clientSecret, 'Edit Spotify Client Secret'),
+              (toggle_debug.toggle_debug, 'Toggle Debug Mode'),
               (None, 'Back to Main Menu')
               ]
 
