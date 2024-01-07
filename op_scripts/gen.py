@@ -28,6 +28,19 @@ def modify_slashes(string=str):
 # create key to replace for slashes - replace in song name before creating file and etc.
 # or- figure out how to replace name during download itself- like how u can thru terminal
 
+def yn_input(prompt = ''):
+
+    run = True
+    while run:
+        userIn = input(prompt + ' Type \'Y\' for \'Yes\' or \'N\' for \'No\': ')
+
+        if(userIn.lower() == 'n' or userIn.lower() == 'no'):
+            return False
+        elif(userIn.lower() == 'y' or userIn.lower() == 'yes'):
+            return True
+        else:
+            print('[ERROR] Invalid Input.')
+
 def input_verification(maxCount = 0, ignoreMax = False, blankInput = False, stringInput = False, prompt = 'Please input selection'):
     """
     Modular input collection method.
