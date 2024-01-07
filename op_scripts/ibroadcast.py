@@ -4,6 +4,7 @@ Module dedicated to iBroadcast specific methods.
 
 import os
 import glob
+import time
 import threading
 import ibroadcast
 
@@ -48,10 +49,33 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
         if not tempIBOBJ.isuploaded(file):
 
             # Upload file
-            iBroadcastTrackIDs.append(tempIBOBJ.upload(file))
+            attempts = 0
+            while attempts < 5:
+                try:
+            
+                    # Upload file
+                    prnt('[UPDATE] Uploading: ' + file)
+                    iBroadcastTrackIDs[0] = tempIBOBJ.upload(file)
 
-    # Add tracks to playlist
-    tempIBOBJ.addtracks(iBroadcastPlaylistID, iBroadcastTrackIDs)
+                    # Add track to playlist
+                    prnt('[UPDATE] Adding to playlist...')
+                    tempIBOBJ.addtracks(iBroadcastPlaylistID, iBroadcastTrackIDs)
+
+                    prnt('[UPDATE] SUCCESSFUL')
+                    attempts = 10
+                    break
+                except:
+                    prnt('[ERROR] Possible timeout. Waiting...')
+                    time.sleep(5.0)
+                    attempts += 1
+                    prnt('[UPDATE] Retrying...')
+
+            # Save file if not uploaded
+            if attempts != 10:
+                prnt('[ERROR] File could not be uploaded. Refer to \'SKIPPED.txt\' for file.')
+                with open('SKIPPED.txt', 'a') as skipFile:
+                    skipFile.write(str(file) + '\n')
+                    
     
 def upload_all():
     """
