@@ -40,7 +40,7 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
         return
     
     # iBroadcast returned track ids for playlist assignment 
-    iBroadcastTrackIDs = []
+    iBroadcastTrackIDs = [1]
     
     # For each new file, attempt to
     for file in newFilePaths:
@@ -61,7 +61,7 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
                     prnt('[UPDATE] Adding to playlist...')
                     tempIBOBJ.addtracks(iBroadcastPlaylistID, iBroadcastTrackIDs)
 
-                    prnt('[UPDATE] SUCCESSFUL')
+                    prnt('[UPDATE] SUCCESSFUL\n')
                     attempts = 10
                     break
                 except:

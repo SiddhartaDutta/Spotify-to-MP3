@@ -62,7 +62,7 @@ def autoUpdate(self):
 
             # Update iBroadcast if flagged
             if os.environ.get("UPDATEIBROADCAST") == 'True':
-                prnt('[UPDATING iBROADCAST')
+                prnt('[UPDATING iBROADCAST\n')
                 ibroadcast.upload_new(newFiles, iBroadcastIDs[playlist])
 
             # Update Apple Music playlist lengths automatically
@@ -79,6 +79,6 @@ def autoUpdate(self):
             dotenv.set_key(dotenv.find_dotenv(), "DOWNLOADCOUNTS", os.environ['DOWNLOADCOUNTS'])
 
             active = False
-            print('\n[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
+            print('[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
         else:
             print("[NO UPDATE AVAILABLE] %-*s PLAYLIST: %-*s CURRENT LENGTH: %s\n" % (4, '', 25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
