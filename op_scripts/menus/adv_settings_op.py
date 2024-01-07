@@ -9,11 +9,11 @@ import dotenv
 import op_scripts.gen as gen
 import op_scripts.spotify as spotify
 
-from op_scripts.menus.adv_settings import edit_username
-from op_scripts.menus.adv_settings import edit_clientID
-from op_scripts.menus.adv_settings import edit_clientSecret
-from op_scripts.menus.adv_settings import edit_downloadCounts
-from op_scripts.menus.adv_settings import edit_spotifyPlaylistIDs
+from op_scripts.menus.prog_settings import edit_username
+from op_scripts.menus.prog_settings import edit_clientID
+from op_scripts.menus.prog_settings import edit_clientSecret
+from op_scripts.menus.prog_settings import edit_downloadCounts
+from op_scripts.menus.prog_settings import edit_spotifyPlaylistIDs
 
 
 operations = [(edit_username.edit_username, 'Edit Spotify Username'),
