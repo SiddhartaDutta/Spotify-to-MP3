@@ -5,11 +5,11 @@
 *.jpg
 *.mp3
 
-
 /Music
 
 .vscode/
 
 testScript.py
+output.txt
 
 **/__pycache__

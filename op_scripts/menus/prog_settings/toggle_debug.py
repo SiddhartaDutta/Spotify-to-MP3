@@ -5,7 +5,7 @@ Module dedicated to toggling debug mode.
 import os
 import dotenv
 
-from gen import yn_input
+from op_scripts.gen import yn_input
 
 def toggle_debug():
 

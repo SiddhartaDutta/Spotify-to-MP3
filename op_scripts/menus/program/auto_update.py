@@ -6,6 +6,7 @@ import os
 import json
 import dotenv
 import threading
+from tqdm import tqdm
 
 import op_scripts.spotify as spotify
 import op_scripts.ibroadcast as ibroadcast
@@ -23,18 +24,18 @@ def autoUpdate(self):
         return
 
     # Iterate through each Spotify playlist and compare length to downloaded counts
-    for playlist in range(len(playlistIDs)):
+    for playlist in tqdm(range(len(playlistIDs)), desc= 'Check Playlists', disable= (os.environ.get('DEBUGMODE') == 'True')):
 
         currentSpotifyLength = spotify.get_playlist_length(self, playlistIDs[playlist])
 
         if(currentSpotifyLength != int(AMPlaylistLengths[playlist])):
 
             # Loading animation
-            if os.environ.get("DEBUGMODE") == 'False' : 
-                print('[UPDATE] This process can take several minutes. Do *NOT* force quit the program!')
-                active = True
-                loadThread = threading.Thread(target= loading_screen, args= (lambda : active, ))
-                loadThread.start()
+            # if os.environ.get("DEBUGMODE") == 'False' : 
+            #     print('[UPDATE] This process can take several minutes. Do *NOT* force quit the program!')
+            #     active = True
+            #     loadThread = threading.Thread(target= loading_screen, args= (lambda : active, ))
+            #     loadThread.start()
 
             # Get song IDs for non-equal Spotify playlist
             prnt('[CACHING SONG IDS]\n')
@@ -62,7 +63,7 @@ def autoUpdate(self):
 
             # Update iBroadcast if flagged
             if os.environ.get("UPDATEIBROADCAST") == 'True':
-                prnt('[UPDATING iBROADCAST\n')
+                prnt('[UPDATING iBROADCAST]\n')
                 ibroadcast.upload_new(newFiles, iBroadcastIDs[playlist])
 
             # Update Apple Music playlist lengths automatically
@@ -79,6 +80,6 @@ def autoUpdate(self):
             dotenv.set_key(dotenv.find_dotenv(), "DOWNLOADCOUNTS", os.environ['DOWNLOADCOUNTS'])
 
             active = False
-            print('[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
+            prnt('[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
         else:
-            print("[NO UPDATE AVAILABLE] %-*s PLAYLIST: %-*s CURRENT LENGTH: %s\n" % (4, '', 25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
+            prnt("[NO UPDATE AVAILABLE] %-*s PLAYLIST: %-*s CURRENT LENGTH: %s\n" % (4, '', 25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))

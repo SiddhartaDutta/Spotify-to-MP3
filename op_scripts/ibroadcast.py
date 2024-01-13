@@ -5,8 +5,10 @@ Module dedicated to iBroadcast specific methods.
 import os
 import glob
 import time
+import errno
 import threading
 import ibroadcast
+from tqdm import tqdm
 
 from op_scripts.gen import prnt, loading_screen
 
@@ -43,11 +45,14 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
     iBroadcastTrackIDs = [1]
     
     # For each new file, attempt to
-    for file in newFilePaths:
+    for file in tqdm(newFilePaths, desc= 'Uploading to iBroadcast', disable= (os.environ.get('DEBUGMODE') == 'True')):
         
         # Upload if not uploaded
-        if not tempIBOBJ.isuploaded(file):
-
+        if True:
+            
+            # Prevent too many request timeout
+            time.sleep(1.0)
+            
             # Upload file
             attempts = 0
             while attempts < 5:
@@ -55,7 +60,7 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
             
                     # Upload file
                     prnt('[UPDATE] Uploading: ' + file)
-                    iBroadcastTrackIDs[0] = tempIBOBJ.upload(file)
+                    iBroadcastTrackIDs[0] = tempIBOBJ.upload(file, force= True)
 
                     # Add track to playlist
                     prnt('[UPDATE] Adding to playlist...')
@@ -64,11 +69,39 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
                     prnt('[UPDATE] SUCCESSFUL\n')
                     attempts = 10
                     break
+
+                except MemoryError:
+
+                    print('[ERROR] CRITICAL Memory Error. Program will be force shutting down...')
+                    quit()
+
+                except TimeoutError:
+                    
+                    tempList = []
+                    tempList.append(file)
+                    print('[ERROR] Connection Timed Out. Retrying...')
+
+                    upload_new(tempList, iBroadcastPlaylistID= iBroadcastPlaylistID)
+
+                except OSError as error:
+
+                    _CONNECTION_ERRORS = frozenset({
+                        errno.ECONNRESET,  # ConnectionResetError
+                        errno.EPIPE, errno.ESHUTDOWN,  # BrokenPipeError
+                        errno.ECONNABORTED,  # ConnectionAbortedError
+                        errno.ECONNREFUSED,  # ConnectionRefusedError
+                    })
+
+                    if error.errno not in _CONNECTION_ERRORS:
+                        raise
+                    print('got ConnectionError - %e' % error)
+
                 except:
-                    prnt('[ERROR] Possible timeout. Waiting...')
+
+                    print('[ERROR] Possible timeout. Waiting...')
                     time.sleep(5.0)
                     attempts += 1
-                    prnt('[UPDATE] Retrying...')
+                    print('[UPDATE] Retrying...')
 
             # Save file if not uploaded
             if attempts != 10:

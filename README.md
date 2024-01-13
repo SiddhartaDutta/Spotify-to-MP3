@@ -105,11 +105,11 @@ sudo docker start -ai spotify_to_mp3
 <details><summary>Answer</summary>
 
 ***
-When using iBroadcast for your music library, your songs will be added in the same order they appear when you decide to update your playlist. If you wish for iBroadcast to mirror Spotify (only when uploading initially), then you can use the tool regularly with no worry about song order specification.
+<u>When using iBroadcast</u> for your music library, your songs will be added in the same order they appear when you decide to update your playlist. If you wish for iBroadcast to mirror Spotify (only when uploading initially), then you can use the tool regularly with no worry about song order specification.
 
-When using Apple Music for your music library, it is highly recommended that when creating playlists on Spotify, you create them grouped as albums; all songs belonging to an album should be grouped chronologically together. This style of listening involves fully listening to an album at once and adding desired songs then.
+<u>When using Apple Music</u> for your music library, it is highly recommended that when creating playlists on Spotify, you create them grouped as albums; all songs belonging to an album should be grouped chronologically together. This style of listening involves fully listening to an album at once and adding desired songs then.
 
-Note for Apple Music: However, if you do not wish to listen to music in an album fashion, you can still easily add albums to your MP3 manager. After downloading your music, you can sort the album folders by those edited most recent. This way, all albums will be listed that need to be transferred (is beneficial when there are a large amount of albums/singles).
+<u>Note for Apple Music:</u> However, if you do not wish to listen to music in an album fashion, you can still easily add albums to your MP3 manager. After downloading your music, you can sort the album folders by those edited most recent. This way, all albums will be listed that need to be transferred (is beneficial when there are a large amount of albums/singles).
 ***
 
 </details>

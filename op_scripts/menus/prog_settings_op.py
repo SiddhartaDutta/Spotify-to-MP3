@@ -42,9 +42,9 @@ def run():
 
 def printMenu():
 
-    print('---**--**--- ADVANCED SETTINGS ---**--**---\n')
+    print('-----**--**----- SETTINGS -----**--**-----\n')
 
     for tupleIndex in range(len(operations)):
         print(f'{tupleIndex + 1}. {operations[tupleIndex][1]}')
 
-    print('\n-----***----- - - * *** * - - -----***-----\n')
+    print('\n-----***----- - - * ** * - - -----***-----\n')

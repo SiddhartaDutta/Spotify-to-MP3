@@ -8,6 +8,7 @@ import time
 import shutil
 import dotenv
 import requests
+from tqdm import tqdm
 from mutagen.mp3 import MP3
 from yt_dlp import YoutubeDL
 from pydub import AudioSegment
@@ -26,7 +27,11 @@ def get_track_info(self, songID):
     try:
         return self.track(urn)
     except:
-        print('\n[ERROR] INVALID SONG ID')
+        try:
+            time.sleep(5.0)
+            return self.track(urn)
+        except:
+            print('\n[ERROR] INVALID SONG ID: ' + songID)
         pass
 
 def get_playlist_ids(self, username, playlist_id):
@@ -40,7 +45,7 @@ def get_playlist_ids(self, username, playlist_id):
     while r['next']:
         r = self.next(r)
         t.extend(r['items'])
-    for s in t: ids.append(s["track"]["id"])
+    for s in tqdm(t, desc= 'Caching Spotify Track IDs', disable= (os.environ.get('DEBUGMODE') == 'True')): ids.append(s["track"]["id"])
     return ids
 
 def get_albums_from_ids(self, amLength, spotifyLength, idList):
@@ -52,7 +57,7 @@ def get_albums_from_ids(self, amLength, spotifyLength, idList):
     albumNames = []
 
     # Iterate through idList (list of music ids)
-    for index in range(amLength, spotifyLength):
+    for index in tqdm(range(amLength, spotifyLength), desc= 'Caching Album Names', disable= (os.environ.get('DEBUGMODE') == 'True')):
         trackID = idList[index]
         track = get_track_info(self, trackID)
 
@@ -94,6 +99,7 @@ def update_dir():
     """
     Creates a directory to hold all new songs for a given update. Directory name contains timestamp.
     """
+
     preformattedTime = time.localtime()
     formattedTime = time.strftime("%m-%d-%Y %H:%M:%S", preformattedTime)
     print(formattedTime)
@@ -118,7 +124,7 @@ def create_album_dirs(playlistName=str, newAlbums=list):
     # Based on if there are new albums to be processed (new albums implies new songs)
     newSongs = False
 
-    for album in newAlbums:
+    for album in tqdm(newAlbums, desc= 'Creating Album Directories', disable= (os.environ.get('DEBUGMODE') == 'True')):
 
         album = gen.remove_slashes(album)
 
@@ -193,7 +199,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
     newFiles = []
 
-    for index in range(amLength, spotifyLength):
+    for index in tqdm(range(amLength, spotifyLength), desc= 'Downloading Songs', disable= (os.environ.get('DEBUGMODE') == 'True')):
 
         if sourceURL == '':
             track = get_track_info(self, IDs[index])
@@ -283,9 +289,9 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
                     successfulDownload = True
                 except:
                     tries += 1
-                    gen.prnt('[TIMEOUT ERROR] WAITING...')
-                    time.sleep(3)
-                    gen.prnt('[RETRYING...]\n')
+                    print('[ERROR] WAITING...\n')
+                    time.sleep(10)
+                    print('[RETRYING...]\n')
 
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
 
@@ -326,7 +332,7 @@ def move_images_to_album_dirs():
     basePath = os.path.join(os.getcwd(), "Music/")
     imagePaths = glob.glob('*.jpg')
 
-    for image in imagePaths:
+    for image in tqdm(imagePaths, desc= 'Moving Images to Album Directories', disable= (os.environ.get('DEBUGMODE') == 'True')):
 
         # Extract album name from image and create target path
         tempStr = image[:(len(image)-4)]
@@ -389,7 +395,7 @@ def add_img_to_id3_for_album(targetDirectory=str):
             tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
             tempFile.save()
         else:
-            print('[ERROR: .JPG NOT FOUND] ALBUM: ' + targetDirectory)
+            gen.prnt('[ERROR: .JPG NOT FOUND] ALBUM: ' + targetDirectory)
 
     # Delete image file
     try:
@@ -412,7 +418,7 @@ def update_img_tags():
     dirPaths = glob.glob(f'{os.getcwd()}/*/')
 
     # Update
-    for directory in dirPaths:
+    for directory in tqdm(dirPaths, desc= 'Applying Images to MP3 Files', disable= (os.environ.get('DEBUGMODE') == 'True')):
         add_img_to_id3_for_album(directory)
 
     os.chdir(currDir)

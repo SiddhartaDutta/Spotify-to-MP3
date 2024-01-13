@@ -5,7 +5,7 @@ Module dedicated to toggling iBroadcast automatic updates.
 import os
 import dotenv
 
-from gen import yn_input
+from op_scripts.gen import yn_input
 
 def toggle_ibroadcastUpdate():
 
