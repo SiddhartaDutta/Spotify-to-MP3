@@ -45,7 +45,10 @@ def get_playlist_ids(self, username, playlist_id):
     while r['next']:
         r = self.next(r)
         t.extend(r['items'])
-    for s in tqdm(t, desc= 'Caching Spotify Track IDs', disable= (os.environ.get('DEBUGMODE') == 'True')): ids.append(s["track"]["id"])
+
+    for s in tqdm(t, desc= 'Caching Spotify Track IDs', disable= (os.environ.get('DEBUGMODE') == 'True')): 
+        ids.append(s["track"]["id"])
+    
     return ids
 
 def get_albums_from_ids(self, amLength, spotifyLength, idList):
@@ -183,9 +186,18 @@ def download_img(albumName=str, url=str):
 
     # If image doesn't exist, download image
     if not imageExists:
-        response = requests.get(url)
-        with open('%s.jpg' % albumName, 'wb') as imgFile:
-            imgFile.write(response.content)
+        attempts = 0
+        while attempts < 5:
+            try:
+                response = requests.get(url)
+                with open('%s.jpg' % albumName, 'wb') as imgFile:
+                    imgFile.write(response.content)
+                break
+            except:
+                gen.prnt('[ERROR] Image download issue. Waiting...')
+                time.sleep(5.0)
+                gen.prnt('[UPDATE] Retrying...\n')
+                attempts += 1
 
 def __match_target_amplitude(sound, target_dBFS):
     change_in_dBFS = target_dBFS - sound.dBFS

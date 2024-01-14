@@ -30,13 +30,6 @@ def autoUpdate(self):
 
         if(currentSpotifyLength != int(AMPlaylistLengths[playlist])):
 
-            # Loading animation
-            # if os.environ.get("DEBUGMODE") == 'False' : 
-            #     print('[UPDATE] This process can take several minutes. Do *NOT* force quit the program!')
-            #     active = True
-            #     loadThread = threading.Thread(target= loading_screen, args= (lambda : active, ))
-            #     loadThread.start()
-
             # Get song IDs for non-equal Spotify playlist
             prnt('[CACHING SONG IDS]\n')
             songIDs = spotify.get_playlist_ids(self, os.environ.get("USERNAME"), playlistIDs[playlist])
@@ -79,7 +72,6 @@ def autoUpdate(self):
             os.environ['DOWNLOADCOUNTS'] = str(newStr)
             dotenv.set_key(dotenv.find_dotenv(), "DOWNLOADCOUNTS", os.environ['DOWNLOADCOUNTS'])
 
-            active = False
             prnt('[PLAYLIST UPDATE COMPLETE] PLAYLIST: %-*s NEW LENGTH: %s\n' % (25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))
         else:
             prnt("[NO UPDATE AVAILABLE] %-*s PLAYLIST: %-*s CURRENT LENGTH: %s\n" % (4, '', 25, str((self.playlist(playlistIDs[playlist]))['name']), str(AMPlaylistLengths[playlist])))

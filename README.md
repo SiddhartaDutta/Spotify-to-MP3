@@ -15,6 +15,10 @@ This project is designed to be both a learning tool and for experimental purpose
 
 Coming soon...
 
+## Please Update Playlists Regularly!
+
+Large updates can error out regardless of steps taken to prevent errors. These errors are server sided and out of my control.
+
 ## Usage (Downloadable Image)
 
 Coming soon...

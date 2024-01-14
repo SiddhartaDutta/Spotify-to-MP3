@@ -51,7 +51,7 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
         if True:
             
             # Prevent too many request timeout
-            time.sleep(1.0)
+            time.sleep(1.5)
             
             # Upload file
             attempts = 0
@@ -99,7 +99,7 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
                 except:
 
                     print('[ERROR] Possible timeout. Waiting...')
-                    time.sleep(5.0)
+                    time.sleep(10.0)
                     attempts += 1
                     print('[UPDATE] Retrying...')
 
