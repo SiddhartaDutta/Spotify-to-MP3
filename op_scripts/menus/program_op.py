@@ -19,7 +19,7 @@ operations = [(auto_update.autoUpdate, True, 'Automatically Run Checks on Provid
               (create_song.createSong, False, 'Create a Fully Custom Song'),
               (create_album.createAlbum, False, 'Create a Fully Custom Album'),
               (ibroadcast.upload_all, False, 'Upload All Songs to iBroadcast'),
-              (prog_settings_op.run, False, 'Advanced Settings'),
+              (prog_settings_op.run, False, 'Settings'),
               #(misc_scripts.upload_and_add_all, True, 'test'),
               (None, False, 'Exit the Program')
              ]
