@@ -2,6 +2,7 @@
 Module dedicated to calling methods for menu operation.
 """
 
+import os
 from time import sleep
 
 import op_scripts.gen as gen
@@ -32,7 +33,7 @@ def run(self):
 
     while run:
         
-        sleep(0.75)
+        sleep(float(os.environ.get('MENUSLEEP')))
         gen.clear_screen()
 
         printMenu()

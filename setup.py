@@ -106,6 +106,9 @@ def initialSetup():
         # iBroadcast flag
         envFile.write("UPDATEIBROADCAST=\'" + str(updateIBroad) + '\'\n')
 
+        # Sleep timer
+        envFile.write("MENUSLEEP=\'0.25\'\n")
+
         # Update clientid
         envFile.write("SPOTIFYCLIENTID=\'" + clientID + '\'\n')
 

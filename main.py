@@ -28,5 +28,5 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 # Launch Program
 program_op.run(sp)
 
-sleep(0.75)
+sleep(float(os.environ.get('MENUSLEEP')))
 clear_screen()
