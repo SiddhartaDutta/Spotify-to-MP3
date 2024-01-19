@@ -2,6 +2,8 @@
 Module dedicated to settings menu methods.
 """
 
+from time import sleep
+
 import op_scripts.gen as gen
 from op_scripts.menus.prog_settings import edit_username
 from op_scripts.menus.prog_settings import edit_clientID
@@ -27,6 +29,9 @@ def run():
     run = True
 
     while run:
+
+        sleep(0.75)
+        gen.clear_screen()
 
         printMenu()
 

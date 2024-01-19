@@ -2,6 +2,8 @@
 Module dedicated to calling methods for menu operation.
 """
 
+from time import sleep
+
 import op_scripts.gen as gen
 import op_scripts.ibroadcast as ibroadcast
 
@@ -30,6 +32,9 @@ def run(self):
 
     while run:
         
+        sleep(0.75)
+        gen.clear_screen()
+
         printMenu()
 
         userInput = gen.input_verification(len(operations)) - 1

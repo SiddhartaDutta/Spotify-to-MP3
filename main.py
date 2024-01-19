@@ -1,10 +1,16 @@
+"""
+Main operation module.
+"""
+
 import os
+from time import sleep
 from dotenv import load_dotenv
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
 import setup
+from op_scripts.gen import clear_screen
 import op_scripts.menus.program_op as program_op
 import op_scripts.menus.program.auto_update as auto_update
 
@@ -21,3 +27,6 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Launch Program
 program_op.run(sp)
+
+sleep(0.75)
+clear_screen()

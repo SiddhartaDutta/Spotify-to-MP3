@@ -90,3 +90,8 @@ def loading_screen(active):
 
 def prnt(string):
     if os.environ.get("DEBUGMODE") == 'True' : print(string)
+
+def clear_screen():
+    # If not debug mode, then clear (clear during reg op)
+    if os.environ.get("DEBUGMODE") == 'False': 
+        os.system('cls' if os.name == 'nt' else 'clear')
