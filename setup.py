@@ -1,11 +1,11 @@
-import json
+import os
 from time import sleep
 
 def initialSetup():
 
     print("[INFO] The following will setup Spotify-to-MP3 for you.")
     sleep(0.5)
-    print("[INFO] Please enter the information as requested. All mistakes can be fixed later in settings...")
+    print("[INFO] Please enter the information as requested. All mistakes can be fixed later in settings...\n")
     sleep(0.5)
 
     clientID = str(input("[INPUT] Please input your generated Spotify Client ID: "))
@@ -127,9 +127,7 @@ def initialSetup():
         # Update download counts
         envFile.write("DOWNLOADCOUNTS=" + playlistLengthStr + '\n')
         
-    print('[UPDATE] Finished setting up your data file.')
-
-    print('[UPDATE] Data setup complete.')  
+    print('[UPDATE] User data saved.\n')
 
 # RUN SETUP
-initialSetup()
+#initialSetup()

@@ -4,12 +4,17 @@ from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
+import setup
 import op_scripts.menus.program_op as program_op
 import op_scripts.menus.program.auto_update as auto_update
 
-load_dotenv(override= True)
+if not os.path.isfile('.env'):
+    print('[UPDATE] No user data detected.\n')
+    setup.initialSetup()
+else:
+    print('[UPDATE] Starting Spotify to MP3...\n')
 
-print('[UPDATE] Starting Spotify to MP3...\n')
+load_dotenv(override= True)
 
 auth_manager = SpotifyClientCredentials(client_id=os.environ.get("SPOTIFYCLIENTID"), client_secret=os.environ.get("SPOTIFYCLIENTSECRET"))
 sp = spotipy.Spotify(auth_manager=auth_manager)
