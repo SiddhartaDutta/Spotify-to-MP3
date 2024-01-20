@@ -20,7 +20,9 @@ def toggle_debug():
         if toToggle:
             newVal = 'True'
     
-    os.environ['DEBUGMODE'] = newVal
-    dotenv.set_key(dotenv.find_dotenv(), "DEBUGMODE", os.environ['DEBUGMODE'])
+    # Update only if update exists
+    if toToggle:
+        os.environ['DEBUGMODE'] = newVal
+        dotenv.set_key(dotenv.find_dotenv(), "DEBUGMODE", os.environ['DEBUGMODE'])
     print('Saved.\n')
    

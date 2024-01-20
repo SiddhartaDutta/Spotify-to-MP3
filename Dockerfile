@@ -5,7 +5,7 @@ RUN apk add --no-cache ffmpeg
 ADD main.py .
 ADD op_scripts .
 
-ADD .env .
+#ADD .env .
 ADD .cache* .
 
 #COPY requirements.txt requirements.txt

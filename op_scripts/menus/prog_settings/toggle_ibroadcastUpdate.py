@@ -20,7 +20,9 @@ def toggle_ibroadcastUpdate():
         if toToggle:
             newVal = 'True'
     
-    os.environ['UPDATEIBROADCAST'] = newVal
-    dotenv.set_key(dotenv.find_dotenv(), "UPDATEIBROADCAST", os.environ['UPDATEIBROADCAST'])
+    # Update only if update exists
+    if toToggle:
+        os.environ['UPDATEIBROADCAST'] = newVal
+        dotenv.set_key(dotenv.find_dotenv(), "UPDATEIBROADCAST", os.environ['UPDATEIBROADCAST'])
     print('Saved.\n')
    
