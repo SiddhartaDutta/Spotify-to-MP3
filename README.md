@@ -4,26 +4,73 @@
 
 This project is designed to be both a learning tool and for experimental purposes only. <u>**The author takes no responsibility for damage or misfunction of any kind caused by the software in this repository.**</u> Please use both caution and common sense when using this project.
 
+## Contents
+1. [Description](#description)
+2. [Badges](#badges)
+3. [Visuals](#visuals)
+4. [Usage Option 1 (Downloadable Docker Image)](#usage-option-1downloadable-docker-image)
+5. [Usage Option 2 (Creating a Local Docker Image)](#usage-option-2-creating-a-docker-image)
+6. [Usage Option 3 (Cloning the Repository)](#usage-option-3-cloning-the-repository)
+7. [Frequently Asked Questions](#frequently-asked-questions)
+8. [Prerequisite Instructions](#prerequisite-instructions)
+9. [Contributing](#contributing)
+
 ## Description
 
-**Spotify to MP3** is a collection of scripts written and organized to help the user download their playlists in a relatively quick and organized manner. The MP3 files contain metadata in the ID3 format so that the MP3 files may be exported to an MP3 manager, such as iBroadcast, iTunes or Spotify (although Spotify does not allow "premium" features for owned MP3 files), without the user having to edit metadata.
+**Spotify to MP3** is a collection of scripts written and organized to help the user download their playlists in a relatively quick and organized manner. The MP3 files contain metadata in the ID3 format so that the MP3 files may be exported to an MP3 manager, such as iBroadcast, iTunes or Spotify, (although Spotify does not allow "premium" features for owned MP3 files), without the user having to edit metadata.
 
 ## Badges
-![LICENSE](https://img.shields.io/github/license/SiddhartaDutta/spotify-to-mp3)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
+
+![Apple Music](https://img.shields.io/badge/Apple_Music-9933CC?style=for-the-badge&logo=apple-music&logoColor=white)
+![Spotify](https://img.shields.io/badge/Spotify-1ED760?style=for-the-badge&logo=spotify&logoColor=white)
+
+[![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](./LICENSE)
 
 ## Visuals
 
 Coming soon...
 
-## Please Update Playlists Regularly!
+## Usage Option 1(Downloadable Docker Image)
 
-Large updates can error out regardless of steps taken to prevent errors. These errors are server sided and out of my control.
+### Prerequisites
 
-## Usage (Downloadable Image)
+Docker Engine, and an MP3 manager are ALL required for this installation process (the least demanding option).
 
-Coming soon...
+Please follow the relevant steps here: [Prerequisite Instructions](#prerequisite-instructions)
 
-## Usage (Creating a Docker Image)
+<b><u>CAUTION:</u> Please Update Playlists Regularly!</b>
+
+    Large updates can fail regardless of steps taken to prevent errors. These errors are server sided and out of my control.
+
+### Instructions
+
+The downloadable Docker image can be found here: [Link to Docker Hub](https://hub.docker.com/r/siddhartadutta/spotify-to-mp3)
+
+#### Installing Using the Command Line
+1. Open either WSL or a Bash Terminal
+2. Run the following command to pull the image:
+    ```bash
+    sudo docker pull siddhartadutta/spotify-to-mp3
+    ```
+3. To run the image,
+    * If it is your first time running the image, use
+        ```bash
+        sudo docker run --name spotify_to_mp3 -it --mount type=bind,src=<PATH>,target=/src siddhartadutta/spotify-to-mp3
+        ```
+        Where PATH is the path to where you would like to be your main directory (a music folder will be created in that directory).
+
+        <b>Example:</b> PATH/Music/ 
+        
+        Where PATH is defined by you and Music/ is a folder created by the program.
+    * If you have ran the image before, use
+    ```bash
+    sudo docker start -ai spotify_to_mp3
+    ```
+
+## Usage Option 2 (Creating a Docker Image)
 
 **Prerequisite: Docker**
 
@@ -104,7 +151,46 @@ After having run the initial setup image, you can just run the ***spotify_to_mp3
 sudo docker start -ai spotify_to_mp3
 ```
 
-## Frequently Asked Questions (For the Tool)
+## Usage Option 3 (Cloning the Repository)
+### Language Prerequisite
+* [Python3](https://www.python.org/downloads/) 
+
+Please follow the linked instructions should you not already have Python (this program utilizes Python 3.10.11)
+### Module Prerequisites
+#### Modules to be Installed:
+* [yt-dlp](https://pypi.org/project/yt-dlp/)
+
+* [spotipy](https://pypi.org/project/spotipy/)
+
+* [dotenv](https://pypi.org/project/python-dotenv/)
+
+* [requests](https://pypi.org/project/requests/)
+
+* [pydub](https://pypi.org/project/pydub/)
+
+* [ibroadcast](https://pypi.org/project/ibroadcast/)
+
+* [tqdm](https://pypi.org/project/tqdm/)
+
+Running the following command in your virtual environment (or where ever you wish to have the modules) should download all required and non-standard modules:
+```.sh
+pip3 install yt_dlp python-requests python-dotenv pydub ibroadcast tqdm && pip3 install spotipy --upgrade
+```
+
+### Cloning
+
+You can then clone the repository with the following command:
+```.sh
+git clone https://github.com/SiddhartaDutta/Spotify-to-MP3.git
+```
+
+### Running the Program
+Ensuring you are in the clone directory, you can run the following command:
+```bash
+python3 main.py
+```
+
+## Frequently Asked Questions
 **How is the tool designed to be used?** 
 <details><summary>Answer</summary>
 
@@ -158,48 +244,8 @@ The ID is **######**
 
 </details>
 
-## Cloning the Project
-To clone this project, you will need the following:
-### Language
-* [Python3](https://www.python.org/downloads/) 
+## Prerequisite Instructions
 
-Please follow the linked instructions should you not already have Python (this program utilizes Python 3.10.11)
-### Modules
-#### Modules to be Installed:
-* [yt-dlp](https://pypi.org/project/yt-dlp/)
-
-* [spotipy](https://pypi.org/project/spotipy/)
-
-* [dotenv](https://pypi.org/project/python-dotenv/)
-
-* [requests](https://pypi.org/project/requests/)
-
-* [pydub](https://pypi.org/project/pydub/)
-
-* [ibroadcast](https://pypi.org/project/ibroadcast/)
-
-Running the following command in your virtual environment (or where ever you wish to have the modules) should download all required and non-standard modules:
-```.sh
-pip3 install yt_dlp python-requests python-dotenv pydub ibroadcast && pip3 install spotipy --upgrade
-```
-
-#### Pre-Installed Modules (Installation should be unneeded):
-* os
-
-* glob
-
-* json
-
-* time
-
-* shutil
-
-* mutagen
-
-You can then clone the repository with the following command:
-```.sh
-git clone https://github.com/SiddhartaDutta/Spotify-to-MP3.git
-```
 
 ## Contributing
 
