@@ -7,21 +7,23 @@ from time import sleep
 
 import op_scripts.gen as gen
 from op_scripts.menus.prog_settings import edit_username
-from op_scripts.menus.prog_settings import edit_clientID
-from op_scripts.menus.prog_settings import edit_clientSecret
+from op_scripts.menus.prog_settings import edit_clientID, edit_clientSecret
 from op_scripts.menus.prog_settings import edit_downloadCounts
 from op_scripts.menus.prog_settings import edit_spotifyPlaylistIDs
 from op_scripts.menus.prog_settings import toggle_debug
 from op_scripts.menus.prog_settings import toggle_ibroadcastUpdate
+from op_scripts.menus.prog_settings import edit_ibroadcastUser, edit_ibroadcastPass
 
 
-operations = [(edit_username.edit_username, 'Edit Spotify Username'),
-              (toggle_ibroadcastUpdate.toggle_ibroadcastUpdate, 'Toggle iBroadcast Connection'),
-              (edit_downloadCounts.edit_downloadCounts, 'Edit Downloaded Song Counts'),
-              (edit_spotifyPlaylistIDs.edit_spotifyPlaylistIDs, 'Edit Spotify Playlist IDs'),
+operations = [(edit_downloadCounts.edit_downloadCounts, 'Edit Downloaded Song Counts'),
+              (edit_username.edit_username, 'Edit Spotify Username'),
+              (edit_spotifyPlaylistIDs.edit_spotifyPlaylistIDs, 'Edit Spotify Playlist IDs (Modify, Add, Delete)'),
               (edit_clientID.edit_clientID, 'Edit Spotify Client ID'),
               (edit_clientSecret.edit_clientSecret, 'Edit Spotify Client Secret'),
               (toggle_debug.toggle_debug, 'Toggle Debug Mode'),
+              (toggle_ibroadcastUpdate.toggle_ibroadcastUpdate, 'Toggle iBroadcast Connection'),
+              (edit_ibroadcastUser.edit_ibroadcastUser, 'Edit iBroadcast Username'),
+              (edit_ibroadcastPass.edit_ibroadcastPass, 'Edit iBroadcast Password'),
               (None, 'Back to Main Menu')
               ]
 

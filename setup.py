@@ -1,4 +1,5 @@
 import os
+import getpass
 from time import sleep
 
 def initialSetup():
@@ -26,7 +27,7 @@ def initialSetup():
 
     if updateIBroad == 'True':
         iBroadUser = str(input("[INPUT] Please enter your iBroadcast username: "))
-        iBroadPswd = str(input("[INPUT] Please enter your iBroadcast password: "))
+        iBroadPswd = str(getpass.getpass("[INPUT] Please enter your iBroadcast password: "))
     else:
         iBroadUser = ''
         iBroadPswd = ''
