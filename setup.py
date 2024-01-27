@@ -1,4 +1,3 @@
-import os
 import getpass
 from time import sleep
 
@@ -59,7 +58,7 @@ def initialSetup():
                 print("[ERROR] Invalid input. Please input a number.")
 
         # Update iBroadcast
-        if updateIBroad:
+        if updateIBroad == 'True':
             iBroadIDs.append(input('[INPUT] Please input the corresponding iBroadcast playlist ID for the above playlist: '))
 
     # Format playlist arrays for env file addition
@@ -76,7 +75,7 @@ def initialSetup():
         tempStr = '"' + tempStr + '",'
         playlistIDStr += tempStr
 
-    if updateIBroad:
+    if updateIBroad == 'True':
         for ibID in iBroadIDs:
             # Process iBroadcast ID
             tempStr = str(ibID)
@@ -90,7 +89,7 @@ def initialSetup():
         playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
         playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
 
-    if updateIBroad:
+    if updateIBroad == 'True':
         if numOfPlaylists == 0:
             iBroadIDStr = iBroadIDStr + ']'
         else:
@@ -132,6 +131,3 @@ def initialSetup():
         envFile.write("DOWNLOADCOUNTS=" + playlistLengthStr + '\n')
         
     print('[UPDATE] User data saved.\n')
-
-# RUN SETUP
-#initialSetup()
