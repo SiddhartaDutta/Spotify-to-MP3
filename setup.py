@@ -8,6 +8,8 @@ def initialSetup():
     print("[INFO] Please enter the information as requested. All mistakes can be fixed later in settings...\n")
     sleep(0.5)
 
+    saveDir = str(input('[INPUT] Please input the full path of your host directory: '))
+
     clientID = str(input("[INPUT] Please input your generated Spotify Client ID: "))
     clientSecret = str(input("[INPUT] Please input your generated Spotify Client Secret: "))
 
@@ -99,6 +101,9 @@ def initialSetup():
 
     # Set .env file
     with open(".env", "w") as envFile:
+
+        # Host directory
+        envFile.write("HOSTDIR=\'" + saveDir + '\'\n')
 
         # Debug Mode flag
         envFile.write("DEBUGMODE=\'" + 'False' + '\'\n')

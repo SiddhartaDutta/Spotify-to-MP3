@@ -14,6 +14,7 @@ from op_scripts.gen import clear_screen
 import op_scripts.menus.program_op as program_op
 import op_scripts.menus.program.auto_update as auto_update
 
+# Check for .env file
 if not os.path.isfile('.env'):
     print('[UPDATE] No user data detected.\n')
     setup.initialSetup()
@@ -22,6 +23,10 @@ else:
 
 load_dotenv(override= True)
 
+# Change to host directory
+os.chdir(os.environ.get("HOSTDIR"))
+
+# Create Spotify object 
 auth_manager = SpotifyClientCredentials(client_id=os.environ.get("SPOTIFYCLIENTID"), client_secret=os.environ.get("SPOTIFYCLIENTSECRET"))
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
