@@ -130,7 +130,7 @@ There is currently no native Powershell support. The following commands are univ
     sudo ./setup.sh
     ```
 
-* <u>If being told that script cannot run, use:</u>
+* <u>If being told that the script cannot run, use:</u>
     ```
     sudo chmod +x setup.sh
     ```
@@ -172,9 +172,7 @@ Please follow the linked instructions should you not already have Python (this p
 Running the following command in your virtual environment (or where ever you wish to have the modules) should download all required and non-standard modules:
 
 ```bash
-pip3 install yt_dlp python-requests python-dotenv pydub ibroadcast tqdm 
-&& pip3 install spotipy --upgrade 
-&& pip3 install --upgrade yt-dlp
+pip3 install yt_dlp python-requests python-dotenv pydub ibroadcast tqdm && pip3 install spotipy --upgrade && pip3 install --upgrade yt-dlp
 ```
 
 ### Cloning
