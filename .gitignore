@@ -1,7 +1,15 @@
 .env
+.data.json
+
 .cache
 *.jpg
 *.mp3
+
 /Music
-/__pycache__
-/op_scripts/__pycache__
+
+.vscode/
+
+testScript.py
+output.txt
+
+**/__pycache__

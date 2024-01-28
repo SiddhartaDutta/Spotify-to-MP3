@@ -11,6 +11,7 @@ echo "[UPDATE] Initiating setup..."
 python3 ./setup.py
 
 # Build program image
+echo "[UPDATE] Building Docker image..."
 docker build -f Dockerfile -t spotify-to-mp3 .
 
 # Run program image

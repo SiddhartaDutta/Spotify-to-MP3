@@ -1,5 +1,5 @@
 """
-Module dedicated to Spotify/music specific methods.
+Module dedicated to Spotify specific methods.
 """
 
 import os
@@ -8,12 +8,15 @@ import time
 import shutil
 import dotenv
 import requests
-from yt_dlp import YoutubeDL
+from tqdm import tqdm
 from mutagen.mp3 import MP3
+from yt_dlp import YoutubeDL
+from pydub import AudioSegment
 from mutagen.easyid3 import EasyID3  
 from mutagen.id3 import ID3, APIC, error
 
-from op_scripts import gen
+import op_scripts.gen as gen
+import op_scripts.meta_data_frame as metaDF
 
 def get_track_info(self, songID):
     """
@@ -21,7 +24,15 @@ def get_track_info(self, songID):
     """
 
     urn = 'spotify:track:' + songID
-    return self.track(urn)
+    try:
+        return self.track(urn)
+    except:
+        try:
+            time.sleep(5.0)
+            return self.track(urn)
+        except:
+            print('\n[ERROR] INVALID SONG ID: ' + songID)
+        pass
 
 def get_playlist_ids(self, username, playlist_id):
     """
@@ -34,7 +45,10 @@ def get_playlist_ids(self, username, playlist_id):
     while r['next']:
         r = self.next(r)
         t.extend(r['items'])
-    for s in t: ids.append(s["track"]["id"])
+
+    for s in tqdm(t, desc= 'Caching Spotify Track IDs', disable= (os.environ.get('DEBUGMODE') == 'True')): 
+        ids.append(s["track"]["id"])
+    
     return ids
 
 def get_albums_from_ids(self, amLength, spotifyLength, idList):
@@ -46,7 +60,7 @@ def get_albums_from_ids(self, amLength, spotifyLength, idList):
     albumNames = []
 
     # Iterate through idList (list of music ids)
-    for index in range(amLength, spotifyLength):
+    for index in tqdm(range(amLength, spotifyLength), desc= 'Caching Album Names', disable= (os.environ.get('DEBUGMODE') == 'True')):
         trackID = idList[index]
         track = get_track_info(self, trackID)
 
@@ -76,9 +90,9 @@ def get_album_cover_url(self, songID=str):
         try:
             return get_track_info(self, songID)['album']['images'][1]['url']
         except:
-            print('[TIMEOUT ERROR] WAITING...')
+            gen.prnt('[TIMEOUT ERROR] WAITING...')
             time.sleep(3)
-            print('[RETRYING...]\n')
+            gen.prnt('[RETRYING...]')
 
     print('[]')
 
@@ -88,6 +102,7 @@ def update_dir():
     """
     Creates a directory to hold all new songs for a given update. Directory name contains timestamp.
     """
+
     preformattedTime = time.localtime()
     formattedTime = time.strftime("%m-%d-%Y %H:%M:%S", preformattedTime)
     print(formattedTime)
@@ -112,7 +127,7 @@ def create_album_dirs(playlistName=str, newAlbums=list):
     # Based on if there are new albums to be processed (new albums implies new songs)
     newSongs = False
 
-    for album in newAlbums:
+    for album in tqdm(newAlbums, desc= 'Creating Album Directories', disable= (os.environ.get('DEBUGMODE') == 'True')):
 
         album = gen.remove_slashes(album)
 
@@ -171,115 +186,155 @@ def download_img(albumName=str, url=str):
 
     # If image doesn't exist, download image
     if not imageExists:
-        response = requests.get(url)
-        with open('%s.jpg' % albumName, 'wb') as imgFile:
-            imgFile.write(response.content)
+        attempts = 0
+        while attempts < 5:
+            try:
+                response = requests.get(url)
+                with open('%s.jpg' % albumName, 'wb') as imgFile:
+                    imgFile.write(response.content)
+                break
+            except:
+                gen.prnt('[ERROR] Image download issue. Waiting...')
+                time.sleep(5.0)
+                gen.prnt('[UPDATE] Retrying...\n')
+                attempts += 1
 
-ydl_opts = {
-    'format': 'bestaudio/best',
-    'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192'
-    }],
-    # 'postprocessor_args': [
-    #         '-ar', '16000'
-    # ],
-    'prefer_ffmpeg': True,
-    'keepvideo': False,
-    'outtmpl': 'NEW_MP3_FILE'
-}
+def __match_target_amplitude(sound, target_dBFS):
+    change_in_dBFS = target_dBFS - sound.dBFS
+    return sound.apply_gain(change_in_dBFS)
 
-def download_songs_by_spotify_id(self, playlistName=str, IDs=[], amLength=int, spotifyLength=int):
+def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL='', metaData= metaDF.metaDataFrame(), imgDownloaded= False):
     """
     Downloads all songs by their Spotify ID.
+    :param list metaData: test
     """
 
-    for index in range(amLength, spotifyLength):
-        # Create string to search for song with
-        track = get_track_info(self, IDs[index])
-        searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
+    newFiles = []
+
+    for index in tqdm(range(amLength, spotifyLength), desc= 'Downloading Songs', disable= (os.environ.get('DEBUGMODE') == 'True')):
+
+        if sourceURL == '':
+            track = get_track_info(self, IDs[index])
 
         # Extract ID3 data
-        albumName = str(track['album']['name'])
-        releaseDate = str(track['album']['release_date'])
-        genre = 'Hip-Hop/Rap'
-        title = gen.remove_slashes(str(track['name']))
-        tracknumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
-        
-            # Extract all album artists
-        albumArtist = ''
-        numArtistsOnAlbum = len(track['album']['artists'])
-        for n in range(numArtistsOnAlbum):
-            if n:
-                albumArtist += ', '
-        
-            albumArtist += track['album']['artists'][n]['name']
+        if metaData.albumName == '':
 
-            # Extract all song artists
-        songArtist = ''
-        numArtistsOnSong = len(track['artists'])
-        for n in range(numArtistsOnSong):
-            if n:
-                songArtist += ', '
+            metaData.albumName = str(track['album']['name'])
+            metaData.releaseDate = str(track['album']['release_date'])
+            metaData.genre = 'Hip-Hop/Rap'
+            metaData.title = gen.remove_slashes(str(track['name']))
+            metaData.trackNumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
 
-            songArtist += track['artists'][n]['name']
+                # Extract all album artists
+            metaData.albumArtist = ''
+            numArtistsOnAlbum = len(track['album']['artists'])
+            for n in range(numArtistsOnAlbum):
+                if n:
+                    metaData.albumArtist += ', '
+            
+                metaData.albumArtist += track['album']['artists'][n]['name']
+
+                # Extract all song artists
+            metaData.songArtist = ''
+            numArtistsOnSong = len(track['artists'])
+            for n in range(numArtistsOnSong):
+                if n:
+                    metaData.songArtist += ', '
+
+                metaData.songArtist += track['artists'][n]['name']
+        
+        # Determine set of download options
+        if os.environ.get("DEBUGMODE") == 'True':
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': 'mp3',
+                        'preferredquality': '192'
+                }],
+                'prefer_ffmpeg': True,
+                'keepvideo': False,
+                'outtmpl': 'NEW_MP3_FILE',
+                'quiet' : False
+            }
+
+        else:
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': 'mp3',
+                        'preferredquality': '192'
+                }],
+                'prefer_ffmpeg': True,
+                'keepvideo': False,
+                'outtmpl': 'NEW_MP3_FILE',
+                'quiet' : True
+            }
 
         # Download song and edit ID3 tags
         with YoutubeDL(ydl_opts) as ydl:
 
-            # Get URL for song
-            videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']
-    
             # Change directory to add song to correct album folder
             currDir = os.getcwd()
             musicDir = os.getcwd()
-            musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(str(track['album']['name'])))
+            musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(metaData.albumName))
             os.chdir(musicDir)
 
             successfulDownload = False
-            while not successfulDownload:
+            tries = 0
+            while not successfulDownload and tries < 3:
                 try:
+
                     # Download song
-                    ydl.download(videoURL)
+                    if sourceURL == '':
+
+                        searchString = track['artists'][0]['name'] + ' ' + track['name'] + ' Official Audio'
+
+                        # Get URL for song
+                        videoURL = ydl.extract_info(f'ytsearch:{searchString}', download=False)['entries'][0]['webpage_url']                        
+                        ydl.download(videoURL)
+
+                    else:
+                        ydl.download(sourceURL)
 
                     successfulDownload = True
                 except:
-                    print('[TIMEOUT ERROR] WAITING...')
-                    time.sleep(3)
+                    tries += 1
+                    print('[ERROR] WAITING...\n')
+                    time.sleep(10)
                     print('[RETRYING...]\n')
 
-
-            # Rename last downloaded file
-            # listOfFiles = glob.glob("*.mp3")
-            # latestFile = max(listOfFiles, key=os.path.getctime)
-            # print(latestFile)
-            #try:
             os.chmod('NEW_MP3_FILE.mp3', 0o777)
-            os.rename('NEW_MP3_FILE.mp3', title + '.mp3')
-            # except:
-            #     print('\n[RENAME ERROR] RETRYING...\n')
-            #     os.rename('NEW_MP3_FILE.mp3', remove_slashes(title) + '.mp3')
 
+            gen.prnt('\n[NORMALIZING AUDIO]\n')
+            sound = AudioSegment.from_file("NEW_MP3_FILE.mp3", "mp3")
+            normalized_sound = __match_target_amplitude(sound, -14.0)
+            normalized_sound.export("NEW_MP3_FILE.mp3", format= "mp3")
+
+            os.rename('NEW_MP3_FILE.mp3', gen.remove_slashes(metaData.title) + '.mp3')
 
             # Adjust path to newest song
-            musicDir = os.path.join(musicDir, title + '.mp3')
+            musicDir = os.path.join(musicDir, gen.remove_slashes(metaData.title) + '.mp3')
+
+            # Record new paths
+            newFiles.append(str(musicDir))
 
             # Change ID3 tags
-            add_easyid3_tags(musicDir, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber)
-
-            # Update "update" file
-            os.chdir('../')
-            with open('Playlist Update: ' + playlistName, 'a') as playlist:
-                print('[UPDATING PLAYLIST LIST]\n')
-                playlist.write('*\t' + 'ALBUM: ' + albumName)
-                playlist.write('\n \t' + 'TITLE: ' + title + '\n\n')
+            add_easyid3_tags(musicDir, metaData.albumName, metaData.albumArtist, metaData.songArtist, metaData.releaseDate, metaData.genre, metaData.title, metaData.trackNumber)
 
             # Reset directory
             os.chdir(currDir)
 
             # Download album cover
-            download_img(gen.remove_slashes(albumName), get_album_cover_url(self, IDs[index]))
+            if not imgDownloaded:
+                download_img(gen.remove_slashes(metaData.albumName), get_album_cover_url(self, IDs[index]))
+
+            # Reset meta data struct
+            metaData.albumName = ''
+
+    # Return new file paths
+    return newFiles
 
 def move_images_to_album_dirs():
     """
@@ -289,7 +344,7 @@ def move_images_to_album_dirs():
     basePath = os.path.join(os.getcwd(), "Music/")
     imagePaths = glob.glob('*.jpg')
 
-    for image in imagePaths:
+    for image in tqdm(imagePaths, desc= 'Moving Images to Album Directories', disable= (os.environ.get('DEBUGMODE') == 'True')):
 
         # Extract album name from image and create target path
         tempStr = image[:(len(image)-4)]
@@ -308,7 +363,7 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
     try:
         tempFile.add_tags()
     except error:
-        print('[ERROR] Tags could not be added.\n')
+        gen.prnt('[UPDATE] Tag base already exists.')
         pass
 
     tempFile['album'] = albumName
@@ -321,7 +376,7 @@ def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genr
 
     tempFile.save()
 
-    print('\n[NEW FILE]\n' + tempFile.pprint() + '\n')
+    gen.prnt('\n[NEW FILE]\n' + tempFile.pprint() + '\n')
 
 def add_img_to_id3_for_album(targetDirectory=str):
     """
@@ -352,7 +407,7 @@ def add_img_to_id3_for_album(targetDirectory=str):
             tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
             tempFile.save()
         else:
-            print('[ERROR: .JPG NOT FOUND] ALBUM: ' + targetDirectory)
+            gen.prnt('[ERROR: .JPG NOT FOUND] ALBUM: ' + targetDirectory)
 
     # Delete image file
     try:
@@ -375,12 +430,13 @@ def update_img_tags():
     dirPaths = glob.glob(f'{os.getcwd()}/*/')
 
     # Update
-    for directory in dirPaths:
+    for directory in tqdm(dirPaths, desc= 'Applying Images to MP3 Files', disable= (os.environ.get('DEBUGMODE') == 'True')):
         add_img_to_id3_for_album(directory)
 
     os.chdir(currDir)
 
 def write_playlist_data_to_env(playlistIDs, AMPlaylistLengths):
+
     # Format playlist arrays for env file addition
     playlistLengthStr = playlistIDStr = '['
     for Length, ID in zip(AMPlaylistLengths, playlistIDs):
@@ -396,13 +452,17 @@ def write_playlist_data_to_env(playlistIDs, AMPlaylistLengths):
         playlistIDStr += tempStr
 
     # Remove extra comma
-    if len(playlistIDs) > 0:
+    #if len(playlistIDs) > 0:
+    if len(playlistIDs) == 0:
+        playlistLengthStr = playlistLengthStr + ']'
+        playlistIDStr = playlistIDStr + ']'
+    else:
         playlistLengthStr = playlistLengthStr[:len(playlistLengthStr)-1] + ']'
         playlistIDStr = playlistIDStr[:len(playlistIDStr)-1] + ']'
 
     # Write to env file
-    os.environ['PLAYLISTS'] = playlistIDStr
-    dotenv.set_key(dotenv.find_dotenv(), 'PLAYLISTS', os.environ['PLAYLISTS'])
+    os.environ["SPOTIFYPLAYLISTS"] = playlistIDStr
+    dotenv.set_key(dotenv.find_dotenv(), "SPOTIFYPLAYLISTS", os.environ["SPOTIFYPLAYLISTS"])
 
-    os.environ['AMPLAYLISTLENGTHS'] = playlistLengthStr
-    dotenv.set_key(dotenv.find_dotenv(), 'AMPLAYLISTLENGTHS', os.environ['AMPLAYLISTLENGTHS'])
+    os.environ["DOWNLOADCOUNTS"] = playlistLengthStr
+    dotenv.set_key(dotenv.find_dotenv(), "DOWNLOADCOUNTS", os.environ["DOWNLOADCOUNTS"])
