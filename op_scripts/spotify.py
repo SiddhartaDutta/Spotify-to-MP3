@@ -94,7 +94,7 @@ def get_album_cover_url(self, songID=str):
             time.sleep(3)
             gen.prnt('[RETRYING...]')
 
-    print('[]')
+    gen.prnt('[ERROR] COULD NOT DOWNLOAD IMAGE\n')
 
 # new method for outputting new track names with artists (from end of main.py)
 
@@ -205,7 +205,7 @@ def __match_target_amplitude(sound, target_dBFS):
 
 def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int, sourceURL='', metaData= metaDF.metaDataFrame(), imgDownloaded= False):
     """
-    Downloads all songs by their Spotify ID.
+    Downloads all songs by their Spotify ID. Main downloader.
     :param list metaData: test
     """
 
@@ -341,17 +341,24 @@ def move_images_to_album_dirs():
     Move images from base directory into album directories.
     """
 
+    adjustedPaths = []
+
     basePath = os.path.join(os.getcwd(), "Music/")
     imagePaths = glob.glob('*.jpg')
 
     for image in tqdm(imagePaths, desc= 'Moving Images to Album Directories', disable= (os.environ.get('DEBUGMODE') == 'True')):
 
         # Extract album name from image and create target path
-        tempStr = image[:(len(image)-4)]
-        tempTargetPath = os.path.join(basePath, tempStr, image)
+        tempAlbum = image[:(len(image)-4)]
+        tempTargetPath = os.path.join(basePath, tempAlbum, image)
 
         # Move images from main directory into album directories
-        shutil.move(image, tempTargetPath)   
+        shutil.move(image, tempTargetPath)
+
+        # Append to return list
+        adjustedPaths.append(tempAlbum)
+    
+    return adjustedPaths
 
 def add_easyid3_tags(PATH, albumName, albumArtist, songArtist, releaseDate, genre, title, tracknumber):
     """
@@ -401,9 +408,7 @@ def add_img_to_id3_for_album(targetDirectory=str):
             pass
 
         # Add image to ID3 and save
-        #print(albumCoverPath)
         if not albumCoverPath == '':
-            #print(albumCoverPath)
             tempFile.tags.add(APIC(mime = 'image/jpeg', type = 3, desc = u'Cover', data = open(albumCoverPath, 'rb').read()))
             tempFile.save()
         else:
@@ -416,7 +421,7 @@ def add_img_to_id3_for_album(targetDirectory=str):
         pass
     os.chdir(currDir)
 
-def update_img_tags():
+def update_img_tags(updatedAlbums):
     """
     Steps through directories applying saved image to ID3 album cover tag.
     """
@@ -426,11 +431,11 @@ def update_img_tags():
     # Switch into Music directory
     os.chdir(os.path.join(os.getcwd(), 'Music'))
 
-    # Cache subdirectories
-    dirPaths = glob.glob(f'{os.getcwd()}/*/')
+    # # Cache subdirectories
+    # dirPaths = glob.glob(f'{os.getcwd()}/*/')
 
     # Update
-    for directory in tqdm(dirPaths, desc= 'Applying Images to MP3 Files', disable= (os.environ.get('DEBUGMODE') == 'True')):
+    for directory in tqdm(updatedAlbums, desc= 'Applying Images to MP3 Files', disable= (os.environ.get('DEBUGMODE') == 'True')):
         add_img_to_id3_for_album(directory)
 
     os.chdir(currDir)
