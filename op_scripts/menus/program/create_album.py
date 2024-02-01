@@ -99,7 +99,7 @@ def createAlbum():
 
                 # Move images
                 print('[MOVING .JPG FILE]\n')
-                spotify.move_images_to_album_dirs()
+                updatedAlbums = spotify.move_images_to_album_dirs()
                 
                 print('\n[CUSTOM MP3 FILE CREATED]\n')
 
@@ -110,9 +110,9 @@ def createAlbum():
 
                 print()
 
-                # Update all image tags
-                print('[UPDATING ID3 IMAGE TAGS]\n')
-                spotify.update_img_tags()
+        # Update all image tags
+        print('[UPDATING ID3 IMAGE TAGS]\n')
+        spotify.update_img_tags(updatedAlbums)
             
     except:
         print('[ERROR] OPERATION FAILED (Invalid Song ID and/or Invalid Source URL). The operation will be aborted.\n')

@@ -38,11 +38,11 @@ def spotifyBase(self):
 
             # Move images
             print('[MOVING .JPG FILE]\n')
-            spotify.move_images_to_album_dirs()
+            updatedAlbums = spotify.move_images_to_album_dirs()
 
             # Update all image tags
             print('[UPDATING ID3 IMAGE TAGS]\n')
-            spotify.update_img_tags()
+            spotify.update_img_tags(upd)
             
             print('[CUSTOM MP3 FILE CREATED]\n')
 

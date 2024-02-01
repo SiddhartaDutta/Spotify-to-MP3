@@ -48,11 +48,11 @@ def autoUpdate(self):
 
             # Move images
             prnt('[MOVING .JPG FILES]\n')
-            spotify.move_images_to_album_dirs()
+            updatedAlbums = spotify.move_images_to_album_dirs()
 
             # Update all image tags
             prnt('[UPDATING ID3 IMAGE TAGS]\n')
-            spotify.update_img_tags()
+            spotify.update_img_tags(updatedAlbums)
 
             # Update iBroadcast if flagged
             if os.environ.get("UPDATEIBROADCAST") == 'True':
