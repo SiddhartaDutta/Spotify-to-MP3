@@ -261,7 +261,8 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
                 # Reset meta data struct
                 metaData.albumName = ''
-                #musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(metaData.albumName))
+
+                # Skip to next iteration
                 continue
 
         except:     # Handle unexpected errors
@@ -336,9 +337,6 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             normalized_sound.export("NEW_MP3_FILE.mp3", format= "mp3")
 
             os.rename('NEW_MP3_FILE.mp3', gen.remove_slashes(metaData.title) + '.mp3')
-
-            # Adjust path to newest song
-            #musicDir = os.path.join(musicDir, gen.remove_slashes(metaData.title) + '.mp3')
 
             # Record new paths
             newFiles.append(str(songPath))
