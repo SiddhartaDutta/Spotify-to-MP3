@@ -243,6 +243,31 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
                 metaData.songArtist += track['artists'][n]['name']
         
+        musicDir = os.getcwd()
+        musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(metaData.albumName))
+        songPath = os.path.join(musicDir, gen.remove_slashes(metaData.title) + '.mp3')
+        
+        # Determine if download needed or if file exists
+        currDir = os.getcwd()
+
+        try:        # Check for file
+            if os.path.isfile(songPath):
+
+                # Mark as downloaded
+                newFiles.append(str(songPath))
+
+                # Revert back to old dir
+                os.chdir(currDir)
+
+                # Reset meta data struct
+                metaData.albumName = ''
+                #musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(metaData.albumName))
+                continue
+
+        except:     # Handle unexpected errors
+            os.chdir(currDir)
+            gen.prnt('[ERROR] [spotify.py-257] Unexpected Runtime Error.\n')
+            
         # Determine set of download options
         if os.environ.get("DEBUGMODE") == 'True':
             ydl_opts = {
@@ -276,9 +301,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
         with YoutubeDL(ydl_opts) as ydl:
 
             # Change directory to add song to correct album folder
-            currDir = os.getcwd()
-            musicDir = os.getcwd()
-            musicDir = os.path.join(musicDir, "Music/" + gen.remove_slashes(metaData.albumName))
+            #currDir = os.getcwd()
             os.chdir(musicDir)
 
             successfulDownload = False
@@ -315,13 +338,13 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
             os.rename('NEW_MP3_FILE.mp3', gen.remove_slashes(metaData.title) + '.mp3')
 
             # Adjust path to newest song
-            musicDir = os.path.join(musicDir, gen.remove_slashes(metaData.title) + '.mp3')
+            #musicDir = os.path.join(musicDir, gen.remove_slashes(metaData.title) + '.mp3')
 
             # Record new paths
-            newFiles.append(str(musicDir))
+            newFiles.append(str(songPath))
 
             # Change ID3 tags
-            add_easyid3_tags(musicDir, metaData.albumName, metaData.albumArtist, metaData.songArtist, metaData.releaseDate, metaData.genre, metaData.title, metaData.trackNumber)
+            add_easyid3_tags(songPath, metaData.albumName, metaData.albumArtist, metaData.songArtist, metaData.releaseDate, metaData.genre, metaData.title, metaData.trackNumber)
 
             # Reset directory
             os.chdir(currDir)
