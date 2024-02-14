@@ -88,7 +88,7 @@ def get_album_cover_url(self, songID=str):
     attempts = 0
     while attempts < 5:
         try:
-            return get_track_info(self, songID)['album']['images'][1]['url']
+            return get_track_info(self, songID)['album']['images'][0]['url']
         except:
             gen.prnt('[TIMEOUT ERROR] WAITING...')
             time.sleep(3)
@@ -221,7 +221,7 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
 
             metaData.albumName = str(track['album']['name'])
             metaData.releaseDate = str(track['album']['release_date'])
-            metaData.genre = 'Hip-Hop/Rap'
+            metaData.genre = 'Rap'
             metaData.title = gen.remove_slashes(str(track['name']))
             metaData.trackNumber = str(track['track_number']) + '/' + str(track['album']['total_tracks'])
 
@@ -302,7 +302,6 @@ def download_songs_by_spotify_id(self,  IDs=[], amLength=int, spotifyLength=int,
         with YoutubeDL(ydl_opts) as ydl:
 
             # Change directory to add song to correct album folder
-            #currDir = os.getcwd()
             os.chdir(musicDir)
 
             successfulDownload = False
