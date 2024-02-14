@@ -60,7 +60,7 @@ def upload_new(newFilePaths : list, iBroadcastPlaylistID):
             
                     # Upload file
                     prnt('[UPDATE] Uploading: ' + file)
-                    iBroadcastTrackIDs[0] = tempIBOBJ.upload(file, force= True)
+                    iBroadcastTrackIDs[0] = tempIBOBJ.upload(file, force= False)
 
                     # Add track to playlist
                     prnt('[UPDATE] Adding to playlist...')
