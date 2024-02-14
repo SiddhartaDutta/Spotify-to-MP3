@@ -1,8 +1,9 @@
+import os
 import time
 import errno
 from tqdm import tqdm
 
-from mod_iBroadcast.return_iB_obj import __return_iB_obj
+from pkg_iBroadcast.return_iB_obj import __return_iB_obj
 from op_scripts.gen import prnt
 
 def upload_new(newFilePaths : list, iBroadcastPlaylistID):

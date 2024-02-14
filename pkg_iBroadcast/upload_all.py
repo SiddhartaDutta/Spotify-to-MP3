@@ -2,7 +2,7 @@ import os
 import glob
 import threading
 
-from mod_iBroadcast.return_iB_obj import __return_iB_obj
+from pkg_iBroadcast.return_iB_obj import __return_iB_obj
 from op_scripts.gen import prnt, loading_screen
 
 def upload_all():
