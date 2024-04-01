@@ -6,7 +6,8 @@ import os
 from time import sleep
 
 import op_scripts.gen as gen
-import pkg_iBroadcast.upload_all as pkgIB
+#import pkg_iBroadcast.upload_all as pkgIB
+import pkg_iBroadcast
 
 import op_scripts.menus.prog_settings_op as prog_settings_op
 import op_scripts.menus.program.auto_update as auto_update
@@ -15,15 +16,16 @@ import op_scripts.menus.program.create_album as create_album
 import op_scripts.menus.program.spotify_base as spotify_base
 import op_scripts.menus.program.misc_scripts as misc_scripts
 
-
+import pkg_iBroadcast
 
 operations = [(auto_update.autoUpdate, True, 'Automatically Run Checks on Provided Spotify Playlist IDs'),
               (spotify_base.spotifyBase, True, 'Assign a SoundCloud or YouTube Source to Spotify Song'),
               (create_song.createSong, False, 'Create a Fully Custom Song'),
               (create_album.createAlbum, False, 'Create a Fully Custom Album'),
-              (pkgIB.upload_all, False, 'Upload All Songs to iBroadcast'),
+              (pkg_iBroadcast.upload_all.upload_all, False, 'Upload All Songs to iBroadcast'),
               (prog_settings_op.run, False, 'Settings'),
               #(misc_scripts.upload_and_add_all, True, 'test'),
+              (pkg_iBroadcast.upload_all.upload_all)
               (None, False, 'Exit the Program')
              ]
 

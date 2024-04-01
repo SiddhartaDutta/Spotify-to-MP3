@@ -1,9 +1,13 @@
+"""
+Module dedicated to general operation methods.
+"""
+
 import os
 import ibroadcast
 
 def __return_iB_obj():
-    """
-    Returns iBroadcast object if credentials are accurate
+    """Returns iBroadcast object if saved credentials are accurate.
+
     """
 
     user = os.environ.get("IBROADCASTUSER")
@@ -15,3 +19,5 @@ def __return_iB_obj():
         print('[ERROR] No/incorrect iBroadcast credentials. Please check your username and password in Advanced Settings.')
         print('[UPDATE] Aborting...')
         return None
+
+print(__return_iB_obj())
